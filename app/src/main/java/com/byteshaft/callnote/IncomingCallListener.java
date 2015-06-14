@@ -64,13 +64,12 @@ public class IncomingCallListener extends PhoneStateListener {
     }
 
     private WindowManager.LayoutParams getCustomWindowManagerParameters() {
-        final int ONE_PIXEL = (int) getDensityPixels(20);
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-        params.height = (int) getDensityPixels(30);
-        params.width = (int) getDensityPixels(300);
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.type = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
         params.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-        params.format = PixelFormat.TRANSLUCENT;
+        params.format = PixelFormat.TRANSPARENT;
         return params;
     }
 
@@ -78,15 +77,6 @@ public class IncomingCallListener extends PhoneStateListener {
         if (mWindowManager != null && view != null) {
             mWindowManager.removeView(view);
         }
-    }
-
-    private TelephonyManager getTelephonyManager() {
-        return (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-    }
-
-    float getDensityPixels(int pixels) {
-        return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, pixels, mContext.getResources().getDisplayMetrics());
     }
 
     String getContactNameFromNumber(String phoneNumber) {
