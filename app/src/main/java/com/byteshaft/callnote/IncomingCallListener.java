@@ -25,6 +25,7 @@ public class IncomingCallListener extends PhoneStateListener {
     private Context mContext;
     private View view;
     private String mPhotoUri;
+    private boolean isViewCreated;
 
     public IncomingCallListener(Context context) {
         super();
@@ -41,14 +42,22 @@ public class IncomingCallListener extends PhoneStateListener {
                 TextView textView = (TextView) view.findViewById(R.id.memo_id);
                 textView.setText("Hey ".concat(getContactNameFromNumber(incomingNumber)));
                 ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
-                imageView.setImageURI(Uri.parse(mPhotoUri));
+                if (mPhotoUri == null) {
+                    imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.contact));
+                } else {
+                    imageView.setImageURI(Uri.parse(mPhotoUri));
+                }
                 createSystemOverlayForPreview(view);
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
-                removeView();
+                if (isViewCreated) {
+                    removeView();
+                }
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
-                removeView();
+                if (isViewCreated) {
+                    removeView();
+                }
                 break;
         }
     }
@@ -57,6 +66,7 @@ public class IncomingCallListener extends PhoneStateListener {
         mWindowManager = getWindowManager();
         WindowManager.LayoutParams params = getCustomWindowManagerParameters();
         mWindowManager.addView(view, params);
+        isViewCreated = true;
     }
 
     private WindowManager getWindowManager() {
@@ -76,6 +86,7 @@ public class IncomingCallListener extends PhoneStateListener {
     private void removeView() {
         if (mWindowManager != null && view != null) {
             mWindowManager.removeView(view);
+            isViewCreated = false;
         }
     }
 
@@ -98,6 +109,10 @@ public class IncomingCallListener extends PhoneStateListener {
 
         if (!cursor.isClosed()) {
             cursor.close();
+        }
+
+        if (contactName == null) {
+            return phoneNumber;
         }
 
         return contactName;
