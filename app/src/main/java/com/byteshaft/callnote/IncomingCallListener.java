@@ -1,8 +1,12 @@
 package com.byteshaft.callnote;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.PixelFormat;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.TypedValue;
@@ -12,6 +16,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class IncomingCallListener extends PhoneStateListener {
@@ -19,6 +24,7 @@ public class IncomingCallListener extends PhoneStateListener {
     private WindowManager mWindowManager;
     private Context mContext;
     private View view;
+    private String mPhotoUri;
 
     public IncomingCallListener(Context context) {
         super();
@@ -33,7 +39,9 @@ public class IncomingCallListener extends PhoneStateListener {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.overlay, null);
                 TextView textView = (TextView) view.findViewById(R.id.memo_id);
-                textView.setText("Hey ".concat(incomingNumber));
+                textView.setText("Hey ".concat(getContactNameFromNumber(incomingNumber)));
+                ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
+                imageView.setImageURI(Uri.parse(mPhotoUri));
                 createSystemOverlayForPreview(view);
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
@@ -79,5 +87,29 @@ public class IncomingCallListener extends PhoneStateListener {
     float getDensityPixels(int pixels) {
         return TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, pixels, mContext.getResources().getDisplayMetrics());
+    }
+
+    String getContactNameFromNumber(String phoneNumber) {
+        ContentResolver cr = mContext.getContentResolver();
+        Uri uri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
+                ContactsContract.PhoneLookup.PHOTO_URI}, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactName = null;
+        if (cursor.moveToFirst()) {
+            contactName = cursor.getString(
+                    cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+            mPhotoUri = cursor.getString(
+                    cursor.getColumnIndex(ContactsContract.PhoneLookup.PHOTO_URI));
+        }
+
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return contactName;
     }
 }

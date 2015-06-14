@@ -50,8 +50,8 @@ public class OverlayService extends Service {
     private WindowManager.LayoutParams getCustomWindowManagerParameters() {
         final int ONE_PIXEL = 200;
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-        params.height = ONE_PIXEL;
-        params.width = ONE_PIXEL;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.type = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
         params.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         params.format = PixelFormat.TRANSLUCENT;

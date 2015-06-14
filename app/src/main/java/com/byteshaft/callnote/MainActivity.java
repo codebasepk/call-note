@@ -28,6 +28,5 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         } else {
             stopService(intent);
         }
-
     }
 }
