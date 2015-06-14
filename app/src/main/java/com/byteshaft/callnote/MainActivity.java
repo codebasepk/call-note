@@ -10,14 +10,12 @@ import android.widget.Switch;
 
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener {
 
-    private Switch aSwitch;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        aSwitch = (Switch) findViewById(R.id.aSwitch);
-        aSwitch.setOnCheckedChangeListener(this);
+        Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
+        toggleSwitch.setOnCheckedChangeListener(this);
     }
 
     @Override
