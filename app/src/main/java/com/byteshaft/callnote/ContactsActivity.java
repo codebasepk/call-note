@@ -18,7 +18,7 @@ import android.widget.Toast;
 public class ContactsActivity extends ActionBarActivity {
 
     EditText editTextNote;
-    Button addAnotherNote;
+    Button addIcon;
     Button attachContacts;
     Button checkAll;
     Button uncheckAll;
@@ -44,7 +44,13 @@ public class ContactsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-        addAnotherNote = (Button) findViewById(R.id.add_another_note);
+        addIcon = (Button) findViewById(R.id.add_another_note);
+        addIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initiateIconDialog();
+            }
+        });
         attachContacts = (Button) findViewById(R.id.attach_contacts);
         attachContacts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +86,15 @@ public class ContactsActivity extends ActionBarActivity {
 
         checkAll = (Button) findViewById(R.id.button_checkall);
         uncheckAll = (Button) findViewById(R.id.button_uncheck_all);
+    }
+
+    public void initiateIconDialog() {
+        LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
+        View dialog_layout = inflater.inflate(R.layout.dialog_2, (ViewGroup) findViewById(R.id.dialogLayout_2));
+        AlertDialog.Builder db = new AlertDialog.Builder(ContactsActivity.this);
+        db.setView(dialog_layout);
+        db.setTitle("Add Icon");
+        db.show();
     }
 
 }
