@@ -11,6 +11,12 @@ public class Helpers extends ContextWrapper {
         super(base);
     }
 
+    public static final String LOG_TAG = "";
+
+    static String logTag(Class presentClass) {
+        return LOG_TAG + "/" + presentClass.getSimpleName();
+    }
+
     TelephonyManager getTelephonyManager() {
         return (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
     }
