@@ -3,8 +3,6 @@ package com.byteshaft.callnote;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
