@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/dialogLayout">
 
     <Button
         android:id="@+id/button_checkall"
-        android:layout_gravity="start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
         android:text="Check All"
-        android:textStyle="bold"
-        android:layout_marginLeft="10dp"/>
+        android:textSize="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="30dp"/>
 
     <Button
         android:id="@+id/button_uncheck_all"
-        android:layout_gravity="end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Un-Check All"
-        android:textStyle="bold"
-        android:layout_marginRight="10dp"/>
+        android:layout_alignParentRight="true"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
+        android:text="UnCheck All"
+        android:textSize="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="30dp"/>
 
     <ListView
         android:id="@+id/lv"
+        android:layout_below="@+id/button_checkall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:layout_margin="10dp"/>
+        android:layout_margin="5dp"/>
 
-</LinearLayout>
+</RelativeLayout>

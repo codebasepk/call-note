@@ -20,7 +20,9 @@
         android:layout_width="120dp"
         android:height="60dp"
         android:layout_height="wrap_content"
-        android:text="Add icon"
+        android:text="Attach icon"
+        android:textSize="12dp"
+        android:textStyle="bold"
         android:layout_marginLeft="50dp"
         android:layout_alignParentLeft="true"/>
 
@@ -28,6 +30,8 @@
         android:id="@+id/attach_contacts"
         android:layout_width="120dp"
         android:layout_height="60dp"
+        android:textSize="12dp"
+        android:textStyle="bold"
         android:layout_below="@+id/edittext_create_note"
         android:layout_alignParentRight="true"
         android:text="Attach contacts"
