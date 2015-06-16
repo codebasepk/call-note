@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.Switch;
 
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener {
@@ -14,8 +15,10 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
+
+        ListView listViewMain = (ListView) findViewById(R.id.listview_main);
         toggleSwitch.setOnCheckedChangeListener(this);
-    }
+}
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

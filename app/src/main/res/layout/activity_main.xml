@@ -11,9 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Show Pop-Up on call"/>
+        android:text="Pop-Up Service"
+        android:textStyle="bold"/>
 
     <ListView
+        android:id="@+id/listview_main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/aSwitch"
@@ -26,11 +28,11 @@
         <Button
             android:id="@+id/button"
             android:background="@mipmap/button_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:onClick="openActivity"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_margin="20dp"/>
+            android:layout_margin="15dp"/>
     </RelativeLayout>
 </RelativeLayout>
