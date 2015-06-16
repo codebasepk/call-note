@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener {
+public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener,
+        View.OnClickListener {
+
+    private boolean mViewCreated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,5 +36,19 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         startActivity(new Intent(this, ContactsActivity.class));
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_overlay:
+                if (mViewCreated) {
+                    OverlayHelpers.removePopupNote();
+                    mViewCreated = false;
+                } else {
+                    OverlayHelpers.showPopupNoteForContact("+923422347000");
+                    mViewCreated = true;
+                }
+        }
     }
 }
