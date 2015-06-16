@@ -3,7 +3,9 @@ package com.byteshaft.callnote;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
@@ -75,7 +77,7 @@ public class Helpers extends ContextWrapper {
         return false;
     }
 
-    public boolean contactExistsInWhitelist(String number, String checkedContacts) {
+    boolean contactExistsInWhitelist(String number, String checkedContacts) {
         boolean contactExistsInWhitelist = false;
         String[] checkContactsArray = getCheckedContacts(checkedContacts);
         for(String contact : checkContactsArray) {
@@ -89,4 +91,28 @@ public class Helpers extends ContextWrapper {
     private String[] getCheckedContacts(String checkedContacts) {
         return checkedContacts.split(",");
     }
+
+    void getCheckedContactsFromSharedPrefrence(List<String> contactNumber) {
+        String[] checkedContacts = getCheckedContacts();
+        int i = 0;
+        for (String contact : contactNumber) {
+            for (String checkedContact: checkedContacts) {
+                if (contact.equals(checkedContact)) {
+                    ContactsAdapter.mCheckStates.put(i, true);
+                }
+            }
+            i++;
+        }
+    }
+
+    String[] getCheckedContacts() {
+        String string = getPrefrenceManager().getString("checkedContactsPrefs", " ");
+        return string.split(",");
+    }
+
+    SharedPreferences getPrefrenceManager() {
+        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+    }
+
 }

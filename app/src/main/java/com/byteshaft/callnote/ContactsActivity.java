@@ -18,28 +18,33 @@ public class ContactsActivity extends ActionBarActivity {
     Button addAnotherNote;
     Button attachContacts;
     ListView lv;
+    ContactsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+        editTextNote = (EditText) findViewById(R.id.editText_create_note);
+        adapter = new ContactsAdapter(getApplicationContext());
         addAnotherNote = (Button) findViewById(R.id.add_another_note);
         attachContacts = (Button) findViewById(R.id.attach_contacts);
         attachContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
-                View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
-                AlertDialog.Builder db = new AlertDialog.Builder(ContactsActivity.this);
-                db.setView(dialog_layout);
-                db.setTitle("Select Contacts");
-                db.setPositiveButton("OK", new
+                View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup)
+                        findViewById(R.id.dialogLayout));
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ContactsActivity.this);
+                dialogBuilder.setView(dialog_layout);
+                dialogBuilder.setTitle("Select Contacts");
+                dialogBuilder.setPositiveButton("OK", new
                         DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(ContactsActivity.this, "Checked Contacts Selected", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ContactsActivity.this, "Checked Contacts Selected"
+                                        + which, Toast.LENGTH_SHORT).show();
                             }
                         });
-                db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -48,7 +53,7 @@ public class ContactsActivity extends ActionBarActivity {
                 lv = (ListView) dialog_layout.findViewById(R.id.lv);
                 ContactsAdapter ma = new ContactsAdapter(getApplicationContext());
                 lv.setAdapter(ma);
-                db.show();
+                dialogBuilder.show();
             }
         });
     }
