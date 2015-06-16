@@ -23,12 +23,21 @@ public class ContactsActivity extends ActionBarActivity {
     Button checkAll;
     Button uncheckAll;
     ListView lv;
+    ContactsAdapter adapter;
+    Helpers mHelpers;
+    DataBaseHelpers dbHelpers;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_apply:
-                this.finish();
+                String note = editTextNote.getText().toString();
+                String[] checkedContacts = mHelpers.getCheckedContacts();
+                if (!note.isEmpty()) {
+                    dbHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN, checkedContacts, SqliteHelpers.NOTES_COLUMN, note,
+                            SqliteHelpers.PICTURE_COLUMN, "sdcard location");
+                    this.finish();
+                }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -44,6 +53,9 @@ public class ContactsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+        mHelpers = new Helpers(getApplicationContext());
+        dbHelpers = new DataBaseHelpers(getApplicationContext());
+        editTextNote = (EditText) findViewById(R.id.editText_create_note);
         addIcon = (Button) findViewById(R.id.add_another_note);
         addIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +108,5 @@ public class ContactsActivity extends ActionBarActivity {
         db.setTitle("Add Icon");
         db.show();
     }
-
 }
 

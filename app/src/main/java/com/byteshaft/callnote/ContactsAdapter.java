@@ -31,17 +31,10 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
             mCheckStates = new SparseBooleanArray(mContactNames.size());
         }
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        String[] checkedContacts = getCheckedContacts();
-        int i = 0;
-        for (String contact : mContactNumbers) {
-            for (String checkedContact: checkedContacts) {
-                if (contact.equals(checkedContact)) {
-                    mCheckStates.put(i, true);
-                }
-            }
-            i++;
-        }
+        helper.getCheckedContactsFromSharedPrefrence(mContactNumbers);
     }
+
+
 
     @Override
     public int getCount() {
@@ -89,8 +82,5 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
         mPreferences.edit().putString("checkedContactsPrefs", checkedContacts.toString()).apply();
     }
 
-    private String[] getCheckedContacts() {
-        String string = mPreferences.getString("checkedContactsPrefs", " ");
-        return string.split(",");
-    }
+
 }

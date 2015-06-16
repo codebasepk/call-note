@@ -22,7 +22,7 @@
         android:text="Show overlay"/>
 
     <ListView
-        android:id="@+id/listview_main"
+        android:id="@+id/listView_main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/aSwitch"
