@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -26,5 +27,13 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         } else {
             stopService(intent);
         }
+    }
+
+    public void openActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(), ContactsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(new Intent(this, ContactsActivity.class));
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
+
     }
 }
