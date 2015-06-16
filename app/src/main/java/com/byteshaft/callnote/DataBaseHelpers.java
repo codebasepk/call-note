@@ -18,15 +18,17 @@ public class DataBaseHelpers {
         mSqliteHelper = new SqliteHelpers(context);
     }
 
-    void createNewEntry(String number, String value,String note, String secValue,
-                        String imageLink, String image ) {
+    void createNewEntry(String numberColumn, String[] value,String noteColumn, String secValue,
+                        String imageLinkColumn, String image ) {
         mDbHelper = mSqliteHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(number, value);
-        values.put(note,secValue);
-        values.put(imageLink,image);
-        mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
-        Log.i("Sqlite", "create entry");
+        for (String val: value) {
+            values.put(numberColumn, val);
+            values.put(noteColumn,secValue);
+            values.put(imageLinkColumn,image);
+            mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
+            Log.i(Helpers.LOG_TAG, "created New Entry");
+        }
     }
 
     void deleteItem(String column, String value, boolean val) {

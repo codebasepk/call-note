@@ -1,7 +1,6 @@
 package com.byteshaft.callnote;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,13 +8,12 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import java.util.Arrays;
-
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener
         , Button.OnClickListener {
 
     Button button;
     Helpers mHelpers;
+    private boolean mViewCreated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +51,14 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.buttonGet:
-            DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
-//                dataBaseHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN,
-//                        "03448797786",SqliteHelpers.NOTES_COLUMN,"hello",SqliteHelpers
-//                                .PICTURE_COLUMN,"bla bla bla");
-                dataBaseHelpers.retrieveDate(SqliteHelpers.NOTES_COLUMN,"hello");
-                break;
+            case R.id.button_overlay:
+                if (mViewCreated) {
+                    OverlayHelpers.removePopupNote();
+                    mViewCreated = false;
+                } else {
+                    OverlayHelpers.showPopupNoteForContact("+923422347000");
+                    mViewCreated = true;
+                }
         }
     }
 }

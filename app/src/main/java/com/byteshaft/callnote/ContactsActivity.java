@@ -23,6 +23,7 @@ public class ContactsActivity extends ActionBarActivity {
     ListView lv;
     ContactsAdapter adapter;
     Helpers mHelpers;
+    DataBaseHelpers dbHelpers;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -30,7 +31,9 @@ public class ContactsActivity extends ActionBarActivity {
             case R.id.action_apply:
                 String note = editTextNote.getText().toString();
                 String[] checkedContacts = mHelpers.getCheckedContacts();
-                if (!note.isEmpty() && checkedContacts) {
+                if (!note.isEmpty()) {
+                    dbHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN, checkedContacts , SqliteHelpers.NOTES_COLUMN, note,
+                            SqliteHelpers.PICTURE_COLUMN, "sdcard location");
                     System.out.println("working");
                     this.finish();
                 }
@@ -53,6 +56,7 @@ public class ContactsActivity extends ActionBarActivity {
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         adapter = new ContactsAdapter(getApplicationContext());
         mHelpers = new Helpers(getApplicationContext());
+        dbHelpers = new DataBaseHelpers(getApplicationContext());
         addAnotherNote = (Button) findViewById(R.id.add_another_note);
         attachContacts = (Button) findViewById(R.id.attach_contacts);
         attachContacts.setOnClickListener(new View.OnClickListener() {

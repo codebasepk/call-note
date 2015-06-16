@@ -6,17 +6,11 @@
     android:orientation="horizontal"
     android:background="@drawable/bubble_green">
 
-    <ImageView
-        android:id="@+id/avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/abc_btn_rating_star_on_mtrl_alpha" />
-
     <TextView
         android:id="@+id/memo_id"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:textColor="#000000"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
 </LinearLayout>
