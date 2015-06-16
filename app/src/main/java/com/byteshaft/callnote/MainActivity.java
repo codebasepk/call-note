@@ -9,18 +9,28 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import java.util.Arrays;
+
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener
         , Button.OnClickListener {
+
     Button button;
+    Helpers mHelpers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mHelpers = new Helpers(getApplicationContext());
         button = (Button) findViewById(R.id.buttonGet);
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
         toggleSwitch.setOnCheckedChangeListener(this);
         button.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

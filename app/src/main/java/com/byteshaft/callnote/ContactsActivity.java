@@ -22,12 +22,19 @@ public class ContactsActivity extends ActionBarActivity {
     Button attachContacts;
     ListView lv;
     ContactsAdapter adapter;
+    Helpers mHelpers;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_apply:
-                this.finish();
+                String note = editTextNote.getText().toString();
+                String[] checkedContacts = mHelpers.getCheckedContacts();
+                if (!note.isEmpty() && checkedContacts) {
+                    System.out.println("working");
+                    this.finish();
+                }
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -45,6 +52,7 @@ public class ContactsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_contacts);
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         adapter = new ContactsAdapter(getApplicationContext());
+        mHelpers = new Helpers(getApplicationContext());
         addAnotherNote = (Button) findViewById(R.id.add_another_note);
         attachContacts = (Button) findViewById(R.id.attach_contacts);
         attachContacts.setOnClickListener(new View.OnClickListener() {
