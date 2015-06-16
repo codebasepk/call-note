@@ -4,18 +4,28 @@ import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
+import java.util.ArrayList;
+
 public class IncomingCallListener extends PhoneStateListener {
+    ArrayList<String> arrayList;
+    DataBaseHelpers dbHelpers;
+    Context mContext;
 
     public IncomingCallListener(Context context) {
         super();
+        mContext = context;
     }
 
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
+        dbHelpers = new DataBaseHelpers(mContext);
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
-                OverlayHelpers.showPopupNoteForContact(incomingNumber);
+                arrayList = dbHelpers.retrieveByNotesOrNumber(incomingNumber);
+                for (String note: arrayList) {
+                    OverlayHelpers.showPopupNoteForContact(note);
+                }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
                 OverlayHelpers.removePopupNote();

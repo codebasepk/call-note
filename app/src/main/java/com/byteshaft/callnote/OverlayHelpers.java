@@ -36,11 +36,11 @@ public class OverlayHelpers {
         }
     }
 
-    static void showPopupNoteForContact(String phoneNumber) {
+    static void showPopupNoteForContact(String note) {
         LayoutInflater inflater = AppGlobals.getLayoutInflator();
         mNotePopup = inflater.inflate(R.layout.overlay, null);
         TextView textView = (TextView) mNotePopup.findViewById(R.id.memo_id);
-        textView.setText("Hey " + phoneNumber);
+        textView.setText(note);
         createSystemOverlayForPreview(mNotePopup);
     }
 }

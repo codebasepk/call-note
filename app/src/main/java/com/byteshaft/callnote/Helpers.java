@@ -114,6 +114,4 @@ public class Helpers extends ContextWrapper {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
     }
-
-
 }

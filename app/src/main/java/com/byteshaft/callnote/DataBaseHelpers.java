@@ -44,22 +44,20 @@ public class DataBaseHelpers {
 
     void closeDatabase() {
         mSqliteHelper.close();
-        Log.i("sqlite", "close database");
+        Log.i(Helpers.LOG_TAG, "close database");
     }
 
-    ArrayList<String> retrieveByNotesOrNumber(String column, String value) {
+    ArrayList<String> retrieveByNotesOrNumber(String value) {
         Cursor cursor;
-        mDbHelper = mSqliteHelper.getWritableDatabase();
-        String whereClause =  column+" = ?";
+        mDbHelper = mSqliteHelper.getReadableDatabase();
+        String whereClause =  SqliteHelpers.NUMBER_COLUMN +" = ?";
         String[] whereArgs = new String[] {value};
         cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, null);
         ArrayList<String> list = new ArrayList<>();
         while(cursor.moveToNext()) {
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN)));
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
-            Log.i(Helpers.LOG_TAG," Data retrieved");
+            Log.i(Helpers.LOG_TAG," Data retrieved ,,,,,,");
         }
         return list;
     }

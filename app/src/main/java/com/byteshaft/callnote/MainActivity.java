@@ -35,11 +35,11 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         setContentView(R.layout.activity_main);
         mHelpers = new Helpers(getApplicationContext());
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
-        mDbHelpers = new DataBaseHelpers(getApplicationContext());
-        arrayList = mDbHelpers.retrieveByNotesOrNumber(SqliteHelpers.NOTES_COLUMN, "yo");
-        mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
-        listView = (ListView) findViewById(R.id.listView_main);
-        listView.setAdapter(new ArrayAdapter<>(this,R.layout.drawer_list_item, arrayList));
+//        mDbHelpers = new DataBaseHelpers(getApplicationContext());
+//        arrayList = mDbHelpers.retrieveByNotesOrNumber("03467050920");
+//        mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
+//        listView = (ListView) findViewById(R.id.listView_main);
+//        listView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, arrayList));
         toggleSwitch.setOnCheckedChangeListener(this);
     }
 

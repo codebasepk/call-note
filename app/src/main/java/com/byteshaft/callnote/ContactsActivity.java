@@ -18,7 +18,7 @@ import android.widget.Toast;
 public class ContactsActivity extends ActionBarActivity {
 
     EditText editTextNote;
-    Button addAnotherNote;
+    Button addIcon;
     Button attachContacts;
     Button checkAll;
     Button uncheckAll;
@@ -34,12 +34,10 @@ public class ContactsActivity extends ActionBarActivity {
                 String note = editTextNote.getText().toString();
                 String[] checkedContacts = mHelpers.getCheckedContacts();
                 if (!note.isEmpty()) {
-                    dbHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN, checkedContacts , SqliteHelpers.NOTES_COLUMN, note,
+                    dbHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN, checkedContacts, SqliteHelpers.NOTES_COLUMN, note,
                             SqliteHelpers.PICTURE_COLUMN, "sdcard location");
-                    System.out.println("working");
                     this.finish();
                 }
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -55,31 +53,20 @@ public class ContactsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-        editTextNote = (EditText) findViewById(R.id.editText_create_note);
-        adapter = new ContactsAdapter(getApplicationContext());
         mHelpers = new Helpers(getApplicationContext());
         dbHelpers = new DataBaseHelpers(getApplicationContext());
-        addAnotherNote = (Button) findViewById(R.id.add_another_note);
+        editTextNote = (EditText) findViewById(R.id.editText_create_note);
+        addIcon = (Button) findViewById(R.id.add_another_note);
+        addIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initiateIconDialog();
+            }
+        });
         attachContacts = (Button) findViewById(R.id.attach_contacts);
         attachContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
-                View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup)
-                        findViewById(R.id.dialogLayout));
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ContactsActivity.this);
-                dialogBuilder.setView(dialog_layout);
-                dialogBuilder.setTitle("Select Contacts");
-                dialogBuilder.setPositiveButton("OK", new
-                        DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(ContactsActivity.this, "Checked Contacts Selected"
-                                        + which, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
                 showContactsDialog();
             }
         });
@@ -88,34 +75,38 @@ public class ContactsActivity extends ActionBarActivity {
     public void showContactsDialog() {
         LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ContactsActivity.this);
-        dialogBuilder.setView(dialog_layout);
-        dialogBuilder.setTitle("Select Contacts");
-        dialogBuilder.setPositiveButton("OK", new
+        AlertDialog.Builder db = new AlertDialog.Builder(ContactsActivity.this);
+        db.setView(dialog_layout);
+        db.setTitle("Select Contacts");
+        db.setPositiveButton("OK", new
                 DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(ContactsActivity.this, "Checked Contacts Selected", Toast.LENGTH_SHORT).show();
                     }
                 });
-                lv = (ListView) dialog_layout.findViewById(R.id.lv);
-                ContactsAdapter ma = new ContactsAdapter(getApplicationContext());
-                lv.setAdapter(ma);
-                dialogBuilder.show();
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
             }
         });
         lv = (ListView) dialog_layout.findViewById(R.id.lv);
-        adapter = new ContactsAdapter(getApplicationContext());
-        lv.setAdapter(adapter);
-        dialogBuilder.show();
+        ContactsAdapter ma = new ContactsAdapter(getApplicationContext());
+        lv.setAdapter(ma);
+        db.show();
 
 
         checkAll = (Button) findViewById(R.id.button_checkall);
         uncheckAll = (Button) findViewById(R.id.button_uncheck_all);
     }
-        });
+
+    public void initiateIconDialog() {
+        LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
+        View dialog_layout = inflater.inflate(R.layout.dialog_2, (ViewGroup) findViewById(R.id.dialogLayout_2));
+        AlertDialog.Builder db = new AlertDialog.Builder(ContactsActivity.this);
+        db.setView(dialog_layout);
+        db.setTitle("Add Icon");
+        db.show();
     }
 }
 
