@@ -47,23 +47,44 @@ public class DataBaseHelpers {
         Log.i("sqlite", "close database");
     }
 
-    List<String> retrieveDate(String column, String value) {
+    ArrayList<String> retrieveByNotesOrNumber(String column, String value) {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getWritableDatabase();
         String whereClause =  column+" = ?";
         String[] whereArgs = new String[] {value};
         cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, null);
-        List<String> list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         while(cursor.moveToNext()) {
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN)));
-            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN)));
-            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
-            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
             Log.i(Helpers.LOG_TAG," Data retrieved");
         }
         return list;
     }
+
+    List<String> getLastNoteForContact(String value) {
+        Cursor cursor;
+        mDbHelper = mSqliteHelper.getWritableDatabase();
+        String whereClause =  SqliteHelpers.NUMBER_COLUMN+" = ?";
+        String[] whereArgs = new String[] {value};
+        cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
+                null,null,SqliteHelpers.NOTES_COLUMN+ " DESC ", "1");
+        List<String> list = new ArrayList<>();
+        while(cursor.moveToNext()) {
+            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN)));
+            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
+            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
+            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN)));
+            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
+            Log.i(Helpers.LOG_TAG," Data retrieved");
+        }
+        return list;
+    }
+
+
+
+
+
 }

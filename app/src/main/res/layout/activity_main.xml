@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Show Pop-Up on call"/>
+        android:text="Pop-Up Service"
+        android:textStyle="bold"/>
 
     <Button
         android:id="@+id/button_overlay"
@@ -21,6 +22,7 @@
         android:text="Show overlay"/>
 
     <ListView
+        android:id="@+id/listView_main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/aSwitch"
@@ -33,23 +35,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Data"
-        android:id="@+id/buttonGet"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
         <Button
             android:id="@+id/button"
             android:background="@mipmap/button_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:onClick="openActivity"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_margin="20dp"/>
+            android:layout_margin="15dp"/>
     </RelativeLayout>
 </RelativeLayout>
