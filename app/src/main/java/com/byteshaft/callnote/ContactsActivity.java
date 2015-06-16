@@ -20,6 +20,8 @@ public class ContactsActivity extends ActionBarActivity {
     EditText editTextNote;
     Button addAnotherNote;
     Button attachContacts;
+    Button checkAll;
+    Button uncheckAll;
     ListView lv;
 
     @Override
@@ -47,28 +49,38 @@ public class ContactsActivity extends ActionBarActivity {
         attachContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
-                View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
-                AlertDialog.Builder db = new AlertDialog.Builder(ContactsActivity.this);
-                db.setView(dialog_layout);
-                db.setTitle("Select Contacts");
-                db.setPositiveButton("OK", new
-                        DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(ContactsActivity.this, "Checked Contacts Selected", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                lv = (ListView) dialog_layout.findViewById(R.id.lv);
-                ContactsAdapter ma = new ContactsAdapter(getApplicationContext());
-                lv.setAdapter(ma);
-                db.show();
+                showContactsDialog();
             }
         });
     }
+
+    public void showContactsDialog() {
+        LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
+        View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
+        AlertDialog.Builder db = new AlertDialog.Builder(ContactsActivity.this);
+        db.setView(dialog_layout);
+        db.setTitle("Select Contacts");
+        db.setPositiveButton("OK", new
+                DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(ContactsActivity.this, "Checked Contacts Selected", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        lv = (ListView) dialog_layout.findViewById(R.id.lv);
+        ContactsAdapter ma = new ContactsAdapter(getApplicationContext());
+        lv.setAdapter(ma);
+        db.show();
+
+
+        checkAll = (Button) findViewById(R.id.button_checkall);
+        uncheckAll = (Button) findViewById(R.id.button_uncheck_all);
+    }
+
 }
+

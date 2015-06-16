@@ -3,9 +3,29 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/dialogLayout">
 
+    <Button
+        android:id="@+id/button_checkall"
+        android:layout_gravity="start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check All"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"/>
+
+    <Button
+        android:id="@+id/button_uncheck_all"
+        android:layout_gravity="end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Un-Check All"
+        android:textStyle="bold"
+        android:layout_marginRight="10dp"/>
+
     <ListView
         android:id="@+id/lv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
         android:layout_margin="10dp"/>
+
 </LinearLayout>
