@@ -8,7 +8,8 @@
     <EditText
         android:id="@+id/edittext_create_note"
         android:layout_width="fill_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="130dp"
         android:layout_margin="30dp"
         android:layout_centerHorizontal="true"
         android:hint="Create a note here..."/>
