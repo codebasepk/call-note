@@ -23,9 +23,11 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         , Button.OnClickListener {
 
     Helpers mHelpers;
+    private ArrayAdapter<String> mModeAdapter;
     private boolean mViewCreated;
     DataBaseHelpers mDbHelpers;
     ArrayList<String> arrayList;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +37,9 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         arrayList = mDbHelpers.retrieveByNotesOrNumber(SqliteHelpers.NOTES_COLUMN, "yo");
-        ListView modeList = new ListView(this);
-        ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, R.id.listView_main, arrayList);
-        modeList.setAdapter(modeAdapter);
+        mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
+        listView = (ListView) findViewById(R.id.listView_main);
+        listView.setAdapter(new ArrayAdapter<>(this,R.layout.drawer_list_item, arrayList));
         toggleSwitch.setOnCheckedChangeListener(this);
     }
 
@@ -75,15 +77,17 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     mViewCreated = true;
                 }
         }
+    }
 
-        class NotesListAdapter extends ArrayAdapter<String> {
+        class NotesArrayList extends ArrayAdapter<String> {
 
-            public NotesListAdapter(Context context, int resource, ArrayList<String> videos) {
+            public NotesArrayList(Context context, int resource, ArrayList<String> videos) {
                 super(context, resource, videos);
             }
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
+                ViewHolder holder;
                 if (convertView == null) {
                     LayoutInflater inflater = getLayoutInflater();
                     convertView = inflater.inflate(R.layout.row, parent, false);
@@ -92,23 +96,30 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     holder.time = (TextView) convertView.findViewById(R.id.tv);
                     holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
                     convertView.setTag(holder);
-                } else {
-                    holder = (ViewHolder) convertView.getTag();
                 }
-                holder.title.setText(mVideosTitles[position]);
-                holder.time.setText(
-                        mHelper.getFormattedTime((mHelper.getDurationForVideo(position))));
-                holder.position = position;
-                if (BitmapCache.getBitmapFromMemCache(String.valueOf(position)) == null) {
-                    holder.thumbnail.setImageURI(null);
-                    new ThumbnailCreationTask(getApplicationContext(),
-                            holder, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    holder.thumbnail.setImageBitmap(BitmapCache.getBitmapFromMemCache
-                            (String.valueOf(position)));
-                }
+//                else {
+//                    holder = (ViewHolder) convertView.getTag();
+//                }
+//                holder.title.setText(mVideosTitles[position]);
+//                holder.time.setText(
+//                        mHelper.getFormattedTime((mHelper.getDurationForVideo(position))));
+//                holder.position = position;
+//                if (BitmapCache.getBitmapFromMemCache(String.valueOf(position)) == null) {
+//                    holder.thumbnail.setImageURI(null);
+//                    new ThumbnailCreationTask(getApplicationContext(),
+//                            holder, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                } else {
+//                    holder.thumbnail.setImageBitmap(BitmapCache.getBitmapFromMemCache
+//                            (String.valueOf(position)));
+//                }
                 return convertView;
             }
         }
+
+    static class ViewHolder {
+        public TextView title;
+        public TextView time;
+        public ImageView thumbnail;
+        public int position;
     }
 }

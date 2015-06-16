@@ -20,6 +20,8 @@ public class ContactsActivity extends ActionBarActivity {
     EditText editTextNote;
     Button addAnotherNote;
     Button attachContacts;
+    Button checkAll;
+    Button uncheckAll;
     ListView lv;
     ContactsAdapter adapter;
     Helpers mHelpers;
@@ -78,14 +80,42 @@ public class ContactsActivity extends ActionBarActivity {
                 dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                showContactsDialog();
+            }
+        });
+    }
 
+    public void showContactsDialog() {
+        LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
+        View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ContactsActivity.this);
+        dialogBuilder.setView(dialog_layout);
+        dialogBuilder.setTitle("Select Contacts");
+        dialogBuilder.setPositiveButton("OK", new
+                DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(ContactsActivity.this, "Checked Contacts Selected", Toast.LENGTH_SHORT).show();
                     }
                 });
                 lv = (ListView) dialog_layout.findViewById(R.id.lv);
                 ContactsAdapter ma = new ContactsAdapter(getApplicationContext());
                 lv.setAdapter(ma);
                 dialogBuilder.show();
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
             }
+        });
+        lv = (ListView) dialog_layout.findViewById(R.id.lv);
+        adapter = new ContactsAdapter(getApplicationContext());
+        lv.setAdapter(adapter);
+        dialogBuilder.show();
+
+
+        checkAll = (Button) findViewById(R.id.button_checkall);
+        uncheckAll = (Button) findViewById(R.id.button_uncheck_all);
+    }
         });
     }
 }
+
