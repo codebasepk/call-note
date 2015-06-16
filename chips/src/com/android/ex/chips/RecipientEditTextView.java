@@ -343,7 +343,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         DrawableRecipientChip last = getLastChip();
         if (last != null && start < getSpannable().getSpanEnd(last)) {
             // Grab the last chip and set the cursor to after it.
-            setSelection(Math.min(getSpannable().getSpanEnd(last) + 1, getText().length()));
+//            setSelection(Math.min(getSpannable().getSpanEnd(last) + 1, getText().length()));
         }
         super.onSelectionChanged(start, end);
     }
@@ -517,7 +517,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         removeMoreChip();
         setCursorVisible(true);
         Editable text = getText();
-        setSelection(text != null && text.length() > 0 ? text.length() : 0);
+//        setSelection(text != null && text.length() > 0 ? text.length() : 0);
         // If there are any temporary chips, try replacing them now that the user
         // has expanded the field.
         if (mTemporaryRecipients != null && mTemporaryRecipients.size() > 0) {
@@ -1238,7 +1238,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         if (shouldCreateChip(start, end)) {
             commitChip(start, end, editable);
         }
-        setSelection(getText().length());
+//        setSelection(getText().length());
     }
 
     private boolean commitChip(int start, int end, Editable editable) {
@@ -1340,7 +1340,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         // This is in the middle of a chip, so select out the whole chip
         // and commit it.
         Editable editable = getText();
-        setSelection(end);
+//        setSelection(end);
         String text = getText().toString().substring(start, end);
         if (!TextUtils.isEmpty(text)) {
             RecipientEntry entry = RecipientEntry.constructFakeEntry(text, isValid(text));
@@ -1483,7 +1483,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                         clearSelectedChip();
                         mSelectedChip = selectChip(currentChip);
                     } else if (mSelectedChip == null) {
-                        setSelection(getText().length());
+//                        setSelection(getText().length());
                         commitDefault();
                         mSelectedChip = selectChip(currentChip);
                     } else {
@@ -2055,7 +2055,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             spannable.removeSpan(currentChip);
             editable.delete(spanStart, spanEnd);
             setCursorVisible(true);
-            setSelection(editable.length());
+//            setSelection(editable.length());
             editable.append(text);
             return constructChipSpan(
                     RecipientEntry.constructFakeEntry((String) text, isValid(text.toString())),
@@ -2160,7 +2160,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         mSelectedChip = null;
         if (start == -1 || end == -1) {
             Log.w(TAG, "The chip doesn't exist or may be a chip a user was editing");
-            setSelection(editable.length());
+//            setSelection(editable.length());
             commitDefault();
         } else {
             getSpannable().removeSpan(chip);
@@ -2176,7 +2176,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             }
         }
         setCursorVisible(true);
-        setSelection(editable.length());
+//        setSelection(editable.length());
         if (mAlternatesPopup != null && mAlternatesPopup.isShowing()) {
             mAlternatesPopup.dismiss();
         }
@@ -2303,7 +2303,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             public void run() {
                 setTextColor(getCurrentHintTextColor());
                 setText("Choose Contacts:");
-                setSelection(16);
+//                setSelection(16);
             }
         }, 500);
     }
@@ -2337,7 +2337,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             if (mSelectedChip != null) {
                 if (!isGeneratedContact(mSelectedChip)) {
                     setCursorVisible(true);
-                    setSelection(getText().length());
+//                    setSelection(getText().length());
                     clearSelectedChip();
                 } else {
                     return;
