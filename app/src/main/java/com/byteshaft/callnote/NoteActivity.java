@@ -32,10 +32,11 @@ public class NoteActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_apply:
-                String note = editTextNote.getText().toString();
+                String title = noteTitle.getText().toString();
+                String description = editTextNote.getText().toString();
                 String[] checkedContacts = mHelpers.getCheckedContacts();
-                if (!note.isEmpty()) {
-                    dbHelpers.createNewEntry(checkedContacts, note,"this is a test","sdcard location",
+                if (!title.isEmpty() && !description.isEmpty()) {
+                    dbHelpers.createNewEntry(checkedContacts, title, description, "sdcard location",
                             mHelpers.getCurrentDateandTime());
                     this.finish();
                 }
