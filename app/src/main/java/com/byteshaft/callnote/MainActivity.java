@@ -38,6 +38,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         toggleSwitch.setOnCheckedChangeListener(this);
+
     }
 
     @Override
