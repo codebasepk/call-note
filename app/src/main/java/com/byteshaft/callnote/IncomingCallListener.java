@@ -1,10 +1,13 @@
 package com.byteshaft.callnote;
 
 import android.content.Context;
+import android.telephony.PhoneNumberUtils;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class IncomingCallListener extends PhoneStateListener {
     ArrayList<String> arrayList;
@@ -22,7 +25,7 @@ public class IncomingCallListener extends PhoneStateListener {
         dbHelpers = new DataBaseHelpers(mContext);
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
-                arrayList = dbHelpers.retrieveByNotesOrNumber(incomingNumber);
+                arrayList = dbHelpers.retrieveByNotesOrNumber((incomingNumber));
                 for (String note: arrayList) {
                     OverlayHelpers.showPopupNoteForContact(note);
                 }
