@@ -45,9 +45,16 @@ public class NoteActivity extends ActionBarActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_contacts, menu);
+        if (getIntent().getExtras() != null) {
+            menu.findItem(R.id.action_share).setVisible(true);
+            noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
+            editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
+            setTitle("Edit Note");
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -59,11 +66,6 @@ public class NoteActivity extends ActionBarActivity {
         dbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
-        if (getIntent().getExtras() != null) {
-            noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
-            editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
-            setTitle("Edit Note");
-        }
         addIcon = (Button) findViewById(R.id.button_icon);
         addIcon.setOnClickListener(new View.OnClickListener() {
             @Override
