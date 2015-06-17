@@ -14,13 +14,6 @@
         android:text="Pop-Up Service"
         android:textStyle="bold"/>
 
-    <Button
-        android:id="@+id/button_overlay"
-        android:onClick="onClick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show overlay"/>
-
     <ListView
         android:id="@+id/listView_main"
         android:layout_width="fill_parent"

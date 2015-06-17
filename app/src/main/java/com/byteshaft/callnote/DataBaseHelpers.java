@@ -112,4 +112,20 @@ public class DataBaseHelpers {
         }
         return list;
     }
+
+    ArrayList<String> getDescriptions() {
+        Cursor cursor;
+        mDbHelper = mSqliteHelper.getWritableDatabase();
+        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
+        cursor = mDbHelper.rawQuery(query, null);
+        ArrayList<String> arrayList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String itemname = cursor.getString(cursor.getColumnIndex(
+                    SqliteHelpers.DESCRIPTION));
+            if (itemname != null) {
+                arrayList.add(itemname);
+            }
+        }
+        return arrayList;
+    }
 }

@@ -7,11 +7,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,8 +22,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener
-        , Button.OnClickListener, AdapterView.OnItemClickListener {
+public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener,
+        AdapterView.OnItemClickListener {
 
     Helpers mHelpers;
     private boolean mViewCreated;
@@ -29,6 +31,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     ArrayList<String> arrayList;
     ListView listView;
     TextView textViewTitle;
+    private ArrayList<String> mNoteSummaries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +52,37 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     protected void onResume() {
         super.onResume();
         arrayList = mDbHelpers.getAllPresentNotes();
+        mNoteSummaries = mDbHelpers.getDescriptions();
         ArrayAdapter<String> mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
 //        listView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, arrayList));
         listView.setAdapter(mModeAdapter);
         listView.setOnItemClickListener(this);
         listView.setDivider(null);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_overlay:
+                if (mViewCreated) {
+                    OverlayHelpers.removePopupNote();
+                    mViewCreated = false;
+                } else {
+                    OverlayHelpers.showPopupNoteForContact("+923422347000");
+                    mViewCreated = true;
+                }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -72,20 +100,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(new Intent(this, NoteActivity.class));
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_overlay:
-                if (mViewCreated) {
-                    OverlayHelpers.removePopupNote();
-                    mViewCreated = false;
-                } else {
-                    OverlayHelpers.showPopupNoteForContact("+923422347000");
-                    mViewCreated = true;
-                }
-        }
     }
 
     @Override
@@ -117,10 +131,10 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                     holder.title.setText(arrayList.get(position));
-                    holder.summary.setText("hdhhfhf");
+                    holder.summary.setText(mNoteSummaries.get(position));
                 }
                 holder.title.setText(arrayList.get(position));
-//                holder.summary.setText(mDbHelpers.get);
+                holder.summary.setText(mNoteSummaries.get(position));
                 holder.thumbnail.setImageResource(R.drawable.character_1);
                 return convertView;
             }
