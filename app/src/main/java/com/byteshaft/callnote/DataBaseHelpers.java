@@ -84,7 +84,8 @@ public class DataBaseHelpers {
     ArrayList<String> getAllPresentNotes() {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getWritableDatabase();
-        String query = "SELECT Distinct FROM " + SqliteHelpers.TABLE_NAME;
+        String query = "SELECT Distinct "+SqliteHelpers.NOTES_COLUMN+" FROM " +
+                SqliteHelpers.TABLE_NAME + " ORDER BY "+SqliteHelpers.NOTES_COLUMN + " DESC";
         cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {
