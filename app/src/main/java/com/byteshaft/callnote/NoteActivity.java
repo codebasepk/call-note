@@ -70,9 +70,7 @@ public class NoteActivity extends ActionBarActivity {
         dbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
-        MenuItem item = (MenuItem) findViewById(R.id.action_share);
         if (getIntent().getExtras() != null) {
-            item.setEnabled(true);
                     noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             setTitle("Edit Note");
