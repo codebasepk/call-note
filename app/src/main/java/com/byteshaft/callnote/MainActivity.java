@@ -2,6 +2,7 @@ package com.byteshaft.callnote;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -44,8 +45,10 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         arrayList = mDbHelpers.getAllPresentNotes();
         mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
-        listView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, arrayList));
+//        listView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, arrayList));
+        listView.setAdapter(mModeAdapter);
         listView.setOnItemClickListener(this);
+        listView.setDivider(null);
     }
 
     @Override
@@ -102,33 +105,23 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     convertView = inflater.inflate(R.layout.row, parent, false);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.FilePath);
-                    holder.time = (TextView) convertView.findViewById(R.id.tv);
                     holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
+                    holder.summary = (TextView) convertView.findViewById(R.id.summary);
                     convertView.setTag(holder);
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
                 }
-//                else {
-//                    holder = (ViewHolder) convertView.getTag();
-//                }
-//                holder.title.setText(mVideosTitles[position]);
-//                holder.time.setText(
-//                        mHelper.getFormattedTime((mHelper.getDurationForVideo(position))));
-//                holder.position = position;
-//                if (BitmapCache.getBitmapFromMemCache(String.valueOf(position)) == null) {
-//                    holder.thumbnail.setImageURI(null);
-//                    new ThumbnailCreationTask(getApplicationContext(),
-//                            holder, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//                } else {
-//                    holder.thumbnail.setImageBitmap(BitmapCache.getBitmapFromMemCache
-//                            (String.valueOf(position)));
-//                }
+
+                holder.title.setText(arrayList.get(position));
+                holder.summary.setText(mDbHelpers.get);
+                holder.thumbnail.setImageResource(R.drawable.character_1);
                 return convertView;
             }
         }
 
     static class ViewHolder {
         public TextView title;
-        public TextView time;
+        public TextView summary;
         public ImageView thumbnail;
-        public int position;
     }
 }
