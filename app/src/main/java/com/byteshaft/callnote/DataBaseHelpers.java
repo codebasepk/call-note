@@ -18,15 +18,15 @@ public class DataBaseHelpers {
         mSqliteHelper = new SqliteHelpers(context);
     }
 
-    void createNewEntry(String numberColumn, String[] value, String noteColumn, String secValue,
-                        String imageLinkColumn, String image, String DateColumn, String date) {
+    void createNewEntry(String[] value, String note,String desc, String image, String date) {
         mDbHelper = mSqliteHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         for (String val : value) {
-            values.put(numberColumn, val.trim());
-            values.put(noteColumn, secValue.trim());
-            values.put(imageLinkColumn, image);
-            values.put(DateColumn,date);
+            values.put(SqliteHelpers.NUMBER_COLUMN, val.trim());
+            values.put(SqliteHelpers.NOTES_COLUMN, note.trim());
+            values.put(SqliteHelpers.PICTURE_COLUMN, image);
+            values.put(SqliteHelpers.DATE_COLUMN,date);
+            values.put(SqliteHelpers.DESCRIPTION,desc);
             mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
             Log.i(Helpers.LOG_TAG, "created New Entry");
         }
@@ -83,18 +83,33 @@ public class DataBaseHelpers {
     }
 
     ArrayList<String> getAllPresentNotes() {
+                    Cursor cursor;
+                    mDbHelper = mSqliteHelper.getWritableDatabase();
+                    String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
+                    cursor = mDbHelper.rawQuery(query, null);
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    while (cursor.moveToNext()) {
+                            String itemname = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
+                            if (itemname != null) {
+                                    arrayList.add(itemname);
+                                }
+                        }
+                    return arrayList;
+    }
+
+    ArrayList<String> getDescriptionForNote(String note) {
         Cursor cursor;
-        mDbHelper = mSqliteHelper.getWritableDatabase();
-        String query = "SELECT Distinct "+SqliteHelpers.NOTES_COLUMN+" FROM " +
-                SqliteHelpers.TABLE_NAME + " ORDER BY "+"DATETIME" + " DESC";
-        cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<>();
+        mDbHelper = mSqliteHelper.getReadableDatabase();
+        String whereClause = SqliteHelpers.NOTES_COLUMN + " = ?";
+        String[] whereArgs = new String[]{note};
+        cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
+                null, null, null);
+        ArrayList<String> list = new ArrayList<>();
         while (cursor.moveToNext()) {
-            String itemname = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
-            if (itemname != null) {
-                arrayList.add(itemname);
-            }
+            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
+            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
+            Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
         }
-        return arrayList;
+        return list;
     }
 }

@@ -2,7 +2,8 @@ package com.byteshaft.callnote;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,27 +24,32 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         , Button.OnClickListener, AdapterView.OnItemClickListener {
 
     Helpers mHelpers;
-    private ArrayAdapter<String> mModeAdapter;
     private boolean mViewCreated;
     DataBaseHelpers mDbHelpers;
     ArrayList<String> arrayList;
     ListView listView;
+    TextView textViewTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
+        textViewTitle = (TextView) findViewById(R.id.title);
         mHelpers = new Helpers(getApplicationContext());
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         toggleSwitch.setOnCheckedChangeListener(this);
+        mDbHelpers.getDescriptionForNote("yo");
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         arrayList = mDbHelpers.getAllPresentNotes();
-        mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
+        ArrayAdapter<String> mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
 //        listView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, arrayList));
         listView.setAdapter(mModeAdapter);
@@ -85,8 +91,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, NoteActivity.class);
-        intent.putExtra("note_title", "hellowmkam");
-        intent.putExtra("note_data", arrayList.get(position));
+        intent.putExtra("note_title", arrayList.get(position));
+        intent.putExtra("note_data", "");
         startActivity(intent);
         System.out.println(parent.getItemAtPosition(position));
     }
@@ -110,10 +116,11 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
+                    holder.title.setText(arrayList.get(position));
+                    holder.summary.setText("hdhhfhf");
                 }
-
                 holder.title.setText(arrayList.get(position));
-                holder.summary.setText(mDbHelpers.get);
+//                holder.summary.setText(mDbHelpers.get);
                 holder.thumbnail.setImageResource(R.drawable.character_1);
                 return convertView;
             }

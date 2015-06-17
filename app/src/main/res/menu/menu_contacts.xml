@@ -4,8 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.byteshaft.callnote.NoteActivity">
     <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="Share"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
+    
+    <item
         android:id="@+id/action_apply"
         android:title="@string/action_settings"
         android:icon="@drawable/ic_done_white_256dp_1x"
         app:showAsAction="ifRoom" />
+
 </menu>
