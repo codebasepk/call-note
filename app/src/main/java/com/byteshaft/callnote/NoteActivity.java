@@ -1,7 +1,10 @@
 package com.byteshaft.callnote;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.opengl.Visibility;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,6 +45,14 @@ public class NoteActivity extends ActionBarActivity {
                             mHelpers.getCurrentDateandTime());
                     this.finish();
                 }
+                break;
+                case R.id.action_share:
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    String shareBody = "Here is the share content body";
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                    startActivity(Intent.createChooser(sharingIntent, "Share via"));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -63,7 +74,7 @@ public class NoteActivity extends ActionBarActivity {
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         if (getIntent().getExtras() != null) {
-            noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
+                    noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
@@ -119,5 +130,27 @@ public class NoteActivity extends ActionBarActivity {
         db.setView(dialog_layout);
         db.setTitle("Add Icon");
         db.show();
+    }
+
+        @Override
+        public void onBackPressed() {
+            if (editTextNote.length() > 0 || noteTitle.length() > 0){
+                discardDialog();
+            } else {
+                finish();
+            }
+        }
+
+    void discardDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage("Discard Note?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NoteActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }
