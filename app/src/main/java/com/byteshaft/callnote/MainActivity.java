@@ -2,6 +2,8 @@ package com.byteshaft.callnote;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,6 +36,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
         textViewTitle = (TextView) findViewById(R.id.title);
         mHelpers = new Helpers(getApplicationContext());
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
