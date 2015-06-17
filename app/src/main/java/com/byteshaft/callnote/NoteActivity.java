@@ -64,7 +64,7 @@ public class NoteActivity extends ActionBarActivity {
         if (getIntent().getExtras() != null) {
             menu.findItem(R.id.action_share).setVisible(true);
             noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
-            editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
+            editTextNote.setText(getIntent().getExtras().getString("note_summary", ""));
             setTitle("Edit Note");
         }
 

@@ -49,7 +49,7 @@ public class DataBaseHelpers {
         Log.i(Helpers.LOG_TAG, "close database");
     }
 
-    ArrayList<String> getNotefromNumber(String value) {
+    ArrayList<String> getTitleFromNumber(String value) {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getReadableDatabase();
         cursor = mDbHelper.rawQuery(
@@ -65,7 +65,21 @@ public class DataBaseHelpers {
 
     }
 
+    ArrayList<String> getSummaryFromNumber(String value) {
+        Cursor cursor;
+        mDbHelper = mSqliteHelper.getReadableDatabase();
+        cursor = mDbHelper.rawQuery(
+                "select " + SqliteHelpers.DESCRIPTION + " from " + SqliteHelpers.TABLE_NAME +
+                        " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
+                new String[]{"%" + value + "%"});
+        ArrayList<String> list = new ArrayList<>();
+        while(cursor.moveToNext()) {
+            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
+            Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
+        }
+        return list;
 
+    }
 
     ArrayList<String> retrieveByNumber(String value) {
         Cursor cursor;
@@ -165,21 +179,5 @@ public class DataBaseHelpers {
             Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
         }
         return list;
-    }
-
-    ArrayList<String> getDescriptions() {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getWritableDatabase();
-        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
-        cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            String itemname = cursor.getString(cursor.getColumnIndex(
-                    SqliteHelpers.DESCRIPTION));
-            if (itemname != null) {
-                arrayList.add(itemname);
-            }
-        }
-        return arrayList;
     }
 }

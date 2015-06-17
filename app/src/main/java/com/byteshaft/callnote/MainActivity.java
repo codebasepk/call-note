@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     OverlayHelpers.removePopupNote();
                     mViewCreated = false;
                 } else {
-                    OverlayHelpers.showPopupNoteForContact("+923422347000");
+                    OverlayHelpers.showPopupNoteForContact("Hey yo", "Get some eggs");
                     mViewCreated = true;
                 }
         }
@@ -105,8 +105,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra("note_title", arrayList.get(position));
         intent.putExtra("note_data", "");
+        intent.putExtra("note_summary", mNoteSummaries.get(position));
         startActivity(intent);
-        System.out.println(parent.getItemAtPosition(position));
     }
 
     class NotesArrayList extends ArrayAdapter<String> {
