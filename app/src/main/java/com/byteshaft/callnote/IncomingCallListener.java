@@ -22,13 +22,16 @@ public class IncomingCallListener extends PhoneStateListener {
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
+
         dbHelpers = new DataBaseHelpers(mContext);
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
-                arrayList = dbHelpers.retrieveByNotesOrNumber((incomingNumber));
+                System.out.println("OK");
+                arrayList = dbHelpers.retrieveByNumber("0312 0676767");
                 for (String note: arrayList) {
-                    OverlayHelpers.showPopupNoteForContact(note);
-                }
+                    System.out.println(note);
+                     OverlayHelpers.showPopupNoteForContact(note);
+            }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
                 OverlayHelpers.removePopupNote();

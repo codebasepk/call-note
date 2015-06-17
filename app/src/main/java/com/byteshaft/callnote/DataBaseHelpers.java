@@ -48,15 +48,16 @@ public class DataBaseHelpers {
         Log.i(Helpers.LOG_TAG, "close database");
     }
 
-    ArrayList<String> retrieveByNotesOrNumber(String value) {
+    ArrayList<String> retrieveByNumber(String value) {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getReadableDatabase();
-        String whereClause = SqliteHelpers.NUMBER_COLUMN + " = ?";
-        String[] whereArgs = new String[]{value};
+        mDbHelper = mSqliteHelper.getReadableDatabase();
+                String whereClause =  SqliteHelpers.NUMBER_COLUMN +" = ?";
+        String[] whereArgs = new String[] {value};
         cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, null);
         ArrayList<String> list = new ArrayList<>();
-        while (cursor.moveToNext()) {
+        while(cursor.moveToNext()) {
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
         }
@@ -89,7 +90,8 @@ public class DataBaseHelpers {
                     cursor = mDbHelper.rawQuery(query, null);
                     ArrayList<String> arrayList = new ArrayList<>();
                     while (cursor.moveToNext()) {
-                            String itemname = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
+                            String itemname = cursor.getString(cursor.getColumnIndex(
+                                    SqliteHelpers.NOTES_COLUMN));
                             if (itemname != null) {
                                     arrayList.add(itemname);
                                 }
