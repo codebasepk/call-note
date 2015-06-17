@@ -22,12 +22,13 @@ public class IncomingCallListener extends PhoneStateListener {
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
+        System.out.println(incomingNumber);
         dbHelpers = new DataBaseHelpers(mContext);
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
-                arrayList = dbHelpers.retrieveByNotesOrNumber((incomingNumber));
-                for (String note: arrayList) {
-                    OverlayHelpers.showPopupNoteForContact(note);
+                ArrayList<String> notes = getNotesForNumber(incomingNumber);
+                if (notes != null) {
+                    OverlayHelpers.showPopupNoteForContact(notes.get(0));
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
@@ -37,5 +38,21 @@ public class IncomingCallListener extends PhoneStateListener {
                 OverlayHelpers.removePopupNote();
                 break;
         }
+    }
+
+    private ArrayList<String> getNotesForNumber(String number) {
+        arrayList = dbHelpers.getAllNumbers();
+        ArrayList<String> notesList = new ArrayList<>();
+        for(String contact : arrayList) {
+            if (PhoneNumberUtils.compare(contact, number)) {
+                ArrayList<String> notes = dbHelpers.getNotefromNumber(number);
+                for (String val: notes) {
+                    notesList.add(val);
+                }
+                return notesList;
+            }
+        }
+
+        return null;
     }
 }
