@@ -81,21 +81,6 @@ public class DataBaseHelpers {
         return list;
     }
 
-    ArrayList<String> getAllNotes() {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getWritableDatabase();
-        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
-        cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            String itemname = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
-            if (itemname != null) {
-                arrayList.add(itemname);
-            }
-        }
-        return arrayList;
-    }
-
     ArrayList<String> getAllPresentNotes() {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getWritableDatabase();
