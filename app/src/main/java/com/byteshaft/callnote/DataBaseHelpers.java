@@ -135,7 +135,8 @@ public class DataBaseHelpers {
     ArrayList<String> getAllPresentNotes() {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getWritableDatabase();
-        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
+        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME+ " ORDER BY "+
+                SqliteHelpers.DATE_COLUMN+" DESC";
         cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {
