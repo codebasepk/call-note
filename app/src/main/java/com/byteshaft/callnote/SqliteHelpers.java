@@ -16,6 +16,7 @@ public class SqliteHelpers extends SQLiteOpenHelper {
     public static final String PICTURE_COLUMN = "Picture";
     public static final String ID_COLUMN = "ID";
     public static final String DATE_COLUMN = "DATETIME";
+    public static final String DESCRIPTION = "DESCRIPTION";
 
     public static final String TABLE_CREATE =
             "CREATE TABLE " +
@@ -23,6 +24,7 @@ public class SqliteHelpers extends SQLiteOpenHelper {
                     ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     NUMBER_COLUMN + " TEXT , " +
                     NOTES_COLUMN + " TEXT , " +
+                    DESCRIPTION + " TEXT , "+
                     PICTURE_COLUMN + " TEXT, " +
                     DATE_COLUMN + " TEXT" + " ) ";
 
