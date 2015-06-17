@@ -25,9 +25,8 @@
         <service android:name=".OverlayService" />
 
         <activity
-            android:name=".ContactsActivity"
+            android:name=".NoteActivity"
             android:label="Create Note" >
         </activity>
     </application>
-
 </manifest>

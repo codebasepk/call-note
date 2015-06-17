@@ -2,12 +2,12 @@ package com.byteshaft.callnote;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -17,10 +17,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener
-        , Button.OnClickListener {
+        , Button.OnClickListener, AdapterView.OnItemClickListener {
 
     Helpers mHelpers;
     private ArrayAdapter<String> mModeAdapter;
@@ -48,6 +47,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, arrayList));
+        listView.setOnItemClickListener(this);
     }
 
     @Override
@@ -61,9 +61,9 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     }
 
     public void openActivity(View view) {
-        Intent intent = new Intent(getApplicationContext(), ContactsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(new Intent(this, ContactsActivity.class));
+        startActivity(new Intent(this, NoteActivity.class));
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
     }
 
@@ -81,7 +81,16 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         }
     }
 
-        class NotesArrayList extends ArrayAdapter<String> {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(this, NoteActivity.class);
+        intent.putExtra("note_title", "hellowmkam");
+        intent.putExtra("note_data", arrayList.get(position));
+        startActivity(intent);
+        System.out.println(parent.getItemAtPosition(position));
+    }
+
+    class NotesArrayList extends ArrayAdapter<String> {
 
             public NotesArrayList(Context context, int resource, ArrayList<String> videos) {
                 super(context, resource, videos);
