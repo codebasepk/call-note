@@ -127,4 +127,26 @@ public class NoteActivity extends ActionBarActivity {
         db.setTitle("Add Icon");
         db.show();
     }
+
+        @Override
+        public void onBackPressed() {
+            if (editTextNote.length() > 0 || noteTitle.length() > 0){
+                discardDialog();
+            } else {
+                finish();
+            }
+        }
+
+    void discardDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage("Discard Note?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NoteActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 }
