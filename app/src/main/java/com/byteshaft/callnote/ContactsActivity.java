@@ -34,8 +34,9 @@ public class ContactsActivity extends ActionBarActivity {
                 String note = editTextNote.getText().toString();
                 String[] checkedContacts = mHelpers.getCheckedContacts();
                 if (!note.isEmpty()) {
-                    dbHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN, checkedContacts, SqliteHelpers.NOTES_COLUMN, note,
-                            SqliteHelpers.PICTURE_COLUMN, "sdcard location");
+                    dbHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN, checkedContacts,
+                            SqliteHelpers.NOTES_COLUMN, note,SqliteHelpers.PICTURE_COLUMN,
+                            "sdcard location", SqliteHelpers.DATE_COLUMN,mHelpers.getCurrentDateandTime());
                     this.finish();
                 }
         }
