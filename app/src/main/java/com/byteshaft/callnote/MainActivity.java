@@ -16,33 +16,38 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener
         , Button.OnClickListener, AdapterView.OnItemClickListener {
 
     Helpers mHelpers;
-    private ArrayAdapter<String> mModeAdapter;
     private boolean mViewCreated;
     DataBaseHelpers mDbHelpers;
     ArrayList<String> arrayList;
     ListView listView;
+    TextView textViewTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textViewTitle = (TextView) findViewById(R.id.title);
         mHelpers = new Helpers(getApplicationContext());
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         toggleSwitch.setOnCheckedChangeListener(this);
+        mDbHelpers.getDescriptionForNote("yo");
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         arrayList = mDbHelpers.getAllPresentNotes();
-        mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
+        ArrayAdapter<String> mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, arrayList));
         listView.setOnItemClickListener(this);
@@ -82,8 +87,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, NoteActivity.class);
-        intent.putExtra("note_title", "hellowmkam");
-        intent.putExtra("note_data", arrayList.get(position));
+        intent.putExtra("note_title", arrayList.get(position));
+        intent.putExtra("note_data", "");
         startActivity(intent);
         System.out.println(parent.getItemAtPosition(position));
     }
@@ -105,6 +110,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     holder.time = (TextView) convertView.findViewById(R.id.tv);
                     holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
                     convertView.setTag(holder);
+                    holder.title.setText("yo");
+                    holder.time.setText("hdhhfhf");
                 }
 //                else {
 //                    holder = (ViewHolder) convertView.getTag();
