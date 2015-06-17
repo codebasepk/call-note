@@ -13,31 +13,34 @@ public class IncomingCallListener extends PhoneStateListener {
     ArrayList<String> arrayList;
     DataBaseHelpers dbHelpers;
     Context mContext;
-    private ArrayList<String> titles = new ArrayList<>();
-    private ArrayList<String> summaries = new ArrayList<>();
+    private ArrayList<String> titles = new ArrayList<String>();
+    private ArrayList<String> summaries = new ArrayList<String>();
+    private OverlayHelpers mOverlayHelpers;
 
     public IncomingCallListener(Context context) {
         super();
         mContext = context;
+        mOverlayHelpers = new OverlayHelpers(mContext.getApplicationContext());
     }
 
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
-        System.out.println(incomingNumber);
         dbHelpers = new DataBaseHelpers(mContext);
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
                 getNotesForNumber(incomingNumber);
-                if (titles.size() > 0 && summaries.size() > 0) {
-                    OverlayHelpers.showPopupNoteForContact(titles.get(0), summaries.get(0));
+                if (titles.size() == 1 && summaries.size() == 1) {
+                    mOverlayHelpers.showSingleNoteOverlay(titles.get(0), summaries.get(0));
+                } else if (titles.size() > 1 && summaries.size() > 1) {
+                    mOverlayHelpers.showSingleNoteOverlay(titles, summaries, true);
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
-                OverlayHelpers.removePopupNote();
+                mOverlayHelpers.removePopupNote();
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
-                OverlayHelpers.removePopupNote();
+                mOverlayHelpers.removePopupNote();
                 break;
         }
     }

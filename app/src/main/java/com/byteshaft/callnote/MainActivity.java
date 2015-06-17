@@ -61,13 +61,14 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        OverlayHelpers overlayHelpers = new OverlayHelpers(getApplicationContext());
         switch (item.getItemId()) {
             case R.id.action_overlay:
                 if (mViewCreated) {
-                    OverlayHelpers.removePopupNote();
+                    overlayHelpers.removePopupNote();
                     mViewCreated = false;
                 } else {
-                    OverlayHelpers.showPopupNoteForContact("Hey yo", "Get some eggs");
+                    overlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
                     mViewCreated = true;
                 }
         }
