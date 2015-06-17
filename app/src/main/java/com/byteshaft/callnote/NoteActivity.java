@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public class NoteActivity extends ActionBarActivity {
@@ -27,6 +28,7 @@ public class NoteActivity extends ActionBarActivity {
     ContactsAdapter adapter;
     Helpers mHelpers;
     DataBaseHelpers dbHelpers;
+    Switch noteTrigger;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -55,6 +57,7 @@ public class NoteActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
+        noteTrigger = (Switch) findViewById(R.id.note_switch);
         mHelpers = new Helpers(getApplicationContext());
         dbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
@@ -62,6 +65,7 @@ public class NoteActivity extends ActionBarActivity {
         if (getIntent().getExtras() != null) {
             noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
+            noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
         }
         addIcon = (Button) findViewById(R.id.button_icon);
