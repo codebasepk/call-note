@@ -36,8 +36,8 @@ public class NoteActivity extends ActionBarActivity {
                 String[] checkedContacts = mHelpers.getCheckedContacts();
                 if (!note.isEmpty()) {
                     dbHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN, checkedContacts,
-                            SqliteHelpers.NOTES_COLUMN, note,SqliteHelpers.PICTURE_COLUMN,
-                            "sdcard location", SqliteHelpers.DATE_COLUMN,mHelpers.getCurrentDateandTime());
+                            SqliteHelpers.NOTES_COLUMN, note, SqliteHelpers.PICTURE_COLUMN,
+                            "sdcard location", SqliteHelpers.DATE_COLUMN, mHelpers.getCurrentDateandTime());
                     this.finish();
                 }
         }
@@ -115,5 +115,27 @@ public class NoteActivity extends ActionBarActivity {
         db.setView(dialog_layout);
         db.setTitle("Add Icon");
         db.show();
+    }
+
+        @Override
+        public void onBackPressed() {
+            if (editTextNote.length() > 0 || noteTitle.length() > 0){
+                discardDialog();
+            } else {
+                finish();
+            }
+        }
+
+    void discardDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage("Discard Note?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NoteActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }
