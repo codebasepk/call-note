@@ -13,6 +13,8 @@ public class IncomingCallListener extends PhoneStateListener {
     ArrayList<String> arrayList;
     DataBaseHelpers dbHelpers;
     Context mContext;
+    private ArrayList<String> titles = new ArrayList<>();
+    private ArrayList<String> summaries = new ArrayList<>();
 
     public IncomingCallListener(Context context) {
         super();
@@ -26,9 +28,9 @@ public class IncomingCallListener extends PhoneStateListener {
         dbHelpers = new DataBaseHelpers(mContext);
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
-                ArrayList<String> notes = getNotesForNumber(incomingNumber);
-                if (notes != null) {
-                    OverlayHelpers.showPopupNoteForContact(notes.get(0));
+                getNotesForNumber(incomingNumber);
+                if (titles.size() > 0 && summaries.size() > 0) {
+                    OverlayHelpers.showPopupNoteForContact(titles.get(0), summaries.get(0));
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
@@ -40,19 +42,21 @@ public class IncomingCallListener extends PhoneStateListener {
         }
     }
 
-    private ArrayList<String> getNotesForNumber(String number) {
+    private void getNotesForNumber(String number) {
         arrayList = dbHelpers.getAllNumbers();
-        ArrayList<String> notesList = new ArrayList<>();
         for(String contact : arrayList) {
             if (PhoneNumberUtils.compare(contact, number)) {
-                ArrayList<String> notes = dbHelpers.getNotefromNumber(number);
-                for (String val: notes) {
-                    notesList.add(val);
+                ArrayList<String> noteTitles = dbHelpers.getTitleFromNumber(contact);
+                ArrayList<String> noteSummaries = dbHelpers.getSummaryFromNumber(contact);
+                for (String val: noteTitles) {
+                    titles.add(val);
                 }
-                return notesList;
+
+                for (String value1 : noteSummaries) {
+                    summaries.add(value1);
+                }
+                return;
             }
         }
-
-        return null;
     }
 }
