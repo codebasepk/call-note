@@ -11,7 +11,9 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Helpers extends ContextWrapper {
@@ -113,5 +115,10 @@ public class Helpers extends ContextWrapper {
     SharedPreferences getPrefrenceManager() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+    }
+
+    String getCurrentDateandTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return sdf.format(new Date());
     }
 }

@@ -19,13 +19,14 @@ public class DataBaseHelpers {
     }
 
     void createNewEntry(String numberColumn, String[] value, String noteColumn, String secValue,
-                        String imageLinkColumn, String image) {
+                        String imageLinkColumn, String image, String DateColumn, String date) {
         mDbHelper = mSqliteHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         for (String val : value) {
-            values.put(numberColumn, val);
-            values.put(noteColumn, secValue);
+            values.put(numberColumn, val.trim());
+            values.put(noteColumn, secValue.trim());
             values.put(imageLinkColumn, image);
+            values.put(DateColumn,date);
             mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
             Log.i(Helpers.LOG_TAG, "created New Entry");
         }
@@ -85,7 +86,7 @@ public class DataBaseHelpers {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getWritableDatabase();
         String query = "SELECT Distinct "+SqliteHelpers.NOTES_COLUMN+" FROM " +
-                SqliteHelpers.TABLE_NAME + " ORDER BY "+SqliteHelpers.NOTES_COLUMN + " DESC";
+                SqliteHelpers.TABLE_NAME + " ORDER BY "+"DATETIME" + " DESC";
         cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {

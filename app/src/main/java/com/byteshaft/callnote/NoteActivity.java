@@ -15,8 +15,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ContactsActivity extends ActionBarActivity {
+public class NoteActivity extends ActionBarActivity {
 
+    EditText noteTitle;
     EditText editTextNote;
     Button addIcon;
     Button attachContacts;
@@ -34,8 +35,9 @@ public class ContactsActivity extends ActionBarActivity {
                 String note = editTextNote.getText().toString();
                 String[] checkedContacts = mHelpers.getCheckedContacts();
                 if (!note.isEmpty()) {
-                    dbHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN, checkedContacts, SqliteHelpers.NOTES_COLUMN, note,
-                            SqliteHelpers.PICTURE_COLUMN, "sdcard location");
+                    dbHelpers.createNewEntry(SqliteHelpers.NUMBER_COLUMN, checkedContacts,
+                            SqliteHelpers.NOTES_COLUMN, note,SqliteHelpers.PICTURE_COLUMN,
+                            "sdcard location", SqliteHelpers.DATE_COLUMN,mHelpers.getCurrentDateandTime());
                     this.finish();
                 }
         }
@@ -52,11 +54,17 @@ public class ContactsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_note);
         mHelpers = new Helpers(getApplicationContext());
         dbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
-        addIcon = (Button) findViewById(R.id.add_another_note);
+        noteTitle = (EditText) findViewById(R.id.editText_title_note);
+        if (getIntent().getExtras() != null) {
+            noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
+            editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
+            setTitle("Edit Note");
+        }
+        addIcon = (Button) findViewById(R.id.button_icon);
         addIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,15 +81,15 @@ public class ContactsActivity extends ActionBarActivity {
     }
 
     public void showContactsDialog() {
-        LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
-        AlertDialog.Builder db = new AlertDialog.Builder(ContactsActivity.this);
+        AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
         db.setView(dialog_layout);
         db.setTitle("Select Contacts");
         db.setPositiveButton("OK", new
                 DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(ContactsActivity.this, "Checked Contacts Selected", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NoteActivity.this, "Checked Contacts Selected", Toast.LENGTH_SHORT).show();
                     }
                 });
         db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -101,12 +109,11 @@ public class ContactsActivity extends ActionBarActivity {
     }
 
     public void initiateIconDialog() {
-        LayoutInflater inflater = LayoutInflater.from(ContactsActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog_2, (ViewGroup) findViewById(R.id.dialogLayout_2));
-        AlertDialog.Builder db = new AlertDialog.Builder(ContactsActivity.this);
+        AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
         db.setView(dialog_layout);
         db.setTitle("Add Icon");
         db.show();
     }
 }
-

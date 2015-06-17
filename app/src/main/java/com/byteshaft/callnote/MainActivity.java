@@ -2,7 +2,6 @@ package com.byteshaft.callnote;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener
         , Button.OnClickListener, AdapterView.OnItemClickListener {
@@ -62,9 +60,9 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     }
 
     public void openActivity(View view) {
-        Intent intent = new Intent(getApplicationContext(), ContactsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(new Intent(this, ContactsActivity.class));
+        startActivity(new Intent(this, NoteActivity.class));
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
     }
 
@@ -84,7 +82,9 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(this, NoteDetails.class);
+        Intent intent = new Intent(this, NoteActivity.class);
+        intent.putExtra("note_title", "hellowmkam");
+        intent.putExtra("note_data", arrayList.get(position));
         startActivity(intent);
         System.out.println(parent.getItemAtPosition(position));
     }
