@@ -2,15 +2,18 @@ package com.byteshaft.callnote;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,7 +26,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     Helpers mHelpers;
     private boolean mViewCreated;
@@ -52,13 +55,14 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     @Override
     protected void onResume() {
         super.onResume();
-        mToggleSwitch.setChecked(mHelpers.isSwitchStateEnabled());
+        mToggleSwitch.setChecked(mHelpers.isServiceSettingEnabled());
         arrayList = mDbHelpers.getAllPresentNotes();
         mNoteSummaries = mDbHelpers.getDescriptions();
         ArrayAdapter<String> mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
         listView.setAdapter(mModeAdapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
         listView.setDivider(null);
     }
 
@@ -88,7 +92,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mHelpers.enableSWitchState(isChecked);
+
         if (isChecked) {
             startService(new Intent(this, OverlayService.class));
         } else {
@@ -111,6 +115,14 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         intent.putExtra("note_data", "");
         intent.putExtra("note_summary", mNoteSummaries.get(position));
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        System.out.println(parent.getItemAtPosition(position));
+        DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
+        dataBaseHelpers.deleteItem(SqliteHelpers.NOTES_COLUMN, (String) parent.getItemAtPosition(position), false);
+        return true;
     }
 
     class NotesArrayList extends ArrayAdapter<String> {

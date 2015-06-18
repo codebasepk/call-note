@@ -1,12 +1,15 @@
 package com.byteshaft.callnote;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.TypedValue;
@@ -117,20 +120,17 @@ public class Helpers extends ContextWrapper {
         return sdf.format(new Date());
     }
 
-    boolean isSwitchStateEnabled() {
-        SharedPreferences sharedPreferences = getPreferenceManager();
-        return sharedPreferences.getBoolean("switch_state", false);
-    }
-
-    void enableSWitchState(boolean enable) {
-        SharedPreferences sharedPreferences = getPreferenceManager();
-        sharedPreferences.edit().putBoolean("switch_state", enable).apply();
-    }
-
     void saveServiceStateEnabled(boolean enable) {
         SharedPreferences sharedPreferences = getPreferenceManager();
         sharedPreferences.edit().putBoolean("enabled", enable).apply();
     }
+
+    boolean isServiceSettingEnabled() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                getApplicationContext());
+        return sharedPreferences.getBoolean("enabled", false);
+    }
+
     SharedPreferences getPreferenceManager() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
