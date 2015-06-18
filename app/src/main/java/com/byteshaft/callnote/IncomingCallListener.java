@@ -13,46 +13,53 @@ public class IncomingCallListener extends PhoneStateListener {
     ArrayList<String> arrayList;
     DataBaseHelpers dbHelpers;
     Context mContext;
+    private ArrayList<String> titles = new ArrayList<String>();
+    private ArrayList<String> summaries = new ArrayList<String>();
+    private OverlayHelpers mOverlayHelpers;
 
     public IncomingCallListener(Context context) {
         super();
         mContext = context;
+        mOverlayHelpers = new OverlayHelpers(mContext.getApplicationContext());
     }
 
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
-        System.out.println(incomingNumber);
         dbHelpers = new DataBaseHelpers(mContext);
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
-                ArrayList<String> notes = getNotesForNumber(incomingNumber);
-                if (notes != null) {
-                    OverlayHelpers.showPopupNoteForContact(notes.get(0));
+                getNotesForNumber(incomingNumber);
+                if (titles.size() == 1 && summaries.size() == 1) {
+                    mOverlayHelpers.showSingleNoteOverlay(titles.get(0), summaries.get(0));
+                } else if (titles.size() > 1 && summaries.size() > 1) {
+                    mOverlayHelpers.showSingleNoteOverlay(titles, summaries, true);
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
-                OverlayHelpers.removePopupNote();
+                mOverlayHelpers.removePopupNote();
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
-                OverlayHelpers.removePopupNote();
+                mOverlayHelpers.removePopupNote();
                 break;
         }
     }
 
-    private ArrayList<String> getNotesForNumber(String number) {
+    private void getNotesForNumber(String number) {
         arrayList = dbHelpers.getAllNumbers();
-        ArrayList<String> notesList = new ArrayList<>();
         for(String contact : arrayList) {
             if (PhoneNumberUtils.compare(contact, number)) {
-                ArrayList<String> notes = dbHelpers.getNotefromNumber(number);
-                for (String val: notes) {
-                    notesList.add(val);
+                ArrayList<String> noteTitles = dbHelpers.getTitleFromNumber(contact);
+                ArrayList<String> noteSummaries = dbHelpers.getSummaryFromNumber(contact);
+                for (String val: noteTitles) {
+                    titles.add(val);
                 }
-                return notesList;
+
+                for (String value1 : noteSummaries) {
+                    summaries.add(value1);
+                }
+                return;
             }
         }
-
-        return null;
     }
 }

@@ -32,6 +32,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     ListView listView;
     TextView textViewTitle;
     private ArrayList<String> mNoteSummaries;
+    private OverlayHelpers mOverlayHelpers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         toggleSwitch.setOnCheckedChangeListener(this);
+        mOverlayHelpers = new OverlayHelpers(getApplicationContext());
     }
 
     @Override
@@ -53,7 +55,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         mNoteSummaries = mDbHelpers.getDescriptions();
         ArrayAdapter<String> mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
-//        listView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, arrayList));
         listView.setAdapter(mModeAdapter);
         listView.setOnItemClickListener(this);
         listView.setDivider(null);
@@ -65,10 +66,10 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         switch (item.getItemId()) {
             case R.id.action_overlay:
                 if (mViewCreated) {
-                    OverlayHelpers.removePopupNote();
+                    mOverlayHelpers.removePopupNote();
                     mViewCreated = false;
                 } else {
-                    OverlayHelpers.showPopupNoteForContact("+923422347000");
+                    mOverlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
                     mViewCreated = true;
                 }
         }
@@ -105,8 +106,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra("note_title", arrayList.get(position));
+        intent.putExtra("note_summary", mNoteSummaries.get(position));
         startActivity(intent);
-        System.out.println(parent.getItemAtPosition(position));
     }
 
     class NotesArrayList extends ArrayAdapter<String> {

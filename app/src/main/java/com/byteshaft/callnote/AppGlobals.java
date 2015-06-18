@@ -16,7 +16,7 @@ public class AppGlobals extends Application {
         sWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
     }
 
-    static LayoutInflater getLayoutInflator() {
+    static LayoutInflater getLayoutInflater() {
         return sLayoutInflater;
     }
 

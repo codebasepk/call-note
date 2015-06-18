@@ -1,7 +1,9 @@
 package com.byteshaft.callnote;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -14,22 +16,68 @@ public class DataBaseHelpers {
 
     private SQLiteDatabase mDbHelper;
     private SqliteHelpers mSqliteHelper;
+    Context mContext;
 
     public DataBaseHelpers(Context context) {
+        mContext = context;
         mSqliteHelper = new SqliteHelpers(context);
     }
 
-    void createNewEntry(String[] value, String note,String desc, String image, String date) {
+    String checkIfItemAlreadyExistInDatabase(String note) {
+        Cursor cursor;
+        String value = null;
+        mDbHelper = mSqliteHelper.getReadableDatabase();
+        String whereClause =  SqliteHelpers.NOTES_COLUMN +" = ?";
+        String[] whereArgs = new String[] {note};
+        cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
+                null, null, null);
+        while (cursor.moveToNext()) {
+            value =  cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
+        }
+        return value;
+    }
+
+    void createNewEntry(String[] value, String note, String desc, String image, String date) {
         mDbHelper = mSqliteHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            for (String val : value) {
+                values.put(SqliteHelpers.NUMBER_COLUMN, val.replace(" ", ""));
+                values.put(SqliteHelpers.NOTES_COLUMN, note.replace(" ", ""));
+                values.put(SqliteHelpers.PICTURE_COLUMN, image);
+                values.put(SqliteHelpers.DATE_COLUMN, date);
+                values.put(SqliteHelpers.DESCRIPTION, desc);
+                mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
+                Log.i(Helpers.LOG_TAG, "created New Entry");
+            }
+        }
+
+    void clickUpdate(String[] number, String note, String desc, String image, String date ) {
         ContentValues values = new ContentValues();
-        for (String val : value) {
+        for (String val : number) {
             values.put(SqliteHelpers.NUMBER_COLUMN, val.replace(" ", ""));
             values.put(SqliteHelpers.NOTES_COLUMN, note.replace(" ", ""));
             values.put(SqliteHelpers.PICTURE_COLUMN, image);
-            values.put(SqliteHelpers.DATE_COLUMN,date);
-            values.put(SqliteHelpers.DESCRIPTION,desc);
+            values.put(SqliteHelpers.DATE_COLUMN, date);
+            values.put(SqliteHelpers.DESCRIPTION, desc);
             mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
-            Log.i(Helpers.LOG_TAG, "created New Entry");
+            Log.i(Helpers.LOG_TAG, "Updated.......");
+        }
+        }
+
+
+    void updateData(String[] number, String note, String desc, String image, String date) {
+        ContentValues values = new ContentValues();
+        for (String val : number) {
+            values.put(SqliteHelpers.NUMBER_COLUMN, val.replace(" ", ""));
+            values.put(SqliteHelpers.NOTES_COLUMN, note.replace(" ", ""));
+            values.put(SqliteHelpers.PICTURE_COLUMN, image);
+            values.put(SqliteHelpers.DATE_COLUMN, date);
+            values.put(SqliteHelpers.DESCRIPTION, desc);
+            String selection = SqliteHelpers.NOTES_COLUMN + " LIKE ?"; // where ID column = rowId (that is, selectionArgs)
+            String[] selectionArgs = { note };
+            mDbHelper.update(SqliteHelpers.TABLE_NAME, values, selection,
+                    selectionArgs);
+            Log.i(Helpers.LOG_TAG, "Updated.......");
         }
     }
 
@@ -49,7 +97,23 @@ public class DataBaseHelpers {
         Log.i(Helpers.LOG_TAG, "close database");
     }
 
-    ArrayList<String> getNotefromNumber(String value) {
+    String getIconLinkForNumber(String value) {
+        String uri = null;
+        Cursor cursor;
+        mDbHelper = mSqliteHelper.getReadableDatabase();
+        cursor = mDbHelper.rawQuery(
+                "select " + SqliteHelpers.DESCRIPTION + " from " + SqliteHelpers.TABLE_NAME +
+                        " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
+                new String[]{"%" + value + "%"});
+        while(cursor.moveToNext()) {
+            uri = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
+            Log.i(Helpers.LOG_TAG, " Data retrieved .....");
+        }
+        return uri;
+
+    }
+
+    ArrayList<String> getTitleFromNumber(String value) {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getReadableDatabase();
         cursor = mDbHelper.rawQuery(
@@ -60,6 +124,22 @@ public class DataBaseHelpers {
         while(cursor.moveToNext()) {
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved .....");
+        }
+        return list;
+
+    }
+
+    ArrayList<String> getSummaryFromNumber(String value) {
+        Cursor cursor;
+        mDbHelper = mSqliteHelper.getReadableDatabase();
+        cursor = mDbHelper.rawQuery(
+                "select " + SqliteHelpers.DESCRIPTION + " from " + SqliteHelpers.TABLE_NAME +
+                        " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
+                new String[]{"%" + value + "%"});
+        ArrayList<String> list = new ArrayList<>();
+        while(cursor.moveToNext()) {
+            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
+            Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
         }
         return list;
 
@@ -96,8 +176,6 @@ public class DataBaseHelpers {
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN)));
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
-            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN)));
-            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved");
         }
         return list;
@@ -133,6 +211,22 @@ public class DataBaseHelpers {
                if (itemname != null) {
                   arrayList.add(itemname);
                }
+        }
+        return arrayList;
+    }
+
+    ArrayList<String> getAllIconUri() {
+        Cursor cursor;
+        mDbHelper = mSqliteHelper.getWritableDatabase();
+        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
+        cursor = mDbHelper.rawQuery(query, null);
+        ArrayList<String> arrayList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String itemname = cursor.getString(cursor.getColumnIndex(
+                    SqliteHelpers.PICTURE_COLUMN));
+            if (itemname != null) {
+                arrayList.add(itemname);
+            }
         }
         return arrayList;
     }
