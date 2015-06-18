@@ -69,14 +69,16 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_overlay:
-                if (mViewCreated) {
-                    mOverlayHelpers.removePopupNote();
-                    mViewCreated = false;
-                } else {
-                    mOverlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
-                    mViewCreated = true;
-                }
+//            case R.id.action_overlay:
+//                if (mViewCreated) {
+//                    mOverlayHelpers.removePopupNote();
+//                    mViewCreated = false;
+//                } else {
+//                    mOverlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
+//                    mViewCreated = true;
+//                }
+            case R.id.action_addNote:
+                startActivity(new Intent(this, NoteActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -112,7 +114,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra("note_title", arrayList.get(position));
-        intent.putExtra("note_data", "");
         intent.putExtra("note_summary", mNoteSummaries.get(position));
         startActivity(intent);
     }

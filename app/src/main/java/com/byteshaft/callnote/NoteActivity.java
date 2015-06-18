@@ -1,14 +1,12 @@
 package com.byteshaft.callnote;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.opengl.Visibility;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public class NoteActivity extends ActionBarActivity {
@@ -32,6 +32,14 @@ public class NoteActivity extends ActionBarActivity {
     ContactsAdapter adapter;
     Helpers mHelpers;
     DataBaseHelpers dbHelpers;
+    ImageView imageView1;
+    ImageView imageView2;
+    ImageView imageView3;
+    String imageVariable;
+    AlertDialog alert;
+    Switch noteTrigger;
+    String mTitle;
+    String mNote;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -41,18 +49,21 @@ public class NoteActivity extends ActionBarActivity {
                 String description = editTextNote.getText().toString();
                 String[] checkedContacts = mHelpers.getCheckedContacts();
                 if (!title.isEmpty() && !description.isEmpty()) {
-                    dbHelpers.createNewEntry(checkedContacts, title, description, "sdcard location",
+                    dbHelpers.createNewEntry(checkedContacts, title, description, imageVariable,
                             mHelpers.getCurrentDateandTime());
                     this.finish();
                 }
                 break;
-                case R.id.action_share:
+            case R.id.action_share:
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
-                    String shareBody = "Here is the share content body";
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                    String shareBody = getIntent().getExtras().getString("note_summary", "");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TITLE, getIntent().getExtras().getString("note_title", ""));
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                break;
+            case R.id.action_delete:
+                /* FIXME: DELETE NOTE command here!! */
         }
         return super.onOptionsItemSelected(item);
     }
@@ -63,8 +74,11 @@ public class NoteActivity extends ActionBarActivity {
         inflater.inflate(R.menu.menu_contacts, menu);
         if (getIntent().getExtras() != null) {
             menu.findItem(R.id.action_share).setVisible(true);
+            menu.findItem(R.id.action_delete).setVisible(true);
             noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_summary", ""));
+            mTitle = noteTitle.getText().toString();
+            mNote = editTextNote.getText().toString();
             setTitle("Edit Note");
         }
 
@@ -77,13 +91,17 @@ public class NoteActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
+        noteTrigger = (Switch) findViewById(R.id.note_switch);
         mHelpers = new Helpers(getApplicationContext());
         dbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
+        mTitle = noteTitle.getText().toString();
+        mNote = editTextNote.getText().toString();
         if (getIntent().getExtras() != null) {
                     noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
+            noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
         }
         addIcon = (Button) findViewById(R.id.button_icon);
@@ -133,15 +151,40 @@ public class NoteActivity extends ActionBarActivity {
     public void initiateIconDialog() {
         LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog_2, (ViewGroup) findViewById(R.id.dialogLayout_2));
-        AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
+        final AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
+        alert = db.create();
         db.setView(dialog_layout);
         db.setTitle("Add Icon");
-        db.show();
+        alert = db.show();
+        imageView1 = (ImageView) dialog_layout.findViewById(R.id.character_1);
+        imageView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
+                alert.dismiss();
+            }
+        });
+        imageView2 = (ImageView) dialog_layout.findViewById(R.id.character_2);
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_2;
+                alert.dismiss();
+            }
+        });
+        imageView3 = (ImageView) dialog_layout.findViewById(R.id.character_3);
+        imageView3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_3;
+                alert.dismiss();
+            }
+        });
     }
 
         @Override
         public void onBackPressed() {
-            if (editTextNote.length() > 0 || noteTitle.length() > 0){
+            if (!mNote.equals(editTextNote.getText().toString()) || !mTitle.equals(noteTitle.getText().toString())){
                 discardDialog();
             } else {
                 finish();
