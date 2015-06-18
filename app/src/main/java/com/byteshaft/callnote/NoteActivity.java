@@ -60,9 +60,16 @@ public class NoteActivity extends ActionBarActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_contacts, menu);
+        if (getIntent().getExtras() != null) {
+            menu.findItem(R.id.action_share).setVisible(true);
+            noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
+            editTextNote.setText(getIntent().getExtras().getString("note_summary", ""));
+            setTitle("Edit Note");
+        }
+
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
         return super.onCreateOptionsMenu(menu);

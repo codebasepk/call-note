@@ -7,23 +7,23 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener
-        , Button.OnClickListener, AdapterView.OnItemClickListener {
+public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener,
+        AdapterView.OnItemClickListener {
 
     Helpers mHelpers;
     private boolean mViewCreated;
@@ -31,6 +31,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     ArrayList<String> arrayList;
     ListView listView;
     TextView textViewTitle;
+    private ArrayList<String> mNoteSummaries;
+    private OverlayHelpers mOverlayHelpers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +45,43 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         toggleSwitch.setOnCheckedChangeListener(this);
-        mDbHelpers.getDescriptionForNote("yo");
-
+        mOverlayHelpers = new OverlayHelpers(getApplicationContext());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         arrayList = mDbHelpers.getAllPresentNotes();
+        mNoteSummaries = mDbHelpers.getDescriptions();
         ArrayAdapter<String> mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
-        listView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, arrayList));
+        listView.setAdapter(mModeAdapter);
         listView.setOnItemClickListener(this);
+        listView.setDivider(null);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_overlay:
+                if (mViewCreated) {
+                    mOverlayHelpers.removePopupNote();
+                    mViewCreated = false;
+                } else {
+                    mOverlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
+                    mViewCreated = true;
+                }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -75,26 +102,12 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_overlay:
-                if (mViewCreated) {
-                    OverlayHelpers.removePopupNote();
-                    mViewCreated = false;
-                } else {
-                    OverlayHelpers.showPopupNoteForContact("+923422347000");
-                    mViewCreated = true;
-                }
-        }
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra("note_title", arrayList.get(position));
         intent.putExtra("note_data", "");
+        intent.putExtra("note_summary", mNoteSummaries.get(position));
         startActivity(intent);
-        System.out.println(parent.getItemAtPosition(position));
     }
 
     class NotesArrayList extends ArrayAdapter<String> {
@@ -111,35 +124,24 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     convertView = inflater.inflate(R.layout.row, parent, false);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.FilePath);
-                    holder.time = (TextView) convertView.findViewById(R.id.tv);
                     holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
+                    holder.summary = (TextView) convertView.findViewById(R.id.summary);
                     convertView.setTag(holder);
-                    holder.title.setText("yo");
-                    holder.time.setText("hdhhfhf");
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
+                    holder.title.setText(arrayList.get(position));
+                    holder.summary.setText(mNoteSummaries.get(position));
                 }
-//                else {
-//                    holder = (ViewHolder) convertView.getTag();
-//                }
-//                holder.title.setText(mVideosTitles[position]);
-//                holder.time.setText(
-//                        mHelper.getFormattedTime((mHelper.getDurationForVideo(position))));
-//                holder.position = position;
-//                if (BitmapCache.getBitmapFromMemCache(String.valueOf(position)) == null) {
-//                    holder.thumbnail.setImageURI(null);
-//                    new ThumbnailCreationTask(getApplicationContext(),
-//                            holder, position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//                } else {
-//                    holder.thumbnail.setImageBitmap(BitmapCache.getBitmapFromMemCache
-//                            (String.valueOf(position)));
-//                }
+                holder.title.setText(arrayList.get(position));
+                holder.summary.setText(mNoteSummaries.get(position));
+                holder.thumbnail.setImageResource(R.drawable.character_1);
                 return convertView;
             }
         }
 
     static class ViewHolder {
         public TextView title;
-        public TextView time;
+        public TextView summary;
         public ImageView thumbnail;
-        public int position;
     }
 }
