@@ -23,24 +23,24 @@ import android.widget.Toast;
 
 public class NoteActivity extends ActionBarActivity  {
 
-    EditText noteTitle;
-    EditText editTextNote;
-    Button addIcon;
-    Button attachContacts;
-    Button checkAll;
-    Button uncheckAll;
-    ListView lv;
-    ContactsAdapter adapter;
-    Helpers mHelpers;
-    DataBaseHelpers mDbHelpers;
-    ImageView imageView1;
-    ImageView imageView2;
-    ImageView imageView3;
-    String imageVariable;
-    AlertDialog alert;
-    Switch noteTrigger;
-    String mTitle;
-    String mNote;
+    private EditText noteTitle;
+    private EditText editTextNote;
+    private Button addIcon;
+    private Button attachContacts;
+    private Button checkAll;
+    private Button uncheckAll;
+    private ListView lv;
+    private ContactsAdapter adapter;
+    private Helpers mHelpers;
+    private DataBaseHelpers mDbHelpers;
+    private ImageView imageView1;
+    private ImageView imageView2;
+    private ImageView imageView3;
+    private String imageVariable;
+    private AlertDialog alert;
+    private Switch noteTrigger;
+    private String mTitle;
+    private String mNote;
     private String mId = null;
     private String[] mCheckedContacts;
 
@@ -234,7 +234,7 @@ public class NoteActivity extends ActionBarActivity  {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mDbHelpers.updateData(mCheckedContacts, mTitle, mNote, "Sd card link",
+                        mDbHelpers.updateData(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         NoteActivity.this.finish();
                     }
