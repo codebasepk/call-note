@@ -3,9 +3,11 @@ package com.byteshaft.callnote;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -15,10 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class NoteActivity extends ActionBarActivity  {
@@ -144,7 +148,7 @@ public class NoteActivity extends ActionBarActivity  {
     }
 
     public void showContactsDialog() {
-        LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
+        final LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
         AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
         db.setView(dialog_layout);
@@ -152,7 +156,7 @@ public class NoteActivity extends ActionBarActivity  {
         db.setPositiveButton("OK", new
                 DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(NoteActivity.this, "Checked Contacts Selected", Toast.LENGTH_SHORT).show();
+
                     }
                 });
         db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -162,13 +166,27 @@ public class NoteActivity extends ActionBarActivity  {
             }
         });
         lv = (ListView) dialog_layout.findViewById(R.id.lv);
-        ContactsAdapter ma = new ContactsAdapter(getApplicationContext());
+        final ContactsAdapter ma = new ContactsAdapter(getApplicationContext(), mTitle);
         lv.setAdapter(ma);
+        checkAll = (Button) dialog_layout.findViewById(R.id.button_checkall);
+        checkAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                preferences.edit().putString("check", "checked_all").commit();
+                ma.notifyDataSetChanged();
+            }
+        });
+        uncheckAll = (Button) dialog_layout.findViewById(R.id.button_uncheck_all);
+        uncheckAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                preferences.edit().putString("check", "unchecked_all").commit();
+                ma.notifyDataSetChanged();
+            }
+        });
         db.show();
-
-
-        checkAll = (Button) findViewById(R.id.button_checkall);
-        uncheckAll = (Button) findViewById(R.id.button_uncheck_all);
     }
 
     public void initiateIconDialog() {

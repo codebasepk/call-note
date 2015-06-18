@@ -53,7 +53,7 @@ public class DataBaseHelpers {
         closeDatabase();
         }
 
-    void clickUpdate(String id, String[] number, String note, String desc, String image, String date ) {
+    void clickUpdate(String id, String[] number, String note, String desc, String image, String date) {
         ContentValues values = new ContentValues();
         for (String val : number) {
             values.put(SqliteHelpers.NUMBER_COLUMN, val);
@@ -187,15 +187,16 @@ public class DataBaseHelpers {
     ArrayList<String> getNumberFromNote(String note) {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getReadableDatabase();
-        String query = "SELECT Distinct "+SqliteHelpers.NUMBER_COLUMN+" FROM " + SqliteHelpers.TABLE_NAME;
+        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
         cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {
             String itemname = cursor.getString(cursor.getColumnIndex(
-                    SqliteHelpers.NUMBER_COLUMN));
-            if (itemname != null) {
-                arrayList.add(itemname);
-                System.out.println(itemname);
+                    SqliteHelpers.NOTES_COLUMN));
+            if (itemname.equals(note)) {
+                String number = cursor.getString(cursor.getColumnIndex(
+                        SqliteHelpers.NUMBER_COLUMN));
+                arrayList.add(number);
             }
         }
         return arrayList;
