@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +21,7 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-public class NoteActivity extends ActionBarActivity {
+public class NoteActivity extends ActionBarActivity  {
 
     EditText noteTitle;
     EditText editTextNote;
@@ -31,7 +32,7 @@ public class NoteActivity extends ActionBarActivity {
     ListView lv;
     ContactsAdapter adapter;
     Helpers mHelpers;
-    DataBaseHelpers dbHelpers;
+    DataBaseHelpers mDbHelpers;
     ImageView imageView1;
     ImageView imageView2;
     ImageView imageView3;
@@ -40,18 +41,37 @@ public class NoteActivity extends ActionBarActivity {
     Switch noteTrigger;
     String mTitle;
     String mNote;
+    private String mId = null;
+    private String[] mCheckedContacts;
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        mTitle = noteTitle.getText().toString();
+        mNote = editTextNote.getText().toString();
+        mCheckedContacts = mHelpers.getCheckedContacts();
+        if (mTitle.isEmpty()) {
+            mTitle = mHelpers.getCurrentDateandTime();
+        }
+        if (mNote.isEmpty()) {
+            mNote = " ";
+        }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                String title = noteTitle.getText().toString();
-                String description = editTextNote.getText().toString();
-                String[] checkedContacts = mHelpers.getCheckedContacts();
-                if (!title.isEmpty() && !description.isEmpty()) {
-                    dbHelpers.createNewEntry(checkedContacts, title, description, imageVariable,
-                            mHelpers.getCurrentDateandTime());
+                System.out.println("ID "+mId);
+                if (mId != null) {
+                    mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
+                                    imageVariable, mHelpers.getCurrentDateandTime());
+                    Log.i(Helpers.LOG_TAG,"Update success");
                     this.finish();
+                    } else {
+                    if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null) {
+                        NotesAlreadyExistDialog();
+                    } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null) {
+                        mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
+                                mHelpers.getCurrentDateandTime());
+                        this.finish();
+                    }
                 }
                 break;
             case R.id.action_share:
@@ -81,7 +101,6 @@ public class NoteActivity extends ActionBarActivity {
             mNote = editTextNote.getText().toString();
             setTitle("Edit Note");
         }
-
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
         return super.onCreateOptionsMenu(menu);
@@ -93,13 +112,17 @@ public class NoteActivity extends ActionBarActivity {
         setContentView(R.layout.activity_note);
         noteTrigger = (Switch) findViewById(R.id.note_switch);
         mHelpers = new Helpers(getApplicationContext());
-        dbHelpers = new DataBaseHelpers(getApplicationContext());
+        mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         mTitle = noteTitle.getText().toString();
         mNote = editTextNote.getText().toString();
         if (getIntent().getExtras() != null) {
-                    noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
+            String title = getIntent().getExtras().getString("note_title", "");
+                    noteTitle.setText(title);
+            String[] detailsForThisNote = mDbHelpers.retrieveNoteDetails(title);
+            mId = detailsForThisNote[0];
+            System.out.println("ID "+mId);
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
@@ -197,6 +220,22 @@ public class NoteActivity extends ActionBarActivity {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        NoteActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    void NotesAlreadyExistDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Note already exist")
+                .setMessage("Do you want to replace previous Note ?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mDbHelpers.updateData(mCheckedContacts, mTitle, mNote, "Sd card link",
+                                mHelpers.getCurrentDateandTime());
                         NoteActivity.this.finish();
                     }
                 })
