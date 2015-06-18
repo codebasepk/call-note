@@ -11,12 +11,14 @@
             android:layout_height="150dp"
             android:src="@drawable/character_1"
             android:layout_margin="5dp"
+            android:background="@drawable/iconbackground"
             android:id="@+id/character_1"/>
 
         <ImageView
             android:layout_alignParentLeft="true"
             android:layout_width="90dp"
             android:layout_height="150dp"
+            android:background="@drawable/iconbackground"
             android:src="@drawable/character_2"
             android:layout_margin="5dp"
             android:id="@+id/character_2"/>
@@ -24,6 +26,7 @@
         <ImageView
             android:layout_width="90dp"
             android:layout_height="130dp"
+            android:background="@drawable/iconbackground"
             android:src="@drawable/character_3"
             android:layout_margin="5dp"
             android:id="@+id/character_3"
