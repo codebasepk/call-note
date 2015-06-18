@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,6 +33,11 @@ public class NoteActivity extends ActionBarActivity {
     ContactsAdapter adapter;
     Helpers mHelpers;
     DataBaseHelpers dbHelpers;
+    ImageView imageView1;
+    ImageView imageView2;
+    ImageView imageView3;
+    String imageVariable;
+    AlertDialog alert;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -41,7 +47,7 @@ public class NoteActivity extends ActionBarActivity {
                 String description = editTextNote.getText().toString();
                 String[] checkedContacts = mHelpers.getCheckedContacts();
                 if (!title.isEmpty() && !description.isEmpty()) {
-                    dbHelpers.createNewEntry(checkedContacts, title, description, "sdcard location",
+                    dbHelpers.createNewEntry(checkedContacts, title, description, imageVariable,
                             mHelpers.getCurrentDateandTime());
                     this.finish();
                 }
@@ -133,10 +139,35 @@ public class NoteActivity extends ActionBarActivity {
     public void initiateIconDialog() {
         LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog_2, (ViewGroup) findViewById(R.id.dialogLayout_2));
-        AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
+        final AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
+        alert = db.create();
         db.setView(dialog_layout);
         db.setTitle("Add Icon");
-        db.show();
+        alert = db.show();
+        imageView1 = (ImageView) dialog_layout.findViewById(R.id.character_1);
+        imageView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
+                alert.dismiss();
+            }
+        });
+        imageView2 = (ImageView) dialog_layout.findViewById(R.id.character_2);
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_2;
+                alert.dismiss();
+            }
+        });
+        imageView3 = (ImageView) dialog_layout.findViewById(R.id.character_3);
+        imageView3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_3;
+                alert.dismiss();
+            }
+        });
     }
 
         @Override
