@@ -33,18 +33,18 @@ public class DataBaseHelpers {
 
     void createNewEntry(String[] value, String note, String desc, String image, String date) {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            for (String val : value) {
-                values.put(SqliteHelpers.NUMBER_COLUMN, val);
-                values.put(SqliteHelpers.NOTES_COLUMN, note);
-                values.put(SqliteHelpers.PICTURE_COLUMN, image);
-                values.put(SqliteHelpers.DATE_COLUMN, date);
-                values.put(SqliteHelpers.DESCRIPTION, desc);
-                mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
-                Log.i(Helpers.LOG_TAG, "created New Entry");
-            }
-        closeDatabase();
+        ContentValues values = new ContentValues();
+        for (String val : value) {
+            values.put(SqliteHelpers.NUMBER_COLUMN, val);
+            values.put(SqliteHelpers.NOTES_COLUMN, note);
+            values.put(SqliteHelpers.PICTURE_COLUMN, image);
+            values.put(SqliteHelpers.DATE_COLUMN, date);
+            values.put(SqliteHelpers.DESCRIPTION, desc);
+            mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
+            Log.i(Helpers.LOG_TAG, "created New Entry");
         }
+        closeDatabase();
+    }
 
     void clickUpdate(String id, String[] number, String note, String desc, String image, String date) {
         ContentValues values = new ContentValues();
@@ -105,7 +105,6 @@ public class DataBaseHelpers {
             Log.i(Helpers.LOG_TAG, " Data retrieved .....");
         }
         return uri;
-
     }
 
     ArrayList<String> getTitleFromNumber(String value) {
@@ -120,7 +119,6 @@ public class DataBaseHelpers {
             Log.i(Helpers.LOG_TAG, " Data retrieved .....");
         }
         return list;
-
     }
 
     ArrayList<String> getSummaryFromNumber(String value) {
@@ -135,7 +133,6 @@ public class DataBaseHelpers {
             Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
         }
         return list;
-
     }
 
     String[] retrieveNoteDetails(String value) {
