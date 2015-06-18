@@ -1,14 +1,11 @@
 package com.byteshaft.callnote;
 
-import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +46,7 @@ public class DataBaseHelpers {
                 mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
                 Log.i(Helpers.LOG_TAG, "created New Entry");
             }
+        closeDatabase();
         }
 
     void clickUpdate(String[] number, String note, String desc, String image, String date ) {
@@ -62,7 +60,8 @@ public class DataBaseHelpers {
             mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
             Log.i(Helpers.LOG_TAG, "Updated.......");
         }
-        }
+        closeDatabase();
+    }
 
 
     void updateData(String[] number, String note, String desc, String image, String date) {
@@ -79,6 +78,7 @@ public class DataBaseHelpers {
                     selectionArgs);
             Log.i(Helpers.LOG_TAG, "Updated.......");
         }
+        closeDatabase();
     }
 
     void deleteItem(String column, String value, boolean val) {
@@ -215,22 +215,6 @@ public class DataBaseHelpers {
         return arrayList;
     }
 
-    ArrayList<String> getAllIconUri() {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getWritableDatabase();
-        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
-        cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            String itemname = cursor.getString(cursor.getColumnIndex(
-                    SqliteHelpers.PICTURE_COLUMN));
-            if (itemname != null) {
-                arrayList.add(itemname);
-            }
-        }
-        return arrayList;
-    }
-
     ArrayList<String> getDescriptions() {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getWritableDatabase();
@@ -245,21 +229,5 @@ public class DataBaseHelpers {
             }
         }
         return arrayList;
-    }
-
-    ArrayList<String> getDescriptionForNote(String note) {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getReadableDatabase();
-        String whereClause = SqliteHelpers.NOTES_COLUMN + " = ?";
-        String[] whereArgs = new String[]{note};
-        cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
-                null, null, null);
-        ArrayList<String> list = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
-            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
-            Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
-        }
-        return list;
     }
 }
