@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public class NoteActivity extends ActionBarActivity {
@@ -32,6 +33,7 @@ public class NoteActivity extends ActionBarActivity {
     ContactsAdapter adapter;
     Helpers mHelpers;
     DataBaseHelpers dbHelpers;
+    Switch noteTrigger;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -46,13 +48,16 @@ public class NoteActivity extends ActionBarActivity {
                     this.finish();
                 }
                 break;
-                case R.id.action_share:
+            case R.id.action_share:
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
-                    String shareBody = "Here is the share content body";
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                    String shareBody = getIntent().getExtras().getString("note_summary", "");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TITLE, getIntent().getExtras().getString("note_title", ""));
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                break;
+            case R.id.action_delete:
+                /* FIXME: DELETE NOTE command here!! */
         }
         return super.onOptionsItemSelected(item);
     }
@@ -63,6 +68,7 @@ public class NoteActivity extends ActionBarActivity {
         inflater.inflate(R.menu.menu_contacts, menu);
         if (getIntent().getExtras() != null) {
             menu.findItem(R.id.action_share).setVisible(true);
+            menu.findItem(R.id.action_delete).setVisible(true);
             noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_summary", ""));
             setTitle("Edit Note");
@@ -77,6 +83,7 @@ public class NoteActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
+        noteTrigger = (Switch) findViewById(R.id.note_switch);
         mHelpers = new Helpers(getApplicationContext());
         dbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
@@ -84,6 +91,7 @@ public class NoteActivity extends ActionBarActivity {
         if (getIntent().getExtras() != null) {
                     noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
+            noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
         }
         addIcon = (Button) findViewById(R.id.button_icon);

@@ -34,8 +34,6 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
         helper.getCheckedContactsFromSharedPrefrence(mContactNumbers);
     }
 
-
-
     @Override
     public int getCount() {
         return mContactNames.size();
