@@ -1,10 +1,14 @@
 package com.byteshaft.callnote;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -180,12 +184,5 @@ public class DataBaseHelpers {
             Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
         }
         return list;
-    }
-
-    public void updateRow(int id, String value1, String value2){
-        ContentValues values = new ContentValues();
-        values.put("col name1", value1);
-        values.put("col name2", value2);
-        mDbHelper.update("Table name", values, "kay Id" + "=" + id, null);
     }
 }

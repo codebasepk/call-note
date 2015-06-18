@@ -7,13 +7,16 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 public class OverlayService extends Service {
+    private IncomingCallListener incomingCallListener;
+    private TelephonyManager mTelephonyManager;
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Helpers helpers = new Helpers(getApplicationContext());
-        IncomingCallListener incomingCallListener = new IncomingCallListener(getApplicationContext());
-        TelephonyManager telephonyManager = helpers.getTelephonyManager();
-        telephonyManager.listen(incomingCallListener, PhoneStateListener.LISTEN_CALL_STATE);
+        incomingCallListener = new IncomingCallListener(getApplicationContext());
+        mTelephonyManager = helpers.getTelephonyManager();
+        mTelephonyManager.listen(incomingCallListener, PhoneStateListener.LISTEN_CALL_STATE);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -22,4 +25,9 @@ public class OverlayService extends Service {
         return null;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mTelephonyManager.listen(incomingCallListener, PhoneStateListener.LISTEN_NONE);
+    }
 }
