@@ -108,17 +108,30 @@ public class Helpers extends ContextWrapper {
     }
 
     String[] getCheckedContacts() {
-        String string = getPrefrenceManager().getString("checkedContactsPrefs", " ");
+        String string = getPreferenceManager().getString("checkedContactsPrefs", " ");
         return string.split(",");
-    }
-
-    SharedPreferences getPrefrenceManager() {
-        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
     }
 
     String getCurrentDateandTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         return sdf.format(new Date());
+    }
+
+    boolean isSwitchStateEnabled() {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        return sharedPreferences.getBoolean("switch_state", false);
+    }
+
+    void enableSWitchState(boolean enable) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean("switch_state", enable).apply();
+    }
+
+    void saveServiceStateEnabled(boolean enable) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean("enabled", enable).apply();
+    }
+    SharedPreferences getPreferenceManager() {
+        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 }

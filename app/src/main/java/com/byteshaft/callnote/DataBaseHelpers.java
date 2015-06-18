@@ -181,4 +181,11 @@ public class DataBaseHelpers {
         }
         return list;
     }
+
+    public void updateRow(int id, String value1, String value2){
+        ContentValues values = new ContentValues();
+        values.put("col name1", value1);
+        values.put("col name2", value2);
+        mDbHelper.update("Table name", values, "kay Id" + "=" + id, null);
+    }
 }
