@@ -67,7 +67,6 @@ public class DataBaseHelpers {
         closeDatabase();
     }
 
-
     void updateData(String[] number, String note, String desc, String image, String date) {
         ContentValues values = new ContentValues();
         for (String val : number) {
@@ -200,7 +199,6 @@ public class DataBaseHelpers {
             }
         }
         return arrayList;
-
     }
 
     ArrayList<String> getAllNumbers() {
@@ -239,7 +237,8 @@ public class DataBaseHelpers {
     ArrayList<String> getDescriptions() {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getWritableDatabase();
-        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
+        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME + " ORDER BY "+
+                SqliteHelpers.DATE_COLUMN+" DESC";
         cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {
@@ -250,21 +249,5 @@ public class DataBaseHelpers {
             }
         }
         return arrayList;
-    }
-
-    ArrayList<String> getDescriptionForNote(String note) {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getReadableDatabase();
-        String whereClause = SqliteHelpers.NOTES_COLUMN + " = ?";
-        String[] whereArgs = new String[]{note};
-        cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
-                null, null, null);
-        ArrayList<String> list = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
-            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
-            Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
-        }
-        return list;
     }
 }

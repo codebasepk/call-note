@@ -116,7 +116,7 @@ public class Helpers extends ContextWrapper {
     }
 
     String getCurrentDateandTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
         return sdf.format(new Date());
     }
 
