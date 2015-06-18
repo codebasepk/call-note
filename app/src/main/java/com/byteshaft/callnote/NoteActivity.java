@@ -1,14 +1,12 @@
 package com.byteshaft.callnote;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.opengl.Visibility;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +38,8 @@ public class NoteActivity extends ActionBarActivity {
     String imageVariable;
     AlertDialog alert;
     Switch noteTrigger;
+    String mTitle;
+    String mNote;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -77,6 +77,8 @@ public class NoteActivity extends ActionBarActivity {
             menu.findItem(R.id.action_delete).setVisible(true);
             noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_summary", ""));
+            mTitle = noteTitle.getText().toString();
+            mNote = editTextNote.getText().toString();
             setTitle("Edit Note");
         }
 
@@ -94,6 +96,8 @@ public class NoteActivity extends ActionBarActivity {
         dbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
+        mTitle = noteTitle.getText().toString();
+        mNote = editTextNote.getText().toString();
         if (getIntent().getExtras() != null) {
                     noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
@@ -180,7 +184,7 @@ public class NoteActivity extends ActionBarActivity {
 
         @Override
         public void onBackPressed() {
-            if (editTextNote.length() > 0 || noteTitle.length() > 0){
+            if (!mNote.equals(editTextNote.getText().toString()) || !mTitle.equals(noteTitle.getText().toString())){
                 discardDialog();
             } else {
                 finish();
