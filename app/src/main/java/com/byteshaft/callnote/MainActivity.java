@@ -1,6 +1,8 @@
 package com.byteshaft.callnote;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -23,7 +25,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     Helpers mHelpers;
     private boolean mViewCreated;
@@ -34,6 +36,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private ArrayList<String> mNoteSummaries;
     private OverlayHelpers mOverlayHelpers;
     private Switch mToggleSwitch;
+    ArrayAdapter<String> mModeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,27 +55,31 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     @Override
     protected void onResume() {
         super.onResume();
-        mToggleSwitch.setChecked(mHelpers.isSwitchStateEnabled());
+        mToggleSwitch.setChecked(mHelpers.isServiceSettingEnabled());
         arrayList = mDbHelpers.getAllPresentNotes();
         mNoteSummaries = mDbHelpers.getDescriptions();
-        ArrayAdapter<String> mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
+        mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
         listView.setAdapter(mModeAdapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
         listView.setDivider(null);
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_overlay:
-                if (mViewCreated) {
-                    mOverlayHelpers.removePopupNote();
-                    mViewCreated = false;
-                } else {
-                    mOverlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
-                    mViewCreated = true;
-                }
+//            case R.id.action_overlay:
+//                if (mViewCreated) {
+//                    mOverlayHelpers.removePopupNote();
+//                    mViewCreated = false;
+//                } else {
+//                    mOverlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
+//                    mViewCreated = true;
+//                }
+            case R.id.action_addNote:
+                startActivity(new Intent(this, NoteActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -88,7 +95,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mHelpers.enableSWitchState(isChecked);
+
         if (isChecked) {
             startService(new Intent(this, OverlayService.class));
         } else {
@@ -110,6 +117,38 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         intent.putExtra("note_title", arrayList.get(position));
         intent.putExtra("note_summary", mNoteSummaries.get(position));
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
+        System.out.println(parent.getItemAtPosition(position));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Delete");
+        builder.setMessage("Are you sure?");
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
+                dataBaseHelpers.deleteItem(SqliteHelpers.NOTES_COLUMN, (String)
+                        parent.getItemAtPosition(position), false);
+                mModeAdapter.remove(mModeAdapter.getItem(position));
+                mModeAdapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+        return true;
     }
 
     class NotesArrayList extends ArrayAdapter<String> {
