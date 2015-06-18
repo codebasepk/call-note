@@ -1,15 +1,13 @@
 package com.byteshaft.callnote;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.opengl.Visibility;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,63 +16,74 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public class NoteActivity extends ActionBarActivity  {
 
-    private EditText noteTitle;
-    private EditText editTextNote;
-    private Button addIcon;
-    private Button attachContacts;
-    private Button checkAll;
-    private Button uncheckAll;
-    private ListView lv;
-    private ContactsAdapter adapter;
-    private Helpers mHelpers;
-    private DataBaseHelpers dbHelpers;
-    private String title;
-    private String description;
-    private String[] checkedContacts;
+    EditText noteTitle;
+    EditText editTextNote;
+    Button addIcon;
+    Button attachContacts;
+    Button checkAll;
+    Button uncheckAll;
+    ListView lv;
+    ContactsAdapter adapter;
+    Helpers mHelpers;
+    DataBaseHelpers mDbHelpers;
+    ImageView imageView1;
+    ImageView imageView2;
+    ImageView imageView3;
+    String imageVariable;
+    AlertDialog alert;
+    Switch noteTrigger;
+    String mTitle;
+    String mNote;
     private String mId = null;
+    private String[] mCheckedContacts;
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        title = noteTitle.getText().toString();
-        description = editTextNote.getText().toString();
-        checkedContacts = mHelpers.getCheckedContacts();
-        if (title.isEmpty()) {
-            title = mHelpers.getCurrentDateandTime();
+        mTitle = noteTitle.getText().toString();
+        mNote = editTextNote.getText().toString();
+        mCheckedContacts = mHelpers.getCheckedContacts();
+        if (mTitle.isEmpty()) {
+            mTitle = mHelpers.getCurrentDateandTime();
+        }
+        if (mNote.isEmpty()) {
+            mNote = " ";
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
                 System.out.println("ID "+mId);
                 if (mId != null) {
-                    dbHelpers.deleteItem(SqliteHelpers.ID_COLUMN,mId,false);
-                    dbHelpers.clickUpdate(checkedContacts ,title, description,
-                                    "Sdcard link", mHelpers.getCurrentDateandTime());
+                    mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
+                                    imageVariable, mHelpers.getCurrentDateandTime());
                     Log.i(Helpers.LOG_TAG,"Update success");
                     this.finish();
-                    }
-
-                else {
-                    if (dbHelpers.checkIfItemAlreadyExistInDatabase(title) != null) {
+                    } else {
+                    if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null) {
                         NotesAlreadyExistDialog();
-                    } else if (dbHelpers.checkIfItemAlreadyExistInDatabase(title) == null) {
-                        dbHelpers.createNewEntry(checkedContacts, title, description, "sdcard location",
+                    } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null) {
+                        mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         this.finish();
                     }
                 }
                 break;
-                case R.id.action_share:
+            case R.id.action_share:
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
-                    String shareBody = "Here is the share content body";
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                    String shareBody = getIntent().getExtras().getString("note_summary", "");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TITLE, getIntent().getExtras().getString("note_title", ""));
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                break;
+            case R.id.action_delete:
+                /* FIXME: DELETE NOTE command here!! */
         }
         return super.onOptionsItemSelected(item);
     }
@@ -85,8 +94,11 @@ public class NoteActivity extends ActionBarActivity  {
         inflater.inflate(R.menu.menu_contacts, menu);
         if (getIntent().getExtras() != null) {
             menu.findItem(R.id.action_share).setVisible(true);
+            menu.findItem(R.id.action_delete).setVisible(true);
             noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_summary", ""));
+            mTitle = noteTitle.getText().toString();
+            mNote = editTextNote.getText().toString();
             setTitle("Edit Note");
         }
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -98,17 +110,21 @@ public class NoteActivity extends ActionBarActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
+        noteTrigger = (Switch) findViewById(R.id.note_switch);
         mHelpers = new Helpers(getApplicationContext());
-        dbHelpers = new DataBaseHelpers(getApplicationContext());
+        mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
+        mTitle = noteTitle.getText().toString();
+        mNote = editTextNote.getText().toString();
         if (getIntent().getExtras() != null) {
             String title = getIntent().getExtras().getString("note_title", "");
                     noteTitle.setText(title);
-            String[] detailsForThisNote = dbHelpers.retrieveNoteDetails(title);
+            String[] detailsForThisNote = mDbHelpers.retrieveNoteDetails(title);
             mId = detailsForThisNote[0];
             System.out.println("ID "+mId);
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
+            noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
         }
         addIcon = (Button) findViewById(R.id.button_icon);
@@ -158,15 +174,40 @@ public class NoteActivity extends ActionBarActivity  {
     public void initiateIconDialog() {
         LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog_2, (ViewGroup) findViewById(R.id.dialogLayout_2));
-        AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
+        final AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
+        alert = db.create();
         db.setView(dialog_layout);
         db.setTitle("Add Icon");
-        db.show();
+        alert = db.show();
+        imageView1 = (ImageView) dialog_layout.findViewById(R.id.character_1);
+        imageView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
+                alert.dismiss();
+            }
+        });
+        imageView2 = (ImageView) dialog_layout.findViewById(R.id.character_2);
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_2;
+                alert.dismiss();
+            }
+        });
+        imageView3 = (ImageView) dialog_layout.findViewById(R.id.character_3);
+        imageView3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_3;
+                alert.dismiss();
+            }
+        });
     }
 
         @Override
         public void onBackPressed() {
-            if (editTextNote.length() > 0 || noteTitle.length() > 0){
+            if (!mNote.equals(editTextNote.getText().toString()) || !mTitle.equals(noteTitle.getText().toString())){
                 discardDialog();
             } else {
                 finish();
@@ -193,7 +234,7 @@ public class NoteActivity extends ActionBarActivity  {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dbHelpers.updateData(checkedContacts, title, description, "Sd card link",
+                        mDbHelpers.updateData(mCheckedContacts, mTitle, mNote, "Sd card link",
                                 mHelpers.getCurrentDateandTime());
                         NoteActivity.this.finish();
                     }

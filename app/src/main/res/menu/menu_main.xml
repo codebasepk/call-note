@@ -5,8 +5,14 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_overlay"
-        android:title="Show overlay"
-        android:orderInCategory="100"
-        app:showAsAction="always" />
+        android:id="@+id/action_addNote"
+        android:title="Add Note"
+        app:showAsAction="always"/>
+
+    <!--<item-->
+        <!--android:id="@+id/action_overlay"-->
+        <!--android:title="Show overlay"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="always" />-->
+
 </menu>

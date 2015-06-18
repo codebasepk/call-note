@@ -38,8 +38,8 @@ public class DataBaseHelpers {
         mDbHelper = mSqliteHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             for (String val : value) {
-                values.put(SqliteHelpers.NUMBER_COLUMN, val.replace(" ", ""));
-                values.put(SqliteHelpers.NOTES_COLUMN, note.replace(" ", ""));
+                values.put(SqliteHelpers.NUMBER_COLUMN, val);
+                values.put(SqliteHelpers.NOTES_COLUMN, note);
                 values.put(SqliteHelpers.PICTURE_COLUMN, image);
                 values.put(SqliteHelpers.DATE_COLUMN, date);
                 values.put(SqliteHelpers.DESCRIPTION, desc);
@@ -49,15 +49,15 @@ public class DataBaseHelpers {
         closeDatabase();
         }
 
-    void clickUpdate(String[] number, String note, String desc, String image, String date ) {
+    void clickUpdate(String id, String[] number, String note, String desc, String image, String date ) {
         ContentValues values = new ContentValues();
         for (String val : number) {
-            values.put(SqliteHelpers.NUMBER_COLUMN, val.replace(" ", ""));
-            values.put(SqliteHelpers.NOTES_COLUMN, note.replace(" ", ""));
+            values.put(SqliteHelpers.NUMBER_COLUMN, val);
+            values.put(SqliteHelpers.NOTES_COLUMN, note);
             values.put(SqliteHelpers.PICTURE_COLUMN, image);
             values.put(SqliteHelpers.DATE_COLUMN, date);
             values.put(SqliteHelpers.DESCRIPTION, desc);
-            mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
+            mDbHelper.update(SqliteHelpers.TABLE_NAME, values, SqliteHelpers.ID_COLUMN + "=" + id, null);
             Log.i(Helpers.LOG_TAG, "Updated.......");
         }
         closeDatabase();
@@ -67,8 +67,8 @@ public class DataBaseHelpers {
     void updateData(String[] number, String note, String desc, String image, String date) {
         ContentValues values = new ContentValues();
         for (String val : number) {
-            values.put(SqliteHelpers.NUMBER_COLUMN, val.replace(" ", ""));
-            values.put(SqliteHelpers.NOTES_COLUMN, note.replace(" ", ""));
+            values.put(SqliteHelpers.NUMBER_COLUMN, val);
+            values.put(SqliteHelpers.NOTES_COLUMN, note);
             values.put(SqliteHelpers.PICTURE_COLUMN, image);
             values.put(SqliteHelpers.DATE_COLUMN, date);
             values.put(SqliteHelpers.DESCRIPTION, desc);
@@ -181,6 +181,24 @@ public class DataBaseHelpers {
         return list;
     }
 
+    ArrayList<String> getNumberFromNote(String note) {
+        Cursor cursor;
+        mDbHelper = mSqliteHelper.getReadableDatabase();
+        String query = "SELECT Distinct "+SqliteHelpers.NUMBER_COLUMN+" FROM " + SqliteHelpers.TABLE_NAME;
+        cursor = mDbHelper.rawQuery(query, null);
+        ArrayList<String> arrayList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String itemname = cursor.getString(cursor.getColumnIndex(
+                    SqliteHelpers.NUMBER_COLUMN));
+            if (itemname != null) {
+                arrayList.add(itemname);
+                System.out.println(itemname);
+            }
+        }
+        return arrayList;
+
+    }
+
     ArrayList<String> getAllNumbers() {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getWritableDatabase();
@@ -195,7 +213,6 @@ public class DataBaseHelpers {
             }
         }
         return arrayList;
-
     }
 
     ArrayList<String> getAllPresentNotes() {
@@ -229,5 +246,21 @@ public class DataBaseHelpers {
             }
         }
         return arrayList;
+    }
+
+    ArrayList<String> getDescriptionForNote(String note) {
+        Cursor cursor;
+        mDbHelper = mSqliteHelper.getReadableDatabase();
+        String whereClause = SqliteHelpers.NOTES_COLUMN + " = ?";
+        String[] whereArgs = new String[]{note};
+        cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
+                null, null, null);
+        ArrayList<String> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
+            System.out.println(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
+            Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
+        }
+        return list;
     }
 }

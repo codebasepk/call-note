@@ -33,6 +33,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     TextView textViewTitle;
     private ArrayList<String> mNoteSummaries;
     private OverlayHelpers mOverlayHelpers;
+    private Switch mToggleSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +43,16 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
         textViewTitle = (TextView) findViewById(R.id.title);
         mHelpers = new Helpers(getApplicationContext());
-        Switch toggleSwitch = (Switch) findViewById(R.id.aSwitch);
+        mToggleSwitch = (Switch) findViewById(R.id.aSwitch);
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
-        toggleSwitch.setOnCheckedChangeListener(this);
+        mToggleSwitch.setOnCheckedChangeListener(this);
         mOverlayHelpers = new OverlayHelpers(getApplicationContext());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        mToggleSwitch.setChecked(mHelpers.isSwitchStateEnabled());
         arrayList = mDbHelpers.getAllPresentNotes();
         mNoteSummaries = mDbHelpers.getDescriptions();
         ArrayAdapter<String> mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
@@ -64,14 +66,16 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_overlay:
-                if (mViewCreated) {
-                    mOverlayHelpers.removePopupNote();
-                    mViewCreated = false;
-                } else {
-                    mOverlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
-                    mViewCreated = true;
-                }
+//            case R.id.action_overlay:
+//                if (mViewCreated) {
+//                    mOverlayHelpers.removePopupNote();
+//                    mViewCreated = false;
+//                } else {
+//                    mOverlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
+//                    mViewCreated = true;
+//                }
+            case R.id.action_addNote:
+                startActivity(new Intent(this, NoteActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -87,12 +91,13 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Intent intent = new Intent(getApplicationContext(), OverlayService.class);
+        mHelpers.enableSWitchState(isChecked);
         if (isChecked) {
-            startService(intent);
+            startService(new Intent(this, OverlayService.class));
         } else {
-            stopService(intent);
+            stopService(new Intent(this, OverlayService.class));
         }
+        mHelpers.saveServiceStateEnabled(isChecked);
     }
 
     public void openActivity(View view) {
