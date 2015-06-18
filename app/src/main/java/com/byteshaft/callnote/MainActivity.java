@@ -105,7 +105,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra("note_title", arrayList.get(position));
-        intent.putExtra("note_data", "");
         intent.putExtra("note_summary", mNoteSummaries.get(position));
         startActivity(intent);
     }

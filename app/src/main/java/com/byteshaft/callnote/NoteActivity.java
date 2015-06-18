@@ -48,13 +48,16 @@ public class NoteActivity extends ActionBarActivity {
                     this.finish();
                 }
                 break;
-                case R.id.action_share:
+            case R.id.action_share:
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
-                    String shareBody = "Here is the share content body";
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                    String shareBody = getIntent().getExtras().getString("note_summary", "");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TITLE, getIntent().getExtras().getString("note_title", ""));
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                break;
+            case R.id.action_delete:
+                /* FIXME: DELETE NOTE command here!! */
         }
         return super.onOptionsItemSelected(item);
     }
@@ -65,6 +68,7 @@ public class NoteActivity extends ActionBarActivity {
         inflater.inflate(R.menu.menu_contacts, menu);
         if (getIntent().getExtras() != null) {
             menu.findItem(R.id.action_share).setVisible(true);
+            menu.findItem(R.id.action_delete).setVisible(true);
             noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
             editTextNote.setText(getIntent().getExtras().getString("note_summary", ""));
             setTitle("Edit Note");
