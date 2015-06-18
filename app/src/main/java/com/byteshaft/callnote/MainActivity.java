@@ -1,19 +1,18 @@
 package com.byteshaft.callnote;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,6 +36,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private ArrayList<String> mNoteSummaries;
     private OverlayHelpers mOverlayHelpers;
     private Switch mToggleSwitch;
+    ArrayAdapter<String> mModeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         mToggleSwitch.setChecked(mHelpers.isServiceSettingEnabled());
         arrayList = mDbHelpers.getAllPresentNotes();
         mNoteSummaries = mDbHelpers.getDescriptions();
-        ArrayAdapter<String> mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
+        mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
         listView.setAdapter(mModeAdapter);
         listView.setOnItemClickListener(this);
@@ -119,10 +119,34 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
         System.out.println(parent.getItemAtPosition(position));
-        DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
-        dataBaseHelpers.deleteItem(SqliteHelpers.NOTES_COLUMN, (String) parent.getItemAtPosition(position), false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Delete");
+        builder.setMessage("Are you sure?");
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
+                dataBaseHelpers.deleteItem(SqliteHelpers.NOTES_COLUMN, (String)
+                        parent.getItemAtPosition(position), false);
+                mModeAdapter.remove(mModeAdapter.getItem(position));
+                mModeAdapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
         return true;
     }
 
