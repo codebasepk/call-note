@@ -1,14 +1,10 @@
 package com.byteshaft.callnote;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,21 +12,18 @@ import java.util.List;
 public class DataBaseHelpers {
 
     private SQLiteDatabase mDbHelper;
-    private SqliteHelpers mSqliteHelper;
-    Context mContext;
+    private SqliteHelpers mSqliteHelpers;
 
     public DataBaseHelpers(Context context) {
-        mContext = context;
-        mSqliteHelper = new SqliteHelpers(context);
+        mSqliteHelpers = new SqliteHelpers(context);
     }
 
     String checkIfItemAlreadyExistInDatabase(String note) {
-        Cursor cursor;
         String value = null;
-        mDbHelper = mSqliteHelper.getReadableDatabase();
+        mDbHelper = mSqliteHelpers.getReadableDatabase();
         String whereClause =  SqliteHelpers.NOTES_COLUMN +" = ?";
         String[] whereArgs = new String[] {note};
-        cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
+        Cursor cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, null);
         while (cursor.moveToNext()) {
             value =  cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
@@ -39,7 +32,7 @@ public class DataBaseHelpers {
     }
 
     void createNewEntry(String[] value, String note, String desc, String image, String date) {
-        mDbHelper = mSqliteHelper.getWritableDatabase();
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
             ContentValues values = new ContentValues();
             for (String val : value) {
                 values.put(SqliteHelpers.NUMBER_COLUMN, val);
@@ -85,7 +78,7 @@ public class DataBaseHelpers {
     }
 
     void deleteItem(String column, String value, boolean val) {
-        mDbHelper = mSqliteHelper.getWritableDatabase();
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
         mDbHelper.delete(SqliteHelpers.TABLE_NAME, column + " = ?", new String[]{value});
         if (val) {
             mDbHelper.execSQL("delete from " + SqliteHelpers.TABLE_NAME + " where " +
@@ -96,15 +89,14 @@ public class DataBaseHelpers {
     }
 
     void closeDatabase() {
-        mSqliteHelper.close();
+        mSqliteHelpers.close();
         Log.i(Helpers.LOG_TAG, "close database");
     }
 
     String getIconLinkForNumber(String value) {
         String uri = null;
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getReadableDatabase();
-        cursor = mDbHelper.rawQuery(
+        mDbHelper = mSqliteHelpers.getReadableDatabase();
+        Cursor cursor = mDbHelper.rawQuery(
                 "select " + SqliteHelpers.DESCRIPTION + " from " + SqliteHelpers.TABLE_NAME +
                         " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
                 new String[]{"%" + value + "%"});
@@ -117,9 +109,8 @@ public class DataBaseHelpers {
     }
 
     ArrayList<String> getTitleFromNumber(String value) {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getReadableDatabase();
-        cursor = mDbHelper.rawQuery(
+        mDbHelper = mSqliteHelpers.getReadableDatabase();
+        Cursor cursor = mDbHelper.rawQuery(
                 "select " + SqliteHelpers.NOTES_COLUMN + " from " + SqliteHelpers.TABLE_NAME +
                         " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
                 new String[]{"%" + value + "%"});
@@ -133,9 +124,8 @@ public class DataBaseHelpers {
     }
 
     ArrayList<String> getSummaryFromNumber(String value) {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getReadableDatabase();
-        cursor = mDbHelper.rawQuery(
+        mDbHelper = mSqliteHelpers.getReadableDatabase();
+        Cursor cursor = mDbHelper.rawQuery(
                 "select " + SqliteHelpers.DESCRIPTION + " from " + SqliteHelpers.TABLE_NAME +
                         " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
                 new String[]{"%" + value + "%"});
@@ -149,11 +139,10 @@ public class DataBaseHelpers {
     }
 
     String[] retrieveNoteDetails(String value) {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getReadableDatabase();
+        mDbHelper = mSqliteHelpers.getReadableDatabase();
                 String whereClause =  SqliteHelpers.NOTES_COLUMN +" = ?";
         String[] whereArgs = new String[] {value};
-        cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
+        Cursor cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, null);
         String[] list = new String[5];
         while(cursor.moveToNext()) {
@@ -168,11 +157,10 @@ public class DataBaseHelpers {
     }
 
     List<String> getLastNoteForContact(String value) {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getWritableDatabase();
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
         String whereClause = SqliteHelpers.NUMBER_COLUMN + " = ?";
         String[] whereArgs = new String[]{value};
-        cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
+        Cursor cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, SqliteHelpers.NOTES_COLUMN + " DESC ", "1");
         List<String> list = new ArrayList<>();
         while (cursor.moveToNext()) {
@@ -185,10 +173,9 @@ public class DataBaseHelpers {
     }
 
     ArrayList<String> getNumberFromNote(String note) {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getReadableDatabase();
+        mDbHelper = mSqliteHelpers.getReadableDatabase();
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
-        cursor = mDbHelper.rawQuery(query, null);
+        Cursor cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {
             String itemname = cursor.getString(cursor.getColumnIndex(
@@ -203,10 +190,9 @@ public class DataBaseHelpers {
     }
 
     ArrayList<String> getAllNumbers() {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getWritableDatabase();
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
-        cursor = mDbHelper.rawQuery(query, null);
+        Cursor cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {
             String itemname = cursor.getString(cursor.getColumnIndex(
@@ -219,11 +205,10 @@ public class DataBaseHelpers {
     }
 
     ArrayList<String> getAllPresentNotes() {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getWritableDatabase();
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME+ " ORDER BY "+
                 SqliteHelpers.DATE_COLUMN+" DESC";
-        cursor = mDbHelper.rawQuery(query, null);
+        Cursor cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {
               String itemname = cursor.getString(cursor.getColumnIndex(
@@ -236,11 +221,10 @@ public class DataBaseHelpers {
     }
 
     ArrayList<String> getDescriptions() {
-        Cursor cursor;
-        mDbHelper = mSqliteHelper.getWritableDatabase();
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME + " ORDER BY "+
                 SqliteHelpers.DATE_COLUMN+" DESC";
-        cursor = mDbHelper.rawQuery(query, null);
+        Cursor cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {
             String itemname = cursor.getString(cursor.getColumnIndex(
