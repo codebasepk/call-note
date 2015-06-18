@@ -43,12 +43,13 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     void showSingleNoteOverlay(String noteTitle, String noteSummary) {
         LayoutInflater inflater = AppGlobals.getLayoutInflater();
         mSimpleLayout = (RelativeLayout) inflater.inflate(R.layout.overlay_simple, null);
-        LinearLayout bubbleLayout = (LinearLayout) mSimpleLayout.findViewById(R.id.linearLayout);
+        LinearLayout bubbleLayout = (LinearLayout) mSimpleLayout.findViewById(R.id.linear_layout);
         bubbleLayout.setOnClickListener(this);
         TextView title = (TextView) mSimpleLayout.findViewById(R.id.title);
         TextView summary = (TextView) mSimpleLayout.findViewById(R.id.summary);
         Button moreButton = (Button) mSimpleLayout.findViewById(R.id.more_button);
         if (mHasMoreNotes) {
+            moreButton.setVisibility(View.VISIBLE);
             moreButton.setOnClickListener(this);
         } else {
             moreButton.setVisibility(View.GONE);
@@ -103,7 +104,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
                 mWindowManager.removeView(mScrollableLayout);
                 showSingleNoteOverlay(mTitles.get(0), mSummaries.get(0));
                 break;
-            case R.id.linearLayout:
+            case R.id.linear_layout:
                 mWindowManager.removeView(mSimpleLayout);
                 break;
             case R.id.more_button:
