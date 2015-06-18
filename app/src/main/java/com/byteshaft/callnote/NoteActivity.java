@@ -14,10 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class NoteActivity extends ActionBarActivity {
@@ -121,7 +123,7 @@ public class NoteActivity extends ActionBarActivity {
     }
 
     public void showContactsDialog() {
-        LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
+        final LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
         AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
         db.setView(dialog_layout);
@@ -139,13 +141,12 @@ public class NoteActivity extends ActionBarActivity {
             }
         });
         lv = (ListView) dialog_layout.findViewById(R.id.lv);
-        ContactsAdapter ma = new ContactsAdapter(getApplicationContext());
+        ContactsAdapter ma = new ContactsAdapter(getApplicationContext(), mTitle);
         lv.setAdapter(ma);
         db.show();
 
-
-        checkAll = (Button) findViewById(R.id.button_checkall);
-        uncheckAll = (Button) findViewById(R.id.button_uncheck_all);
+        checkAll = (Button) dialog_layout.findViewById(R.id.button_checkall);
+        uncheckAll = (Button) dialog_layout.findViewById(R.id.button_uncheck_all);
     }
 
     public void initiateIconDialog() {
