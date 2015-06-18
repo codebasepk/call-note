@@ -54,7 +54,7 @@ public class NoteActivity extends ActionBarActivity  {
             mTitle = mHelpers.getCurrentDateandTime();
         }
         if (mNote.isEmpty()) {
-            mNote = null;
+            mNote = " ";
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
