@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         listView.setAdapter(mModeAdapter);
         listView.setOnItemClickListener(this);
         listView.setDivider(null);
+
     }
 
     @Override
@@ -104,7 +105,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra("note_title", arrayList.get(position));
-        intent.putExtra("note_data", "");
         startActivity(intent);
         System.out.println(parent.getItemAtPosition(position));
     }

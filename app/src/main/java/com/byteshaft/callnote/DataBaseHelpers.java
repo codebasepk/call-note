@@ -41,7 +41,7 @@ public class DataBaseHelpers {
                     SqliteHelpers.NUMBER_COLUMN + " ='" + value + "'");
             Log.i("sqlite", "All Entries deleted");
         }
-        Log.i("sqlite", "Entry deleted");
+        Log.i(Helpers.LOG_TAG, "Entry deleted");
     }
 
     void closeDatabase() {
@@ -53,31 +53,33 @@ public class DataBaseHelpers {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getReadableDatabase();
         cursor = mDbHelper.rawQuery(
-                "select "+SqliteHelpers.NOTES_COLUMN+ " from "+SqliteHelpers.TABLE_NAME+
-                        " where "+SqliteHelpers.NUMBER_COLUMN+" like ?",
-                new String[] { "%" + value + "%" });
+                "select " + SqliteHelpers.NOTES_COLUMN + " from " + SqliteHelpers.TABLE_NAME +
+                        " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
+                new String[]{"%" + value + "%"});
         ArrayList<String> list = new ArrayList<>();
         while(cursor.moveToNext()) {
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
-            Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
+            Log.i(Helpers.LOG_TAG, " Data retrieved .....");
         }
         return list;
 
     }
 
-
-
-    ArrayList<String> retrieveByNumber(String value) {
+    String[] retrieveNoteDetails(String value) {
         Cursor cursor;
         mDbHelper = mSqliteHelper.getReadableDatabase();
-                String whereClause =  SqliteHelpers.NUMBER_COLUMN +" = ?";
+                String whereClause =  SqliteHelpers.NOTES_COLUMN +" = ?";
         String[] whereArgs = new String[] {value};
         cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, null);
-        ArrayList<String> list = new ArrayList<>();
+        String[] list = new String[5];
         while(cursor.moveToNext()) {
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
-            Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
+            list[0] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.ID_COLUMN)));
+            list[1] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
+            list[2] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
+            list[3] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.DATE_COLUMN)));
+            list[4] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
+            Log.i(Helpers.LOG_TAG, " Data retrieved ....");
         }
         return list;
     }
@@ -146,7 +148,6 @@ public class DataBaseHelpers {
                     SqliteHelpers.DESCRIPTION));
             if (itemname != null) {
                 arrayList.add(itemname);
-                System.out.println(itemname);
             }
         }
         return arrayList;
