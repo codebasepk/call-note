@@ -89,7 +89,11 @@ public class NoteActivity extends ActionBarActivity  {
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 break;
             case R.id.action_delete:
-                /* FIXME: DELETE NOTE command here!! */
+                if (!mId.isEmpty()) {
+                    mDbHelpers.deleteItemById(mId);
+                    finish();
+                }
+
         }
         return super.onOptionsItemSelected(item);
     }
