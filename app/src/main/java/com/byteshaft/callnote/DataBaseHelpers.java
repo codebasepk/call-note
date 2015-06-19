@@ -26,7 +26,7 @@ public class DataBaseHelpers {
         Cursor cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, null);
         while (cursor.moveToNext()) {
-            value =  cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
+            value = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
         }
         return value;
     }
@@ -93,15 +93,19 @@ public class DataBaseHelpers {
         Log.i(Helpers.LOG_TAG, "close database");
     }
 
-    String getIconLinkForNumber(String value) {
+    String getIconLinkForNote(String value) {
         String uri = null;
         mDbHelper = mSqliteHelpers.getReadableDatabase();
-        Cursor cursor = mDbHelper.rawQuery(
-                "select " + SqliteHelpers.DESCRIPTION + " from " + SqliteHelpers.TABLE_NAME +
-                        " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
-                new String[]{"%" + value + "%"});
+        String queury = String.format(
+                "SELECT %s,%s FROM %s WHERE %s='%s'",
+                SqliteHelpers.NOTES_COLUMN,
+                SqliteHelpers.PICTURE_COLUMN,
+                SqliteHelpers.TABLE_NAME,
+                SqliteHelpers.NOTES_COLUMN,
+                value);
+        Cursor cursor = mDbHelper.rawQuery(queury, null);
         while(cursor.moveToNext()) {
-            uri = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
+            uri = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved .....");
         }
         return uri;
