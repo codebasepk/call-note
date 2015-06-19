@@ -38,7 +38,6 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
             if (mWindowManager != null && isViewCreated) {
                 mWindowManager.removeView(mSimpleLayout);
                 isViewCreated = false;
-                System.out.println("OK");
             }
         } catch (IllegalArgumentException e) {
             mWindowManager = null;
