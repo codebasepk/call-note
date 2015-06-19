@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,7 +19,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class OverlayHelpers extends ContextWrapper implements View.OnClickListener {
+public class OverlayHelpers extends ContextWrapper implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private WindowManager mWindowManager;
     private boolean isViewCreated;
@@ -80,6 +81,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         LayoutInflater inflater = AppGlobals.getLayoutInflater();
         mScrollableLayout = (RelativeLayout) inflater.inflate(R.layout.overlay, null);
         ListView mList = (ListView)  mScrollableLayout.findViewById(R.id.left_drawer);
+        mList.setOnItemClickListener(this);
         mList.setAdapter(mArrayAdapter);
         Button aButton = (Button) mScrollableLayout.findViewById(R.id.less_button);
         aButton.setOnClickListener(this);
@@ -111,16 +113,22 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.less_button:
-                mWindowManager.removeView(mScrollableLayout);
+                removePopupNote();
                 showSingleNoteOverlay(mTitles.get(0), mSummaries.get(0));
                 break;
             case R.id.linear_layout:
-                mWindowManager.removeView(mSimpleLayout);
+                removePopupNote();
                 break;
             case R.id.more_button:
-                mWindowManager.removeView(mSimpleLayout);
+                removePopupNote();
                 showMultiNoteOverlay();
+                break;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        removePopupNote();
     }
 
     class CustomBubbleAdapter extends ArrayAdapter<String> {
