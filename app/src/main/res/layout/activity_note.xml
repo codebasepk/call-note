@@ -3,21 +3,20 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <Switch
-        android:id="@+id/note_switch"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Note Trigger"
-        android:textStyle="bold"
-        android:paddingLeft="9dp"
-        android:paddingRight="9dp"
-        android:visibility="gone"/>
+    <!--<Switch-->
+        <!--android:id="@+id/note_switch"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:text="Note Trigger"-->
+        <!--android:textStyle="bold"-->
+        <!--android:paddingLeft="9dp"-->
+        <!--android:paddingRight="9dp"-->
+        <!--android:visibility="gone"/>-->
 
     <EditText
         android:id="@+id/editText_title_note"
-        android:layout_below="@+id/note_switch"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:maxLength="20"

@@ -137,7 +137,7 @@ public class NoteActivity extends ActionBarActivity  {
         setContentView(R.layout.activity_note);
         AppGlobals.setIsNoteEditModeFirst(true);
         mPreferences = AppGlobals.getSharedPreferences();
-        Switch noteTrigger = (Switch) findViewById(R.id.note_switch);
+//        Switch noteTrigger = (Switch) findViewById(R.id.note_switch);
         iconImageView = (ImageView) findViewById(R.id.image_icon);
         mHelpers = new Helpers(getApplicationContext());
         mHelpers.putPermanentPreferenceToTemporary();
@@ -156,7 +156,7 @@ public class NoteActivity extends ActionBarActivity  {
             System.out.println("ID "+mId);
             imageVariable = detailsForThisNote[4];
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
-            noteTrigger.setVisibility(View.VISIBLE);
+//            noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
         }
         Button addIcon = (Button) findViewById(R.id.button_icon);
