@@ -120,7 +120,7 @@ public class NoteActivity extends ActionBarActivity  {
                     noteTitle.setText(title);
             String[] detailsForThisNote = mDbHelpers.retrieveNoteDetails(title);
             mId = detailsForThisNote[0];
-            System.out.println("ID "+mId);
+            imageVariable = detailsForThisNote[4];
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
