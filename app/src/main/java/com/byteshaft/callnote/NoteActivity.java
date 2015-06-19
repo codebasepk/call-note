@@ -44,7 +44,7 @@ public class NoteActivity extends ActionBarActivity  {
         mNote = editTextNote.getText().toString();
         mCheckedContacts = mHelpers.getCheckedContacts();
         if (mTitle.isEmpty()) {
-            mTitle = mHelpers.getCurrentDateandTime();
+            mTitle = mHelpers.getCurrentDateandTime().substring(0,20);
         }
         if (mNote.isEmpty()) {
             mNote = " ";
