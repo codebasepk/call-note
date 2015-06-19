@@ -40,9 +40,11 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
             switch (whichViewIsVisible) {
                 case "single":
                     mWindowManager.removeView(mSimpleLayout);
+                    System.out.println("Removed View SIMPLE");
                     break;
                 case "multi":
                     mWindowManager.removeView(mScrollableLayout);
+                    System.out.println("Removed View COMPLEX");
                     break;
             }
         }

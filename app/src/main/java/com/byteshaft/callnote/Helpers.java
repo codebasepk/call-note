@@ -118,14 +118,14 @@ public class Helpers extends ContextWrapper {
 
     String getCurrentDateandTime() {
         Date formattedDate = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyy h:mm a zz");
         String date = sdf.format(new Date());
-        try {
-            formattedDate = sdf.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return formattedDate.toString();
+//        try {
+//            formattedDate = sdf.parse(date);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        return date;
     }
 
     void saveServiceStateEnabled(boolean enable) {

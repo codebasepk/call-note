@@ -167,8 +167,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     convertView = inflater.inflate(R.layout.row, parent, false);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.FilePath);
-                    holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
                     holder.summary = (TextView) convertView.findViewById(R.id.summary);
+                    holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
