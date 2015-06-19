@@ -65,4 +65,12 @@
         android:layout_alignParentRight="true"
         android:text="Attach contacts"
         android:layout_marginRight="60dp"/>
+
+    <ImageView
+        android:id="@+id/image_icon"
+        android:layout_width="120dp"
+        android:layout_height="200dp"
+        android:layout_below="@+id/button_icon"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

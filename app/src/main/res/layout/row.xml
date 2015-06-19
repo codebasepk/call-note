@@ -27,11 +27,4 @@
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/Thumbnail"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/drop_shadow"/>
-
 </LinearLayout>

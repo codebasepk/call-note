@@ -167,7 +167,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     convertView = inflater.inflate(R.layout.row, parent, false);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.FilePath);
-                    holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
                     holder.summary = (TextView) convertView.findViewById(R.id.summary);
                     convertView.setTag(holder);
                 } else {
@@ -176,7 +175,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                 holder.title.setText(arrayList.get(position));
                 holder.summary.setText(mNoteSummaries.get(position));
                 Uri uri = Uri.parse(mDbHelpers.getIconLinkForNote(arrayList.get(position)));
-                holder.thumbnail.setImageURI(uri);
                 return convertView;
             }
         }

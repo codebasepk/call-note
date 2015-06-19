@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -37,6 +39,7 @@ public class NoteActivity extends ActionBarActivity  {
     private String mNote;
     private String mId = null;
     private String[] mCheckedContacts;
+    private ImageView iconImageView;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -129,17 +132,21 @@ public class NoteActivity extends ActionBarActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
         Switch noteTrigger = (Switch) findViewById(R.id.note_switch);
+        iconImageView = (ImageView) findViewById(R.id.image_icon);
         mHelpers = new Helpers(getApplicationContext());
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         mTitle = noteTitle.getText().toString();
         mNote = editTextNote.getText().toString();
+
         if (getIntent().getExtras() != null) {
             String title = getIntent().getExtras().getString("note_title", "");
                     noteTitle.setText(title);
             String[] detailsForThisNote = mDbHelpers.retrieveNoteDetails(title);
             mId = detailsForThisNote[0];
+            iconImageView.setImageURI(Uri.parse(detailsForThisNote[4]));
+            System.out.println("ID "+mId);
             imageVariable = detailsForThisNote[4];
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             noteTrigger.setVisibility(View.VISIBLE);
@@ -216,6 +223,8 @@ public class NoteActivity extends ActionBarActivity  {
             @Override
             public void onClick(View view) {
                 imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
+                iconImageView.setImageResource(R.drawable.character_1);
+                iconImageView.setVisibility(View.VISIBLE);
                 alert.dismiss();
             }
         });
@@ -224,6 +233,8 @@ public class NoteActivity extends ActionBarActivity  {
             @Override
             public void onClick(View view) {
                 imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_2;
+                iconImageView.setImageResource(R.drawable.character_2);
+                iconImageView.setVisibility(View.VISIBLE);
                 alert.dismiss();
             }
         });
@@ -232,6 +243,8 @@ public class NoteActivity extends ActionBarActivity  {
             @Override
             public void onClick(View view) {
                 imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_3;
+                iconImageView.setImageResource(R.drawable.character_3);
+                iconImageView.setVisibility(View.VISIBLE);
                 alert.dismiss();
             }
         });
