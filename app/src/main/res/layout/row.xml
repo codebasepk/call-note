@@ -25,6 +25,10 @@
             android:id="@+id/summary"
             android:layout_width="200dp"
             android:layout_height="wrap_content"/>
-
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/Thumbnail"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

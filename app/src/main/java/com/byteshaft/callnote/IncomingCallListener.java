@@ -1,6 +1,8 @@
 package com.byteshaft.callnote;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -16,6 +18,8 @@ public class IncomingCallListener extends PhoneStateListener {
     private ArrayList<String> titles;
     private ArrayList<String> summaries;
     private OverlayHelpers mOverlayHelpers;
+    private SQLiteDatabase mDbHelper;
+    private SqliteHelpers mSqliteHelpers;
 
     public IncomingCallListener(Context context) {
         super();
@@ -26,10 +30,10 @@ public class IncomingCallListener extends PhoneStateListener {
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
-        dbHelpers = new DataBaseHelpers(mContext);
+        mSqliteHelpers = new SqliteHelpers(mContext);
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
-                getNotesForNumber(incomingNumber);
+                getAllNotesForNumber(incomingNumber);
                 System.out.println(titles.size());
                 System.out.println(summaries.size());
                 if (titles.size() == 1 && summaries.size() == 1) {
@@ -47,22 +51,23 @@ public class IncomingCallListener extends PhoneStateListener {
         }
     }
 
-    private void getNotesForNumber(String number) {
-        arrayList = dbHelpers.getAllNumbers();
+    private void getAllNotesForNumber(String number) {
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
         titles = new ArrayList<>();
         summaries = new ArrayList<>();
-        for(String contact : arrayList) {
-            if (PhoneNumberUtils.compare(contact, number)) {
-                ArrayList<String> noteTitles = dbHelpers.getTitleFromNumber(contact);
-                ArrayList<String> noteSummaries = dbHelpers.getSummaryFromNumber(contact);
-                for (String val: noteTitles) {
-                    titles.add(val);
+        String query = String.format(
+                "SELECT * FROM %s", SqliteHelpers.TABLE_NAME);
+        Cursor cursor = mDbHelper.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            String numbers = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN));
+            String[] numbersArray = numbers.split(",");
+            for (int i = 0; i < numbersArray.length; i++) {
+                if (PhoneNumberUtils.compare(numbersArray[i], number)) {
+                    String title = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
+                    String summary = cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION));
+                    titles.add(title);
+                    summaries.add(summary);
                 }
-
-                for (String value1 : noteSummaries) {
-                    summaries.add(value1);
-                }
-                return;
             }
         }
     }

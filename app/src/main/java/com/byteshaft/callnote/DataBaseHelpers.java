@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
+import android.util.SparseArray;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,49 +34,75 @@ public class DataBaseHelpers {
         return value;
     }
 
-    void createNewEntry(String[] value, String note, String desc, String image, String date) {
+    void createNewEntry(String value, String note, String desc, String image, String date) {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         ContentValues values = new ContentValues();
-        for (String val : value) {
-            values.put(SqliteHelpers.NUMBER_COLUMN, val);
-            values.put(SqliteHelpers.NOTES_COLUMN, note);
-            values.put(SqliteHelpers.PICTURE_COLUMN, image);
-            values.put(SqliteHelpers.DATE_COLUMN, date);
-            values.put(SqliteHelpers.DESCRIPTION, desc);
-            mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
-            Log.i(Helpers.LOG_TAG, "created New Entry");
-        }
+        System.out.println(value);
+        values.put(SqliteHelpers.NUMBER_COLUMN, value);
+        values.put(SqliteHelpers.NOTES_COLUMN, note);
+        values.put(SqliteHelpers.PICTURE_COLUMN, image);
+        values.put(SqliteHelpers.DATE_COLUMN, date);
+        values.put(SqliteHelpers.DESCRIPTION, desc);
+        mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
+        Log.i(Helpers.LOG_TAG, "created New Entry");
+//        for (String val : value) {
+//            System.out.println(val);
+//            values.put(SqliteHelpers.NUMBER_COLUMN, val);
+//            values.put(SqliteHelpers.NOTES_COLUMN, note);
+//            values.put(SqliteHelpers.PICTURE_COLUMN, image);
+//            values.put(SqliteHelpers.DATE_COLUMN, date);
+//            values.put(SqliteHelpers.DESCRIPTION, desc);
+//            mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
+//            Log.i(Helpers.LOG_TAG, "created New Entry");
+//        }
         closeDatabase();
     }
 
-    void clickUpdate(String id, String[] number, String note, String desc, String image, String date) {
+    void clickUpdate(String id, String number, String note, String desc, String image, String date) {
         ContentValues values = new ContentValues();
-        for (String val : number) {
-            values.put(SqliteHelpers.NUMBER_COLUMN, val);
-            values.put(SqliteHelpers.NOTES_COLUMN, note);
-            values.put(SqliteHelpers.PICTURE_COLUMN, image);
-            values.put(SqliteHelpers.DATE_COLUMN, date);
-            values.put(SqliteHelpers.DESCRIPTION, desc);
-            mDbHelper.update(SqliteHelpers.TABLE_NAME, values, SqliteHelpers.ID_COLUMN + "=" + id, null);
-            Log.i(Helpers.LOG_TAG, "Updated.......");
-        }
+        values.put(SqliteHelpers.NUMBER_COLUMN, number);
+        values.put(SqliteHelpers.NOTES_COLUMN, note);
+        values.put(SqliteHelpers.PICTURE_COLUMN, image);
+        values.put(SqliteHelpers.DATE_COLUMN, date);
+        values.put(SqliteHelpers.DESCRIPTION, desc);
+        mDbHelper.update(SqliteHelpers.TABLE_NAME, values, SqliteHelpers.ID_COLUMN + "=" + id, null);
+        Log.i(Helpers.LOG_TAG, "Updated.......");
+//        for (String val : number) {
+//            values.put(SqliteHelpers.NUMBER_COLUMN, val);
+//            values.put(SqliteHelpers.NOTES_COLUMN, note);
+//            values.put(SqliteHelpers.PICTURE_COLUMN, image);
+//            values.put(SqliteHelpers.DATE_COLUMN, date);
+//            values.put(SqliteHelpers.DESCRIPTION, desc);
+//            mDbHelper.update(SqliteHelpers.TABLE_NAME, values, SqliteHelpers.ID_COLUMN + "=" + id, null);
+//            Log.i(Helpers.LOG_TAG, "Updated.......");
+//        }
         closeDatabase();
     }
 
-    void updateData(String[] number, String note, String desc, String image, String date) {
+    void updateData(String number, String note, String desc, String image, String date) {
         ContentValues values = new ContentValues();
-        for (String val : number) {
-            values.put(SqliteHelpers.NUMBER_COLUMN, val);
-            values.put(SqliteHelpers.NOTES_COLUMN, note);
-            values.put(SqliteHelpers.PICTURE_COLUMN, image);
-            values.put(SqliteHelpers.DATE_COLUMN, date);
-            values.put(SqliteHelpers.DESCRIPTION, desc);
-            String selection = SqliteHelpers.NOTES_COLUMN + " LIKE ?"; // where ID column = rowId (that is, selectionArgs)
-            String[] selectionArgs = { note };
-            mDbHelper.update(SqliteHelpers.TABLE_NAME, values, selection,
-                    selectionArgs);
-            Log.i(Helpers.LOG_TAG, "Updated.......");
-        }
+        values.put(SqliteHelpers.NUMBER_COLUMN, number);
+        values.put(SqliteHelpers.NOTES_COLUMN, note);
+        values.put(SqliteHelpers.PICTURE_COLUMN, image);
+        values.put(SqliteHelpers.DATE_COLUMN, date);
+        values.put(SqliteHelpers.DESCRIPTION, desc);
+        String selection = SqliteHelpers.NOTES_COLUMN + " LIKE ?"; // where ID column = rowId (that is, selectionArgs)
+        String[] selectionArgs = { note };
+        mDbHelper.update(SqliteHelpers.TABLE_NAME, values, selection,
+                selectionArgs);
+        Log.i(Helpers.LOG_TAG, "Updated.......");
+//        for (String val : number) {
+//            values.put(SqliteHelpers.NUMBER_COLUMN, val);
+//            values.put(SqliteHelpers.NOTES_COLUMN, note);
+//            values.put(SqliteHelpers.PICTURE_COLUMN, image);
+//            values.put(SqliteHelpers.DATE_COLUMN, date);
+//            values.put(SqliteHelpers.DESCRIPTION, desc);
+//            String selection = SqliteHelpers.NOTES_COLUMN + " LIKE ?"; // where ID column = rowId (that is, selectionArgs)
+//            String[] selectionArgs = { note };
+//            mDbHelper.update(SqliteHelpers.TABLE_NAME, values, selection,
+//                    selectionArgs);
+//            Log.i(Helpers.LOG_TAG, "Updated.......");
+//        }
         closeDatabase();
     }
 
@@ -237,4 +266,41 @@ public class DataBaseHelpers {
         }
         return arrayList;
     }
+
+//    ArrayList<String> getAllNotesForNumber(String number) {
+//        mDbHelper = mSqliteHelpers.getWritableDatabase();
+//        String query = String.format(
+//                "SELECT * FROM %s", SqliteHelpers.TABLE_NAME);
+//        Cursor cursor = mDbHelper.rawQuery(query, null);
+//        while (cursor.moveToNext()) {
+//            String numbers = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN));
+//            String[] numbersArray = numbers.split(",");
+//            for (int i = 0; i < numbersArray.length; i++) {
+//                if (PhoneNumberUtils.compare(numbersArray[i], number)) {
+//                    String title = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
+//                    String summary = cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION));
+//                }
+//            }
+//        }
+//    }
+
+//    private void getNotesForNumber(String number) {
+//        arrayList = dbHelpers.getAllNumbers();
+//        titles = new ArrayList<>();
+//        summaries = new ArrayList<>();
+//        for(String contact : arrayList) {
+//            if (PhoneNumberUtils.compare(contact, number)) {
+//                ArrayList<String> noteTitles = dbHelpers.getTitleFromNumber(contact);
+//                ArrayList<String> noteSummaries = dbHelpers.getSummaryFromNumber(contact);
+//                for (String val: noteTitles) {
+//                    titles.add(val);
+//                }
+//
+//                for (String value1 : noteSummaries) {
+//                    summaries.add(value1);
+//                }
+//                return;
+//            }
+//        }
+//    }
 }

@@ -94,7 +94,7 @@ public class Helpers extends ContextWrapper {
         return contactExistsInWhitelist;
     }
 
-    private String[] getCheckedContacts(String checkedContacts) {
+    String[] getCheckedContacts(String checkedContacts) {
         return checkedContacts.split(",");
     }
 
@@ -141,5 +141,18 @@ public class Helpers extends ContextWrapper {
 
     SharedPreferences getPreferenceManager() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    }
+
+    void putTemporaryPreferenceToPermanent() {
+        SharedPreferences preferences = getPreferenceManager();
+        String temp = preferences.getString("checkedContactsTemp", null);
+        preferences.edit().putString("checkedContactsPrefs", temp).commit();
+
+    }
+
+    void putPermanentPreferenceToTemporary() {
+        SharedPreferences preferences = getPreferenceManager();
+        String permanent = preferences.getString("checkedContactsPrefs", null);
+        preferences.edit().putString("checkedContactsTemp", permanent).commit();
     }
 }

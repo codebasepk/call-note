@@ -1,5 +1,6 @@
 package com.byteshaft.callnote;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,14 +39,17 @@ public class NoteActivity extends ActionBarActivity  {
     private String mTitle;
     private String mNote;
     private String mId = null;
-    private String[] mCheckedContacts;
+    private String mCheckedContacts;
+    private SharedPreferences mPreferences;
     private ImageView iconImageView;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         mTitle = noteTitle.getText().toString();
         mNote = editTextNote.getText().toString();
-        mCheckedContacts = mHelpers.getCheckedContacts();
+        mHelpers.putTemporaryPreferenceToPermanent();
+//        mCheckedContacts = mHelpers.getCheckedContacts();
+        mCheckedContacts = getPermanentPreference();
         if (mTitle.isEmpty()) {
             mTitle = mHelpers.getCurrentDateandTime().substring(0,20);
         }
@@ -131,9 +135,12 @@ public class NoteActivity extends ActionBarActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
-        Switch noteTrigger = (Switch) findViewById(R.id.note_switch);
+        AppGlobals.setIsNoteEditModeFirst(true);
+        mPreferences = AppGlobals.getSharedPreferences();
+//        Switch noteTrigger = (Switch) findViewById(R.id.note_switch);
         iconImageView = (ImageView) findViewById(R.id.image_icon);
         mHelpers = new Helpers(getApplicationContext());
+        mHelpers.putPermanentPreferenceToTemporary();
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
@@ -149,7 +156,7 @@ public class NoteActivity extends ActionBarActivity  {
             System.out.println("ID "+mId);
             imageVariable = detailsForThisNote[4];
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
-            noteTrigger.setVisibility(View.VISIBLE);
+//            noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
         }
         Button addIcon = (Button) findViewById(R.id.button_icon);
@@ -174,18 +181,6 @@ public class NoteActivity extends ActionBarActivity  {
         AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
         db.setView(dialog_layout);
         db.setTitle("Select Contacts");
-        db.setPositiveButton("OK", new
-                DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
         ListView listView = (ListView) dialog_layout.findViewById(R.id.lv);
         final ContactsAdapter ma = new ContactsAdapter(getApplicationContext(), mTitle);
         listView.setAdapter(ma);
@@ -193,18 +188,43 @@ public class NoteActivity extends ActionBarActivity  {
         checkAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                preferences.edit().putString("check", "checked_all").commit();
-                ma.notifyDataSetChanged();
+////                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+////                preferences.edit().putString("check", "checked_all").commit();
+//                StringBuilder checkedContacts = new StringBuilder();
+//                for (int i = 0; i < ma.getCount(); i++) {
+//                    checkedContacts.append(ContactsAdapter.mContactNumbers.get(i));
+//                    checkedContacts.append(",");
+//                }
+//                mPreferences.edit().putString("checkedContactsPrefs", checkedContacts.toString()).commit();
+//                ma.notifyDataSetChanged();
             }
         });
         Button uncheckAll = (Button) dialog_layout.findViewById(R.id.button_uncheck_all);
         uncheckAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                preferences.edit().putString("check", "unchecked_all").commit();
-                ma.notifyDataSetChanged();
+//                mPreferences.edit().putString("checkedContactsPrefs", null).commit();
+//                ma.notifyDataSetChanged();
+            }
+        });
+        db.setPositiveButton("OK", new
+                DialogInterface.OnClickListener() {
+                    @SuppressLint("CommitPrefEdits")
+                    public void onClick(DialogInterface dialog, int which) {
+                        StringBuilder builder = new StringBuilder();
+                        for (int i = 0; i < ma.getCount(); i++) {
+                            if (ContactsAdapter.mCheckStates.get(i)) {
+                                builder.append(ma.getContactNumbers().get(i));
+                                builder.append(",");
+                            }
+                        }
+                        mPreferences.edit().putString("checkedContactsTemp", builder.toString()).commit();
+                    }
+                });
+        db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ContactsAdapter.mCheckStates = null;
             }
         });
         db.show();
@@ -286,5 +306,16 @@ public class NoteActivity extends ActionBarActivity  {
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    private String[] getTemporarySP() {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String output = mPreferences.getString("checkedContactsTemp", null);
+        return output.split(",");
+    }
+
+    private String getPermanentPreference() {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        return mPreferences.getString("checkedContactsPrefs", null);
     }
 }

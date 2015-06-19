@@ -20,22 +20,46 @@ import java.util.List;
 
 public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener {
 
-    private SparseBooleanArray mCheckStates;
+    static SparseBooleanArray mCheckStates;
     private LayoutInflater mInflater;
     private SharedPreferences mPreferences;
     private List<String> mContactNames;
     private List<String> mContactNumbers;
     private ArrayList<String> numbersForNote;
+    private String[] mCheckedContactsInSP;
+    static StringBuilder sCheckedContactsToSave;
+    private String[] mTemporaryDB;
+    private Context mContext;
 
     ContactsAdapter(Context context, String noteTitle) {
+        mContext = context;
         Helpers helper = new Helpers(context.getApplicationContext());
         DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(context);
-        numbersForNote = dataBaseHelpers.getNumberFromNote(noteTitle);
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        if (AppGlobals.isIsNoteEditModeFirst()) {
+            numbersForNote = dataBaseHelpers.getNumberFromNote(noteTitle);
+            putDatabaseContactsToTemporarySP(numbersForNote);
+            AppGlobals.setIsNoteEditModeFirst(false);
+        }
+        mTemporaryDB = getTemporarySP();
+        mPreferences = AppGlobals.getSharedPreferences();
+//        mCheckedContactsInSP = helper.getCheckedContacts();
         mContactNames = helper.getAllContactNames();
         mContactNumbers = helper.getAllContactNumbers();
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mCheckStates = new SparseBooleanArray(mContactNumbers.size());
+        int i = 0;
+        for (String contactNumber : mContactNumbers) {
+            for (String number : mTemporaryDB) {
+                if (contactNumber.equals(number)) {
+                    mCheckStates.put(i, true);
+                }
+            }
+            i++;
+        }
+    }
+
+    public List<String> getContactNumbers() {
+        return mContactNumbers;
     }
 
     @Override
@@ -73,17 +97,24 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
         }
 
         viewHolder.checkbox.setTag(position);
-        String checkedPref = mPreferences.getString("check", "blah");
-        if (checkedPref.equals("checked_all")) {
-            viewHolder.checkbox.setChecked(true);
-        } else if(checkedPref.equals("unchecked_all")) {
-            viewHolder.checkbox.setChecked(false);
-        } else {
-            for (String number : numbersForNote) {
-                viewHolder.checkbox.setChecked(mContactNumbers.get(position).equals(number));
-            }
-            viewHolder.checkbox.setChecked(mCheckStates.get(position));
-        }
+        viewHolder.checkbox.setChecked(mCheckStates.get(position));
+//        for (String numberInDb : numbersForNote) {
+//            System.out.println(numberInDb);
+//            if (mContactNumbers.get(position).equals(numberInDb)) {
+//                viewHolder.checkbox.setChecked(true);
+//            } else {
+//                viewHolder.checkbox.setChecked(false);
+//            }
+//        }
+
+//        String[] temp = getTempContacts();
+//        for (String number : temp) {
+//            if (mContactNumbers.get(position).equals(number)) {
+//                viewHolder.checkbox.setChecked(true);
+//            } else {
+//                viewHolder.checkbox.setChecked(false);
+//            }
+//        }
         viewHolder.name.setText(mContactNames.get(position));
         viewHolder.number.setText(mContactNumbers.get(position));
         return convertView;
@@ -99,13 +130,37 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int id = (int) buttonView.getTag();
         mCheckStates.put(id, isChecked);
-        StringBuilder checkedContacts = new StringBuilder();
+        sCheckedContactsToSave = new StringBuilder();
         for (int i = 0; i < mContactNames.size(); i++) {
             if (mCheckStates.get(i)) {
-                checkedContacts.append(mContactNumbers.get(i));
-                checkedContacts.append(",");
+                sCheckedContactsToSave.append(mContactNumbers.get(i));
+                sCheckedContactsToSave.append(",");
             }
         }
-        mPreferences.edit().putString("checkedContactsPrefs", checkedContacts.toString()).apply();
+    }
+
+    private String[] getTempContacts() {
+        String out = mPreferences.getString("checkedContactsTemp", null);
+        if (out != null) {
+            return out.split(",");
+        } else {
+            return null;
+        }
+    }
+
+    private void putDatabaseContactsToTemporarySP(ArrayList<String> numbers) {
+        StringBuilder builder = new StringBuilder();
+        for (String number: numbers) {
+            builder.append(number);
+            builder.append(",");
+        }
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mPreferences.edit().putString("checkedContactsTemp", builder.toString()).apply();
+    }
+
+    private String[] getTemporarySP() {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String output = mPreferences.getString("checkedContactsTemp", null);
+        return output.split(",");
     }
 }
