@@ -105,7 +105,6 @@ public class DataBaseHelpers {
             Log.i(Helpers.LOG_TAG, " Data retrieved .....");
         }
         return uri;
-
     }
 
     ArrayList<String> getTitleFromNumber(String value) {

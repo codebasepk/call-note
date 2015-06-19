@@ -62,7 +62,6 @@ public class NoteActivity extends ActionBarActivity  {
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                System.out.println("ID "+mId);
                 if (mId != null) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
