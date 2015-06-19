@@ -77,14 +77,15 @@ public class DataBaseHelpers {
         closeDatabase();
     }
 
-    void deleteItem(String column, String value, boolean val) {
+    void deleteItem(String column, String value) {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         mDbHelper.delete(SqliteHelpers.TABLE_NAME, column + " = ?", new String[]{value});
-        if (val) {
-            mDbHelper.execSQL("delete from " + SqliteHelpers.TABLE_NAME + " where " +
-                    SqliteHelpers.NUMBER_COLUMN + " ='" + value + "'");
-            Log.i("sqlite", "All Entries deleted");
-        }
+        Log.i(Helpers.LOG_TAG, "Entry deleted");
+    }
+
+    void deleteItemById(String value) {
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
+        mDbHelper.delete(SqliteHelpers.TABLE_NAME, SqliteHelpers.ID_COLUMN + " = ?", new String[]{value});
         Log.i(Helpers.LOG_TAG, "Entry deleted");
     }
 
