@@ -17,7 +17,7 @@ public class OverlayService extends Service {
         incomingCallListener = new IncomingCallListener(getApplicationContext());
         mTelephonyManager = helpers.getTelephonyManager();
         mTelephonyManager.listen(incomingCallListener, PhoneStateListener.LISTEN_CALL_STATE);
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
