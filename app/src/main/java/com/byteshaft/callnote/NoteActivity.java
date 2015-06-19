@@ -268,7 +268,7 @@ public class NoteActivity extends ActionBarActivity  {
                     public void onClick(DialogInterface dialog, int id) {
                         mDbHelpers.updateData(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
-                        NoteActivity.this.finish();
+                           NoteActivity.this.finish();
                     }
                 })
                 .setNegativeButton("No", null)
