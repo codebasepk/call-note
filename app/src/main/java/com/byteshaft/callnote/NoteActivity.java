@@ -3,9 +3,12 @@ package com.byteshaft.callnote;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,44 +17,65 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class NoteActivity extends ActionBarActivity {
+public class NoteActivity extends ActionBarActivity  {
 
-    EditText noteTitle;
-    EditText editTextNote;
-    Button addIcon;
-    Button attachContacts;
-    Button checkAll;
-    Button uncheckAll;
-    ListView lv;
-    ContactsAdapter adapter;
-    Helpers mHelpers;
-    DataBaseHelpers dbHelpers;
-    ImageView imageView1;
-    ImageView imageView2;
-    ImageView imageView3;
-    String imageVariable;
-    AlertDialog alert;
-    Switch noteTrigger;
-    String mTitle;
-    String mNote;
+    private EditText noteTitle;
+    private EditText editTextNote;
+    private Button addIcon;
+    private Button attachContacts;
+    private Button checkAll;
+    private Button uncheckAll;
+    private ListView lv;
+    private ContactsAdapter adapter;
+    private Helpers mHelpers;
+    private DataBaseHelpers mDbHelpers;
+    private ImageView imageView1;
+    private ImageView imageView2;
+    private ImageView imageView3;
+    private String imageVariable;
+    private AlertDialog alert;
+    private Switch noteTrigger;
+    private String mTitle;
+    private String mNote;
+    private String mId = null;
+    private String[] mCheckedContacts;
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        mTitle = noteTitle.getText().toString();
+        mNote = editTextNote.getText().toString();
+        mCheckedContacts = mHelpers.getCheckedContacts();
+        if (mTitle.isEmpty()) {
+            mTitle = mHelpers.getCurrentDateandTime();
+        }
+        if (mNote.isEmpty()) {
+            mNote = " ";
+        }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                String title = noteTitle.getText().toString();
-                String description = editTextNote.getText().toString();
-                String[] checkedContacts = mHelpers.getCheckedContacts();
-                if (!title.isEmpty() && !description.isEmpty()) {
-                    dbHelpers.createNewEntry(checkedContacts, title, description, imageVariable,
-                            mHelpers.getCurrentDateandTime());
+                System.out.println("ID "+mId);
+                if (mId != null) {
+                    mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
+                                    imageVariable, mHelpers.getCurrentDateandTime());
+                    Log.i(Helpers.LOG_TAG,"Update success");
                     this.finish();
+                    } else {
+                    if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null) {
+                        NotesAlreadyExistDialog();
+                    } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null) {
+                        mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
+                                mHelpers.getCurrentDateandTime());
+                        this.finish();
+                    }
                 }
                 break;
             case R.id.action_share:
@@ -81,7 +105,6 @@ public class NoteActivity extends ActionBarActivity {
             mNote = editTextNote.getText().toString();
             setTitle("Edit Note");
         }
-
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
         return super.onCreateOptionsMenu(menu);
@@ -93,13 +116,17 @@ public class NoteActivity extends ActionBarActivity {
         setContentView(R.layout.activity_note);
         noteTrigger = (Switch) findViewById(R.id.note_switch);
         mHelpers = new Helpers(getApplicationContext());
-        dbHelpers = new DataBaseHelpers(getApplicationContext());
+        mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         mTitle = noteTitle.getText().toString();
         mNote = editTextNote.getText().toString();
         if (getIntent().getExtras() != null) {
-                    noteTitle.setText(getIntent().getExtras().getString("note_title", ""));
+            String title = getIntent().getExtras().getString("note_title", "");
+                    noteTitle.setText(title);
+            String[] detailsForThisNote = mDbHelpers.retrieveNoteDetails(title);
+            mId = detailsForThisNote[0];
+            System.out.println("ID "+mId);
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
@@ -121,7 +148,7 @@ public class NoteActivity extends ActionBarActivity {
     }
 
     public void showContactsDialog() {
-        LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
+        final LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
         AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
         db.setView(dialog_layout);
@@ -129,7 +156,7 @@ public class NoteActivity extends ActionBarActivity {
         db.setPositiveButton("OK", new
                 DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(NoteActivity.this, "Checked Contacts Selected", Toast.LENGTH_SHORT).show();
+
                     }
                 });
         db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -139,13 +166,27 @@ public class NoteActivity extends ActionBarActivity {
             }
         });
         lv = (ListView) dialog_layout.findViewById(R.id.lv);
-        ContactsAdapter ma = new ContactsAdapter(getApplicationContext());
+        final ContactsAdapter ma = new ContactsAdapter(getApplicationContext(), mTitle);
         lv.setAdapter(ma);
+        checkAll = (Button) dialog_layout.findViewById(R.id.button_checkall);
+        checkAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                preferences.edit().putString("check", "checked_all").commit();
+                ma.notifyDataSetChanged();
+            }
+        });
+        uncheckAll = (Button) dialog_layout.findViewById(R.id.button_uncheck_all);
+        uncheckAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                preferences.edit().putString("check", "unchecked_all").commit();
+                ma.notifyDataSetChanged();
+            }
+        });
         db.show();
-
-
-        checkAll = (Button) findViewById(R.id.button_checkall);
-        uncheckAll = (Button) findViewById(R.id.button_uncheck_all);
     }
 
     public void initiateIconDialog() {
@@ -197,6 +238,22 @@ public class NoteActivity extends ActionBarActivity {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        NoteActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    void NotesAlreadyExistDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Note already exist")
+                .setMessage("Do you want to replace previous Note ?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mDbHelpers.updateData(mCheckedContacts, mTitle, mNote, imageVariable,
+                                mHelpers.getCurrentDateandTime());
                         NoteActivity.this.finish();
                     }
                 })

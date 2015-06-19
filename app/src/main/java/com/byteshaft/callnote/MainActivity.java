@@ -64,6 +64,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
         listView.setDivider(null);
+
     }
 
     @Override

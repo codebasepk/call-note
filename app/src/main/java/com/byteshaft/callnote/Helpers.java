@@ -97,18 +97,18 @@ public class Helpers extends ContextWrapper {
         return checkedContacts.split(",");
     }
 
-    void getCheckedContactsFromSharedPrefrence(List<String> contactNumber) {
-        String[] checkedContacts = getCheckedContacts();
-        int i = 0;
-        for (String contact : contactNumber) {
-            for (String checkedContact: checkedContacts) {
-                if (contact.equals(checkedContact)) {
-                    ContactsAdapter.mCheckStates.put(i, true);
-                }
-            }
-            i++;
-        }
-    }
+//    void getCheckedContactsFromSharedPrefrence(List<String> contactNumber) {
+//        String[] checkedContacts = getCheckedContacts();
+//        int i = 0;
+//        for (String contact : contactNumber) {
+//            for (String checkedContact: checkedContacts) {
+//                if (contact.equals(checkedContact)) {
+//                    ContactsAdapter.mCheckStates.put(i, true);
+//                }
+//            }
+//            i++;
+//        }
+//    }
 
     String[] getCheckedContacts() {
         String string = getPreferenceManager().getString("checkedContactsPrefs", " ");
@@ -116,7 +116,7 @@ public class Helpers extends ContextWrapper {
     }
 
     String getCurrentDateandTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
         return sdf.format(new Date());
     }
 

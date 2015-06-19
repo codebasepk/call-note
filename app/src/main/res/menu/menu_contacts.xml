@@ -23,5 +23,4 @@
         android:title="Done"
         android:icon="@drawable/ic_done"
         app:showAsAction="ifRoom" />
-
 </menu>

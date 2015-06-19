@@ -7,6 +7,7 @@
     <item
         android:id="@+id/action_addNote"
         android:title="Add Note"
+        android:icon="@drawable/ic_plus"
         app:showAsAction="always"/>
 
     <!--<item-->
