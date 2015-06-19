@@ -29,25 +29,14 @@ public class NoteActivity extends ActionBarActivity  {
 
     private EditText noteTitle;
     private EditText editTextNote;
-    private Button addIcon;
-    private Button attachContacts;
-    private Button checkAll;
-    private Button uncheckAll;
-    private ListView lv;
-    private ContactsAdapter adapter;
     private Helpers mHelpers;
     private DataBaseHelpers mDbHelpers;
-    private ImageView imageView1;
-    private ImageView imageView2;
-    private ImageView imageView3;
     private String imageVariable;
     private AlertDialog alert;
-    private Switch noteTrigger;
     private String mTitle;
     private String mNote;
     private String mId = null;
     private String[] mCheckedContacts;
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -93,7 +82,6 @@ public class NoteActivity extends ActionBarActivity  {
                     mDbHelpers.deleteItemById(mId);
                     finish();
                 }
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -120,7 +108,7 @@ public class NoteActivity extends ActionBarActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
-        noteTrigger = (Switch) findViewById(R.id.note_switch);
+        Switch noteTrigger = (Switch) findViewById(R.id.note_switch);
         mHelpers = new Helpers(getApplicationContext());
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
@@ -137,14 +125,14 @@ public class NoteActivity extends ActionBarActivity  {
             noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
         }
-        addIcon = (Button) findViewById(R.id.button_icon);
+        Button addIcon = (Button) findViewById(R.id.button_icon);
         addIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 initiateIconDialog();
             }
         });
-        attachContacts = (Button) findViewById(R.id.attach_contacts);
+        Button attachContacts = (Button) findViewById(R.id.attach_contacts);
         attachContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,10 +159,10 @@ public class NoteActivity extends ActionBarActivity  {
 
             }
         });
-        lv = (ListView) dialog_layout.findViewById(R.id.lv);
+        ListView listView = (ListView) dialog_layout.findViewById(R.id.lv);
         final ContactsAdapter ma = new ContactsAdapter(getApplicationContext(), mTitle);
-        lv.setAdapter(ma);
-        checkAll = (Button) dialog_layout.findViewById(R.id.button_checkall);
+        listView.setAdapter(ma);
+        Button checkAll = (Button) dialog_layout.findViewById(R.id.button_checkall);
         checkAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,7 +171,7 @@ public class NoteActivity extends ActionBarActivity  {
                 ma.notifyDataSetChanged();
             }
         });
-        uncheckAll = (Button) dialog_layout.findViewById(R.id.button_uncheck_all);
+        Button uncheckAll = (Button) dialog_layout.findViewById(R.id.button_uncheck_all);
         uncheckAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,7 +191,7 @@ public class NoteActivity extends ActionBarActivity  {
         db.setView(dialog_layout);
         db.setTitle("Add Icon");
         alert = db.show();
-        imageView1 = (ImageView) dialog_layout.findViewById(R.id.character_1);
+        ImageView imageView1 = (ImageView) dialog_layout.findViewById(R.id.character_1);
         imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -211,7 +199,7 @@ public class NoteActivity extends ActionBarActivity  {
                 alert.dismiss();
             }
         });
-        imageView2 = (ImageView) dialog_layout.findViewById(R.id.character_2);
+        ImageView imageView2 = (ImageView) dialog_layout.findViewById(R.id.character_2);
         imageView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,7 +207,7 @@ public class NoteActivity extends ActionBarActivity  {
                 alert.dismiss();
             }
         });
-        imageView3 = (ImageView) dialog_layout.findViewById(R.id.character_3);
+        ImageView imageView3 = (ImageView) dialog_layout.findViewById(R.id.character_3);
         imageView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
