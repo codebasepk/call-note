@@ -134,7 +134,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
             public void onClick(DialogInterface dialog, int which) {
                 DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
                 dataBaseHelpers.deleteItem(SqliteHelpers.NOTES_COLUMN, (String)
-                        parent.getItemAtPosition(position), false);
+                        parent.getItemAtPosition(position));
                 mModeAdapter.remove(mModeAdapter.getItem(position));
                 mModeAdapter.notifyDataSetChanged();
                 dialog.dismiss();
