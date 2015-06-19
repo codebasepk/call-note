@@ -14,6 +14,7 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -116,8 +117,15 @@ public class Helpers extends ContextWrapper {
     }
 
     String getCurrentDateandTime() {
+        Date formattedDate = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-        return sdf.format(new Date());
+        String date = sdf.format(new Date());
+        try {
+            formattedDate = sdf.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return formattedDate.toString();
     }
 
     void saveServiceStateEnabled(boolean enable) {

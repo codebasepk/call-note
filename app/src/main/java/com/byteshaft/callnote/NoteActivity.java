@@ -60,9 +60,11 @@ public class NoteActivity extends ActionBarActivity  {
         if (mNote.isEmpty()) {
             mNote = " ";
         }
+        if (imageVariable == null) {
+            imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
+        }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                System.out.println("ID "+mId);
                 if (mId != null) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
