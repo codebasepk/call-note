@@ -78,10 +78,30 @@ public class NoteActivity extends ActionBarActivity  {
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 break;
             case R.id.action_delete:
-                if (!mId.isEmpty()) {
-                    mDbHelpers.deleteItemById(mId);
-                    finish();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Delete");
+                builder.setMessage("Are you sure?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!mId.isEmpty()) {
+                            mDbHelpers.deleteItemById(mId);
+                            finish();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -248,7 +268,7 @@ public class NoteActivity extends ActionBarActivity  {
                     public void onClick(DialogInterface dialog, int id) {
                         mDbHelpers.updateData(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
-                        NoteActivity.this.finish();
+                           NoteActivity.this.finish();
                     }
                 })
                 .setNegativeButton("No", null)

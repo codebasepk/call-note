@@ -7,11 +7,13 @@
 
     <Switch
         android:id="@+id/aSwitch"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:text="Pop-Up Service"
+        android:text="Call Note"
+        android:paddingLeft="9dp"
+        android:paddingRight="9dp"
         android:textStyle="bold"/>
 
     <ListView
