@@ -34,8 +34,14 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     }
 
     void removePopupNote() {
-        if (mWindowManager != null && isViewCreated) {
-            mWindowManager.removeView(mSimpleLayout);
+        try {
+            if (mWindowManager != null && isViewCreated) {
+                mWindowManager.removeView(mSimpleLayout);
+                isViewCreated = false;
+                System.out.println("OK");
+            }
+        } catch (IllegalArgumentException e) {
+            mWindowManager = null;
             isViewCreated = false;
         }
     }
