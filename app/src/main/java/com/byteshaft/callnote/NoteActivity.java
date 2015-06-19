@@ -47,7 +47,7 @@ public class NoteActivity extends ActionBarActivity  {
         mNote = editTextNote.getText().toString();
         mCheckedContacts = mHelpers.getCheckedContacts();
         if (mTitle.isEmpty()) {
-            mTitle = mHelpers.getCurrentDateandTime();
+            mTitle = mHelpers.getCurrentDateandTime().substring(0,20);
         }
         if (mNote.isEmpty()) {
             mNote = " ";
@@ -147,6 +147,7 @@ public class NoteActivity extends ActionBarActivity  {
             mId = detailsForThisNote[0];
             iconImageView.setImageURI(Uri.parse(detailsForThisNote[4]));
             System.out.println("ID "+mId);
+            imageVariable = detailsForThisNote[4];
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
