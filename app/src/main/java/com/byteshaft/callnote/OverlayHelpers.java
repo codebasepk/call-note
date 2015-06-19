@@ -28,6 +28,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     private ArrayList<String> mTitles;
     private ArrayList<String> mSummaries;
     private boolean mHasMoreNotes;
+    private String whichViewIsVisible;
 
     public OverlayHelpers(Context base) {
         super(base);
@@ -35,9 +36,16 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
 
     void removePopupNote() {
         if (mWindowManager != null && isViewCreated) {
-            mWindowManager.removeView(mSimpleLayout);
-            isViewCreated = false;
+            switch (whichViewIsVisible) {
+                case "single":
+                    mWindowManager.removeView(mSimpleLayout);
+                    break;
+                case "multi":
+                    mWindowManager.removeView(mScrollableLayout);
+                    break;
+            }
         }
+        isViewCreated = false;
     }
 
     void showSingleNoteOverlay(String noteTitle, String noteSummary) {
@@ -57,6 +65,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         title.setText(noteTitle);
         summary.setText(noteSummary);
         addViewToWindowManager(mSimpleLayout);
+        whichViewIsVisible = "single";
     }
 
     void showSingleNoteOverlay(ArrayList<String> titles, ArrayList<String> summaries, boolean hasMore) {
@@ -75,6 +84,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         Button aButton = (Button) mScrollableLayout.findViewById(R.id.less_button);
         aButton.setOnClickListener(this);
         addViewToWindowManager(mScrollableLayout);
+        whichViewIsVisible = "multi";
     }
 
     private void addViewToWindowManager(View view) {

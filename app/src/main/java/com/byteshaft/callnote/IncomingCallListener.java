@@ -13,8 +13,8 @@ public class IncomingCallListener extends PhoneStateListener {
     ArrayList<String> arrayList;
     DataBaseHelpers dbHelpers;
     Context mContext;
-    private ArrayList<String> titles = new ArrayList<String>();
-    private ArrayList<String> summaries = new ArrayList<String>();
+    private ArrayList<String> titles;
+    private ArrayList<String> summaries;
     private OverlayHelpers mOverlayHelpers;
 
     public IncomingCallListener(Context context) {
@@ -30,6 +30,8 @@ public class IncomingCallListener extends PhoneStateListener {
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
                 getNotesForNumber(incomingNumber);
+                System.out.println(titles.size());
+                System.out.println(summaries.size());
                 if (titles.size() == 1 && summaries.size() == 1) {
                     mOverlayHelpers.showSingleNoteOverlay(titles.get(0), summaries.get(0));
                 } else if (titles.size() > 1 && summaries.size() > 1) {
@@ -47,6 +49,8 @@ public class IncomingCallListener extends PhoneStateListener {
 
     private void getNotesForNumber(String number) {
         arrayList = dbHelpers.getAllNumbers();
+        titles = new ArrayList<>();
+        summaries = new ArrayList<>();
         for(String contact : arrayList) {
             if (PhoneNumberUtils.compare(contact, number)) {
                 ArrayList<String> noteTitles = dbHelpers.getTitleFromNumber(contact);
