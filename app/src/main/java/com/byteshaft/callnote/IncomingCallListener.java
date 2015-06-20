@@ -10,8 +10,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class IncomingCallListener extends PhoneStateListener {
     ArrayList<String> arrayList;
