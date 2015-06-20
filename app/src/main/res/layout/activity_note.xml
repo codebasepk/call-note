@@ -2,6 +2,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="190dp"
+            android:paddingEnd="190dp"
+            android:paddingLeft="10dp"
+            android:text="Show.."/>
+
+    <Spinner
+        android:id="@+id/noteStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        >
+    </Spinner>
+    </LinearLayout>
 
     <!--<Switch-->
         <!--android:id="@+id/note_switch"-->
@@ -26,6 +48,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_centerHorizontal="true"
+        android:layout_below="@+id/linear_layout"
         android:hint="Title"/>
 
     <EditText

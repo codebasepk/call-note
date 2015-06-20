@@ -19,16 +19,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NoteActivity extends ActionBarActivity  {
+public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSelectedListener{
 
     private EditText noteTitle;
     private EditText editTextNote;
@@ -42,6 +45,8 @@ public class NoteActivity extends ActionBarActivity  {
     private String mCheckedContacts = null;
     private SharedPreferences mPreferences;
     private ImageView iconImageView;
+    private int spinnerState;
+    private String currentNote;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -66,6 +71,7 @@ public class NoteActivity extends ActionBarActivity  {
                 if (mId != null && !mNote.isEmpty() && !mCheckedContacts.isEmpty()) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
+                    mHelpers.saveSpinnerState(mTitle, spinnerState);
                     Log.i(Helpers.LOG_TAG,"Update success");
                     this.finish();
                     } else {
@@ -76,6 +82,7 @@ public class NoteActivity extends ActionBarActivity  {
                             !mNote.isEmpty() && mCheckedContacts != null) {
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
+                        mHelpers.saveSpinnerState(mTitle, spinnerState);
                         this.finish();
                     }
                 }
@@ -148,20 +155,23 @@ public class NoteActivity extends ActionBarActivity  {
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
+        Spinner mSpinner = (Spinner) findViewById(R.id.noteStatus);
+        mSpinner.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
+                R.array.spinner, R.layout.spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
         mTitle = noteTitle.getText().toString();
         mNote = editTextNote.getText().toString();
-
         if (getIntent().getExtras() != null) {
             String title = getIntent().getExtras().getString("note_title", "");
                     noteTitle.setText(title);
             String[] detailsForThisNote = mDbHelpers.retrieveNoteDetails(title);
-            mId = detailsForThisNote[0];
             iconImageView.setImageURI(Uri.parse(detailsForThisNote[4]));
-            System.out.println("ID "+mId);
             imageVariable = detailsForThisNote[4];
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
-//            noteTrigger.setVisibility(View.VISIBLE);
             setTitle("Edit Note");
+            mSpinner.setSelection(mHelpers.getSpinnerValue(title));
         }
         Button addIcon = (Button) findViewById(R.id.button_icon);
         addIcon.setOnClickListener(new View.OnClickListener() {
@@ -313,6 +323,7 @@ public class NoteActivity extends ActionBarActivity  {
                     public void onClick(DialogInterface dialog, int id) {
                         mDbHelpers.updateData(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
+                        mHelpers.saveSpinnerState(mTitle, spinnerState);
                            NoteActivity.this.finish();
                     }
                 })
@@ -329,5 +340,16 @@ public class NoteActivity extends ActionBarActivity  {
     private String getPermanentPreference() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         return mPreferences.getString("checkedContactsPrefs", null);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        spinnerState = position;
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
