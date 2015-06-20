@@ -82,12 +82,12 @@ public class NoteActivity extends ActionBarActivity  {
                 }
                 break;
             case R.id.action_share:
-                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    sharingIntent.setType("text/plain");
-                    String shareBody = getIntent().getExtras().getString("note_summary", "");
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TITLE, getIntent().getExtras().getString("note_title", ""));
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                    startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "Try ‘Call Note’, it’s really fun. '\n' " +
+                        "Link: https://play.google.com/store/apps/details?id=com.fungamesmobile.callnote”";
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 break;
             case R.id.action_delete:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
