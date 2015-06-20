@@ -68,7 +68,9 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                if (mId != null && !mNote.isEmpty() && !mCheckedContacts.isEmpty()) {
+                System.out.println(mId);
+                if (mId != null && !mNote.isEmpty() && mCheckedContacts != null) {
+                    System.out.println("ClickUpdate");
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
@@ -77,9 +79,11 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     } else {
                     if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
                             !mNote.isEmpty()&& !mCheckedContacts.isEmpty()) {
+                        System.out.println("newNote");
                         NotesAlreadyExistDialog();
                     } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
                             !mNote.isEmpty() && !mCheckedContacts.isEmpty()) {
+                        System.out.println("createnew Entry");
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         mHelpers.saveSpinnerState(mTitle, spinnerState);
@@ -169,6 +173,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             String[] detailsForThisNote = mDbHelpers.retrieveNoteDetails(title);
             iconImageView.setImageURI(Uri.parse(detailsForThisNote[4]));
             imageVariable = detailsForThisNote[4];
+            mId = detailsForThisNote[0];
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             setTitle("Edit Note");
             mSpinner.setSelection(mHelpers.getSpinnerValue(title));
