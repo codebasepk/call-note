@@ -68,7 +68,8 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                if (mId != null && !mNote.isEmpty() && !mCheckedContacts.isEmpty()) {
+                System.out.println(mId);
+                if (mId != null && !mNote.isEmpty() && mCheckedContacts != null) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
@@ -77,6 +78,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     } else {
                     if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
                             !mNote.isEmpty()&& !mCheckedContacts.isEmpty()) {
+                        System.out.println("newNote");
                         NotesAlreadyExistDialog();
                     } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
                             !mNote.isEmpty() && mCheckedContacts != null) {
@@ -155,7 +157,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
-        Spinner mSpinner = (Spinner) findViewById(R.id.noteStatus);
+        Spinner mSpinner = (Spinner) findViewById(R.id.note_spinner);
         mSpinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
                 R.array.spinner, R.layout.spinner_item);
@@ -169,6 +171,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             String[] detailsForThisNote = mDbHelpers.retrieveNoteDetails(title);
             iconImageView.setImageURI(Uri.parse(detailsForThisNote[4]));
             imageVariable = detailsForThisNote[4];
+            mId = detailsForThisNote[0];
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             setTitle("Edit Note");
             mSpinner.setSelection(mHelpers.getSpinnerValue(title));
