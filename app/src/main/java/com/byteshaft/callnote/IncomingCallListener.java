@@ -1,6 +1,8 @@
 package com.byteshaft.callnote;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.telephony.PhoneNumberUtils;
@@ -46,12 +48,12 @@ public class IncomingCallListener extends PhoneStateListener {
                 mOverlayHelpers.removePopupNote();
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
-                mOverlayHelpers.removePopupNote();
+//                mOverlayHelpers.removePopupNote();
                 break;
         }
     }
 
-    private void getAllNotesForNumber(String number) {
+    void getAllNotesForNumber(String number) {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         titles = new ArrayList<>();
         summaries = new ArrayList<>();
@@ -71,4 +73,20 @@ public class IncomingCallListener extends PhoneStateListener {
             }
         }
     }
+
+    BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+            System.out.println(number);
+            getAllNotesForNumber(number);
+            System.out.println(titles.size());
+            System.out.println(summaries.size());
+            if (titles.size() == 1 && summaries.size() == 1) {
+                mOverlayHelpers.showSingleNoteOverlay(titles.get(0), summaries.get(0));
+            } else if (titles.size() > 1 && summaries.size() > 1) {
+                mOverlayHelpers.showSingleNoteOverlay(titles, summaries, true);
+            }
+        }
+    };
 }
