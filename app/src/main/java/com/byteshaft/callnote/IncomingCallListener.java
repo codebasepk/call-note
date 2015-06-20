@@ -78,15 +78,10 @@ public class IncomingCallListener extends PhoneStateListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-            System.out.println(number);
             getAllNotesForNumber(number);
-            System.out.println(titles.size());
-            System.out.println(summaries.size());
-            if (titles.size() == 1 && summaries.size() == 1) {
-                mOverlayHelpers.showSingleNoteOverlay(titles.get(0), summaries.get(0));
-            } else if (titles.size() > 1 && summaries.size() > 1) {
-                mOverlayHelpers.showSingleNoteOverlay(titles, summaries, true);
-            }
+                if (titles.size() > 0 && summaries.size() > 0) {
+                    mOverlayHelpers.showNoteOverlay(titles, summaries, mImages);
+                }
         }
     };
 }
