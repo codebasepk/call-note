@@ -70,7 +70,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             case R.id.action_apply:
                 System.out.println(mId);
                 if (mId != null && !mNote.isEmpty() && mCheckedContacts != null) {
-                    System.out.println("ClickUpdate");
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
@@ -82,8 +81,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                         System.out.println("newNote");
                         NotesAlreadyExistDialog();
                     } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
-                            !mNote.isEmpty() && !mCheckedContacts.isEmpty()) {
-                        System.out.println("createnew Entry");
+                            !mNote.isEmpty() && mCheckedContacts != null) {
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         mHelpers.saveSpinnerState(mTitle, spinnerState);

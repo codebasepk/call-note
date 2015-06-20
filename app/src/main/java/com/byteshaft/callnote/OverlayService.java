@@ -2,6 +2,7 @@ package com.byteshaft.callnote;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -17,6 +18,8 @@ public class OverlayService extends Service {
         incomingCallListener = new IncomingCallListener(getApplicationContext());
         mTelephonyManager = helpers.getTelephonyManager();
         mTelephonyManager.listen(incomingCallListener, PhoneStateListener.LISTEN_CALL_STATE);
+//        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_NEW_OUTGOING_CALL);
+//        registerReceiver(incomingCallListener.mOutgoingCallListener, intentFilter);
         return START_STICKY;
     }
 
