@@ -157,7 +157,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
-        Spinner mSpinner = (Spinner) findViewById(R.id.noteStatus);
+        Spinner mSpinner = (Spinner) findViewById(R.id.note_spinner);
         mSpinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
                 R.array.spinner, R.layout.spinner_item);
