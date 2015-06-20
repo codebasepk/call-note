@@ -51,25 +51,30 @@ public class NoteActivity extends ActionBarActivity  {
 //        mCheckedContacts = mHelpers.getCheckedContacts();
         mCheckedContacts = getPermanentPreference();
         if (mTitle.isEmpty()) {
-            mTitle = mHelpers.getCurrentDateandTime().substring(0,20);
+            mTitle = mHelpers.getCurrentDateandTime().substring(0,21);
+        }
+        if (mCheckedContacts == null) {
+            Toast.makeText(getApplicationContext(),"please select at least One contact",Toast.LENGTH_SHORT).show();
         }
         if (mNote.isEmpty()) {
-            mNote = " ";
+            Toast.makeText(getApplicationContext(),"Note is empty", Toast.LENGTH_SHORT).show();
         }
         if (imageVariable == null) {
             imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                if (mId != null) {
+                if (mId != null && !mNote.isEmpty() && !mCheckedContacts.isEmpty()) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
                     Log.i(Helpers.LOG_TAG,"Update success");
                     this.finish();
                     } else {
-                    if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null) {
+                    if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
+                            !mNote.isEmpty()&& !mCheckedContacts.isEmpty()) {
                         NotesAlreadyExistDialog();
-                    } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null) {
+                    } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
+                            !mNote.isEmpty() && !mCheckedContacts.isEmpty()) {
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         this.finish();
