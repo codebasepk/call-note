@@ -39,7 +39,7 @@ public class NoteActivity extends ActionBarActivity  {
     private String mTitle;
     private String mNote;
     private String mId = null;
-    private String mCheckedContacts;
+    private String mCheckedContacts = null;
     private SharedPreferences mPreferences;
     private ImageView iconImageView;
 
@@ -53,11 +53,10 @@ public class NoteActivity extends ActionBarActivity  {
         if (mTitle.isEmpty()) {
             mTitle = mHelpers.getCurrentDateandTime().substring(0,21);
         }
-        if (mCheckedContacts == null) {
-            Toast.makeText(getApplicationContext(),"please select at least One contact",Toast.LENGTH_SHORT).show();
-        }
         if (mNote.isEmpty()) {
             Toast.makeText(getApplicationContext(),"Note is empty", Toast.LENGTH_SHORT).show();
+        } else if (mCheckedContacts == null || mCheckedContacts.isEmpty()) {
+            Toast.makeText(getApplicationContext(),"please select at least one contact",Toast.LENGTH_SHORT).show();
         }
         if (imageVariable == null) {
             imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
