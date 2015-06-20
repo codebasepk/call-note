@@ -37,6 +37,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     private WindowManager.LayoutParams mLayoutParams;
     private ArrayList<String> mLatestNote;
     private boolean isPopupExpanded;
+    private Button aButton;
 
     public OverlayHelpers(Context base) {
         super(base);
@@ -60,10 +61,10 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mLatestNote);
         mBubbleLayout = (RelativeLayout) mLayoutInflater.inflate(R.layout.overlay, null);
         mListView = (CustomScrollView)  mBubbleLayout.findViewById(R.id.left_drawer);
-        mListView.setMaxHeight(200);
+        mListView.setMaxHeight(220);
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mArrayAdapter);
-        Button aButton = (Button) mBubbleLayout.findViewById(R.id.less_button);
+        aButton = (Button) mBubbleLayout.findViewById(R.id.button_less_more);
         aButton.setOnClickListener(this);
         if (titles.size() == 1) {
             aButton.setVisibility(View.GONE);
@@ -77,6 +78,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     private void expandNoteOverlay() {
         mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mTitles);
         mListView.setAdapter(mArrayAdapter);
+        aButton.setBackgroundResource(R.drawable.ic_contract);
         mWindowManager.updateViewLayout(mBubbleLayout, mLayoutParams);
         isPopupExpanded = true;
     }
@@ -84,6 +86,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     private void collapseNoteOverlay() {
         mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mLatestNote);
         mListView.setAdapter(mArrayAdapter);
+        aButton.setBackgroundResource(R.drawable.ic_expand);
         mWindowManager.updateViewLayout(mBubbleLayout, mLayoutParams);
         isPopupExpanded = false;
     }
@@ -111,9 +114,10 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.less_button:
+            case R.id.button_less_more:
                 if (isPopupExpanded) {
                     collapseNoteOverlay();
+
                 } else {
                     expandNoteOverlay();
                 }
