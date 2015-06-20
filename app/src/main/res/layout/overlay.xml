@@ -15,12 +15,12 @@
         android:listSelector="@android:color/transparent" />
 
     <Button
-        android:id="@+id/less_button"
+        android:id="@+id/button_less_more"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_below="@+id/left_drawer"
-        android:background="@drawable/ic_contract"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="35dp"/>
+        android:background="@drawable/ic_expand"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="40dp"/>
 
 </RelativeLayout>

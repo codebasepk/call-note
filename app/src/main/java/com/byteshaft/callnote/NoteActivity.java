@@ -73,7 +73,7 @@ public class NoteActivity extends ActionBarActivity  {
                             !mNote.isEmpty()&& !mCheckedContacts.isEmpty()) {
                         NotesAlreadyExistDialog();
                     } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
-                            !mNote.isEmpty() && !mCheckedContacts.isEmpty()) {
+                            !mNote.isEmpty() && mCheckedContacts != null) {
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         this.finish();
