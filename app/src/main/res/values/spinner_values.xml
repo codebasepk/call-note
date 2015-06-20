@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner">
+        <item>Before call</item>
+        <item>After call</item>
+        <item>Before + after call</item>
+        <item>Never</item>
+    </string-array>
+</resources>
