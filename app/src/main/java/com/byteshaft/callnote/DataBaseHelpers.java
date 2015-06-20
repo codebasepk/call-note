@@ -147,7 +147,7 @@ public class DataBaseHelpers {
                 "select " + SqliteHelpers.NOTES_COLUMN + " from " + SqliteHelpers.TABLE_NAME +
                         " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
                 new String[]{"%" + value + "%"});
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<String>();
         while(cursor.moveToNext()) {
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved .....");
@@ -161,7 +161,7 @@ public class DataBaseHelpers {
                 "select " + SqliteHelpers.DESCRIPTION + " from " + SqliteHelpers.TABLE_NAME +
                         " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
                 new String[]{"%" + value + "%"});
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<String>();
         while(cursor.moveToNext()) {
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
             Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
@@ -193,7 +193,7 @@ public class DataBaseHelpers {
         String[] whereArgs = new String[]{value};
         Cursor cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, SqliteHelpers.NOTES_COLUMN + " DESC ", "1");
-        List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<String>();
         while (cursor.moveToNext()) {
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN)));
             list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
@@ -207,7 +207,7 @@ public class DataBaseHelpers {
         mDbHelper = mSqliteHelpers.getReadableDatabase();
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
         Cursor cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> arrayList = new ArrayList<String>();
         while (cursor.moveToNext()) {
             String itemname = cursor.getString(cursor.getColumnIndex(
                     SqliteHelpers.NOTES_COLUMN));
@@ -224,7 +224,7 @@ public class DataBaseHelpers {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
         Cursor cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> arrayList = new ArrayList<String>();
         while (cursor.moveToNext()) {
             String itemname = cursor.getString(cursor.getColumnIndex(
                     SqliteHelpers.NUMBER_COLUMN));
@@ -240,7 +240,7 @@ public class DataBaseHelpers {
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME+ " ORDER BY "+
                 SqliteHelpers.DATE_COLUMN+" DESC";
         Cursor cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> arrayList = new ArrayList<String>();
         while (cursor.moveToNext()) {
               String itemname = cursor.getString(cursor.getColumnIndex(
               SqliteHelpers.NOTES_COLUMN));
@@ -256,7 +256,7 @@ public class DataBaseHelpers {
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME + " ORDER BY "+
                 SqliteHelpers.DATE_COLUMN+" DESC";
         Cursor cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> arrayList = new ArrayList<String>();
         while (cursor.moveToNext()) {
             String itemname = cursor.getString(cursor.getColumnIndex(
                     SqliteHelpers.DESCRIPTION));

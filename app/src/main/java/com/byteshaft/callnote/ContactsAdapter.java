@@ -98,25 +98,14 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
 
         viewHolder.checkbox.setTag(position);
         viewHolder.checkbox.setChecked(mCheckStates.get(position));
-//        for (String numberInDb : numbersForNote) {
-//            System.out.println(numberInDb);
-//            if (mContactNumbers.get(position).equals(numberInDb)) {
-//                viewHolder.checkbox.setChecked(true);
-//            } else {
-//                viewHolder.checkbox.setChecked(false);
-//            }
-//        }
-
-//        String[] temp = getTempContacts();
-//        for (String number : temp) {
-//            if (mContactNumbers.get(position).equals(number)) {
-//                viewHolder.checkbox.setChecked(true);
-//            } else {
-//                viewHolder.checkbox.setChecked(false);
-//            }
-//        }
         viewHolder.name.setText(mContactNames.get(position));
         viewHolder.number.setText(mContactNumbers.get(position));
+
+        if (AppGlobals.isCheckedAll()) {
+            viewHolder.checkbox.setChecked(true);
+        } else if (AppGlobals.isUnCheckedAll()) {
+            viewHolder.checkbox.setChecked(false);
+        }
         return convertView;
     }
 

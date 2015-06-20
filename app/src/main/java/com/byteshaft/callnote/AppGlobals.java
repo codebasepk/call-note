@@ -14,6 +14,8 @@ public class AppGlobals extends Application {
     private static SharedPreferences sPreferences;
     private static Context sContext;
     private static boolean isNoteEditModeFirst;
+    private static boolean sIsCheckedAll;
+    private static boolean sIsUnCheckedAll;
 
     @Override
     public void onCreate() {
@@ -41,5 +43,21 @@ public class AppGlobals extends Application {
 
     static boolean isIsNoteEditModeFirst() {
         return isNoteEditModeFirst;
+    }
+
+    static void setCheckedAll(boolean checkedAll) {
+        sIsCheckedAll = checkedAll;
+    }
+
+    static boolean isCheckedAll() {
+        return sIsCheckedAll;
+    }
+
+    static void setUncheckedAll(boolean unchecked) {
+        sIsUnCheckedAll = unchecked;
+    }
+
+    static boolean isUnCheckedAll() {
+        return sIsUnCheckedAll;
     }
 }
