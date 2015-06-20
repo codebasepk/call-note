@@ -19,7 +19,7 @@
         android:id="@+id/editText_title_note"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:maxLength="20"
+        android:maxLength="21"
         android:maxLines="1"
         android:textStyle="bold"
         android:layout_marginTop="15dp"
