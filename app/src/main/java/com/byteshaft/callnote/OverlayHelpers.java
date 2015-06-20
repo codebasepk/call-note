@@ -3,6 +3,7 @@ package com.byteshaft.callnote;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,8 +13,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,80 +28,77 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     private ArrayAdapter<String> mArrayAdapter;
     private ArrayList<String> mTitles;
     private ArrayList<String> mSummaries;
+    private ArrayList<String> mIcons;
     private boolean mHasMoreNotes;
     private String whichViewIsVisible;
+    private RelativeLayout mBubbleLayout;
+    private LayoutInflater mLayoutInflater;
+    private CustomScrollView mListView;
+    private WindowManager.LayoutParams mLayoutParams;
+    private ArrayList<String> mLatestNote;
+    private boolean isPopupExpanded;
 
     public OverlayHelpers(Context base) {
         super(base);
+        mWindowManager = AppGlobals.getWindowManager();
+        mLayoutInflater = AppGlobals.getLayoutInflater();
     }
 
     void removePopupNote() {
-        if (mWindowManager != null && isViewCreated) {
-            switch (whichViewIsVisible) {
-                case "single":
-                    mWindowManager.removeView(mSimpleLayout);
-                    System.out.println("Removed View SIMPLE");
-                    break;
-                case "multi":
-                    mWindowManager.removeView(mScrollableLayout);
-                    System.out.println("Removed View COMPLEX");
-                    break;
-            }
+        if (isViewCreated) {
+            mWindowManager.removeView(mBubbleLayout);
         }
         isViewCreated = false;
     }
 
-    void showSingleNoteOverlay(String noteTitle, String noteSummary) {
-        LayoutInflater inflater = AppGlobals.getLayoutInflater();
-        mSimpleLayout = (RelativeLayout) inflater.inflate(R.layout.overlay_simple, null);
-        LinearLayout bubbleLayout = (LinearLayout) mSimpleLayout.findViewById(R.id.linear_layout);
-        bubbleLayout.setOnClickListener(this);
-        TextView title = (TextView) mSimpleLayout.findViewById(R.id.title);
-        TextView summary = (TextView) mSimpleLayout.findViewById(R.id.summary);
-        Button moreButton = (Button) mSimpleLayout.findViewById(R.id.more_button);
-        if (mHasMoreNotes) {
-            moreButton.setVisibility(View.VISIBLE);
-            moreButton.setOnClickListener(this);
-        } else {
-            moreButton.setVisibility(View.GONE);
-        }
-        title.setText(noteTitle);
-        summary.setText(noteSummary);
-        addViewToWindowManager(mSimpleLayout);
-        whichViewIsVisible = "single";
-    }
-
-    void showSingleNoteOverlay(ArrayList<String> titles, ArrayList<String> summaries, boolean hasMore) {
+    void showNoteOverlay(ArrayList<String> titles, ArrayList<String> summaries, ArrayList<String> icons) {
         mTitles = titles;
         mSummaries = summaries;
-        mHasMoreNotes = hasMore;
-        showSingleNoteOverlay(mTitles.get(0), mSummaries.get(0));
+        mIcons = icons;
+        mLatestNote = new ArrayList<>();
+        mLatestNote.add(mTitles.get(0));
+        mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mLatestNote);
+        mBubbleLayout = (RelativeLayout) mLayoutInflater.inflate(R.layout.overlay, null);
+        mListView = (CustomScrollView)  mBubbleLayout.findViewById(R.id.left_drawer);
+        mListView.setMaxHeight(200);
+        mListView.setOnItemClickListener(this);
+        mListView.setAdapter(mArrayAdapter);
+        Button aButton = (Button) mBubbleLayout.findViewById(R.id.less_button);
+        aButton.setOnClickListener(this);
+        if (titles.size() == 1) {
+            aButton.setVisibility(View.GONE);
+        } else if (titles.size() > 1) {
+            aButton.setBackgroundResource(R.drawable.ic_expand);
+            aButton.setVisibility(View.VISIBLE);
+        }
+        addViewToWindowManager(mBubbleLayout);
     }
 
-    private void showMultiNoteOverlay() {
+    private void expandNoteOverlay() {
         mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mTitles);
-        LayoutInflater inflater = AppGlobals.getLayoutInflater();
-        mScrollableLayout = (RelativeLayout) inflater.inflate(R.layout.overlay, null);
-        ListView mList = (ListView)  mScrollableLayout.findViewById(R.id.left_drawer);
-        mList.setOnItemClickListener(this);
-        mList.setAdapter(mArrayAdapter);
-        Button aButton = (Button) mScrollableLayout.findViewById(R.id.less_button);
-        aButton.setOnClickListener(this);
-        addViewToWindowManager(mScrollableLayout);
-        whichViewIsVisible = "multi";
+        mListView.setAdapter(mArrayAdapter);
+        mWindowManager.updateViewLayout(mBubbleLayout, mLayoutParams);
+        isPopupExpanded = true;
+    }
+
+    private void collapseNoteOverlay() {
+        mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mLatestNote);
+        mListView.setAdapter(mArrayAdapter);
+        mWindowManager.updateViewLayout(mBubbleLayout, mLayoutParams);
+        isPopupExpanded = false;
     }
 
     private void addViewToWindowManager(View view) {
         mWindowManager = AppGlobals.getWindowManager();
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-        params.type = WindowManager.LayoutParams.TYPE_PHONE;
-        params.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.format = PixelFormat.TRANSPARENT;
-        params.gravity = Gravity.TOP;
-        params.y = getTwentyPercentDownScreenHeight();
-        mWindowManager.addView(view, params);
+        mLayoutParams = new WindowManager.LayoutParams();
+        mLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        mLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        mLayoutParams.format = PixelFormat.TRANSPARENT;
+        mLayoutParams.gravity = Gravity.TOP;
+        mLayoutParams.y = getTwentyPercentDownScreenHeight();
+        mWindowManager.addView(view, mLayoutParams);
         isViewCreated = true;
     }
 
@@ -115,15 +112,14 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.less_button:
-                removePopupNote();
-                showSingleNoteOverlay(mTitles.get(0), mSummaries.get(0));
+                if (isPopupExpanded) {
+                    collapseNoteOverlay();
+                } else {
+                    expandNoteOverlay();
+                }
                 break;
-            case R.id.linear_layout:
+            case R.id.left_drawer:
                 removePopupNote();
-                break;
-            case R.id.more_button:
-                removePopupNote();
-                showMultiNoteOverlay();
                 break;
         }
     }
@@ -135,11 +131,8 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
 
     class CustomBubbleAdapter extends ArrayAdapter<String> {
 
-        private Context mContext;
-
         public CustomBubbleAdapter(Context context, int resource, ArrayList<String> notes) {
             super(context, resource, notes);
-            mContext = context;
         }
 
         @Override
@@ -151,12 +144,14 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
                 holder = new ViewHolder();
                 holder.title = (TextView) convertView.findViewById(R.id.note_title);
                 holder.summary = (TextView) convertView.findViewById(R.id.note_summary);
+                holder.image = (ImageView) convertView.findViewById(R.id.icon_overlay_row);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.title.setText(mTitles.get(position));
             holder.summary.setText(mSummaries.get(position));
+            holder.image.setImageURI(Uri.parse(mIcons.get(position)));
             return convertView;
         }
     }
@@ -164,5 +159,6 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     static class ViewHolder {
         public TextView title;
         public TextView summary;
+        private ImageView image;
     }
 }

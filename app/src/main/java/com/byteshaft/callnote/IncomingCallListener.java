@@ -17,6 +17,7 @@ public class IncomingCallListener extends PhoneStateListener {
     Context mContext;
     private ArrayList<String> titles;
     private ArrayList<String> summaries;
+    private ArrayList<String> mImages;
     private OverlayHelpers mOverlayHelpers;
     private SQLiteDatabase mDbHelper;
     private SqliteHelpers mSqliteHelpers;
@@ -34,12 +35,8 @@ public class IncomingCallListener extends PhoneStateListener {
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
                 getAllNotesForNumber(incomingNumber);
-                System.out.println(titles.size());
-                System.out.println(summaries.size());
-                if (titles.size() == 1 && summaries.size() == 1) {
-                    mOverlayHelpers.showSingleNoteOverlay(titles.get(0), summaries.get(0));
-                } else if (titles.size() > 1 && summaries.size() > 1) {
-                    mOverlayHelpers.showSingleNoteOverlay(titles, summaries, true);
+                if (titles.size() > 0 && summaries.size() > 0) {
+                    mOverlayHelpers.showNoteOverlay(titles, summaries, mImages);
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
@@ -55,6 +52,7 @@ public class IncomingCallListener extends PhoneStateListener {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         titles = new ArrayList<>();
         summaries = new ArrayList<>();
+        mImages = new ArrayList<>();
         String query = String.format(
                 "SELECT * FROM %s", SqliteHelpers.TABLE_NAME);
         Cursor cursor = mDbHelper.rawQuery(query, null);
@@ -65,8 +63,10 @@ public class IncomingCallListener extends PhoneStateListener {
                 if (PhoneNumberUtils.compare(numbersArray[i], number)) {
                     String title = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
                     String summary = cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION));
+                    String image = cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN));
                     titles.add(title);
                     summaries.add(summary);
+                    mImages.add(image);
                 }
             }
         }
