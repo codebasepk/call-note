@@ -31,7 +31,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NoteActivity extends ActionBarActivity implements Spinner.OnItemClickListener{
+public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSelectedListener{
 
     private EditText noteTitle;
     private EditText editTextNote;
@@ -71,7 +71,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemCli
                 if (mId != null && !mNote.isEmpty() && !mCheckedContacts.isEmpty()) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
-
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
                     Log.i(Helpers.LOG_TAG,"Update success");
                     this.finish();
@@ -157,6 +156,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemCli
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         Spinner mSpinner = (Spinner) findViewById(R.id.noteStatus);
+        mSpinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
                 R.array.spinner, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -171,6 +171,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemCli
             imageVariable = detailsForThisNote[4];
             editTextNote.setText(getIntent().getExtras().getString("note_data", ""));
             setTitle("Edit Note");
+            mSpinner.setSelection(mHelpers.getSpinnerValue(title));
         }
         Button addIcon = (Button) findViewById(R.id.button_icon);
         addIcon.setOnClickListener(new View.OnClickListener() {
@@ -342,7 +343,13 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemCli
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         spinnerState = position;
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
