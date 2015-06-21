@@ -58,7 +58,7 @@ public class IncomingCallListener extends PhoneStateListener {
                 }
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
-//                mOverlayHelpers.removePopupNote();
+                mOverlayHelpers.removePopupNote();
                 break;
         }
     }
