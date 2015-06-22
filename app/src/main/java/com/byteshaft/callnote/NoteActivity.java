@@ -62,7 +62,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         }
         if (mNote.isEmpty()) {
             Toast.makeText(getApplicationContext(),"Note is empty", Toast.LENGTH_SHORT).show();
-        } else if (mCheckedContacts.length() == 0) {
+        } else if (mCheckedContacts == null) {
             Toast.makeText(getApplicationContext(),"please select at least one contact",Toast.LENGTH_SHORT).show();
         }
         if (imageVariable == null) {
@@ -70,7 +70,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                if (mId != null && !mNote.isEmpty() && mCheckedContacts.length() > 0) {
+                if (mId != null && !mNote.isEmpty() && mCheckedContacts != null) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
@@ -79,11 +79,11 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     this.finish();
                     } else {
                     if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
-                            !mNote.isEmpty()&& mCheckedContacts.length() > 0) {
+                            !mNote.isEmpty()&& mCheckedContacts != null) {
                         NotesAlreadyExistDialog();
                         mCheckedContacts = null;
                     } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
-                            !mNote.isEmpty() && mCheckedContacts.length() > 0) {
+                            !mNote.isEmpty() && mCheckedContacts != null) {
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         mHelpers.saveSpinnerState(mTitle, spinnerState);
