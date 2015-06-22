@@ -66,10 +66,10 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         if (imageVariable == null) {
             imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
         }
-        String[] string = mCheckedContacts.split(",");
+        Log.i(Helpers.LOG_TAG , String.valueOf(mCheckedContacts.length()));
         switch (item.getItemId()) {
             case R.id.action_apply:
-                if (mId != null && !mNote.isEmpty() && string.length > 1) {
+                if (mId != null && !mNote.isEmpty() && mCheckedContacts.length() > 0) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
@@ -77,10 +77,10 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     this.finish();
                     } else {
                     if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
-                            !mNote.isEmpty()&& string.length > 1) {
+                            !mNote.isEmpty()&& mCheckedContacts.length() > 0) {
                         NotesAlreadyExistDialog();
                     } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
-                            !mNote.isEmpty() && string.length > 1) {
+                            !mNote.isEmpty() && mCheckedContacts.length() > 0) {
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         mHelpers.saveSpinnerState(mTitle, spinnerState);
