@@ -59,6 +59,7 @@ public class DataBaseHelpers {
     }
 
     void clickUpdate(String id, String number, String note, String desc, String image, String date) {
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SqliteHelpers.NUMBER_COLUMN, number);
         values.put(SqliteHelpers.NOTES_COLUMN, note);
@@ -80,6 +81,7 @@ public class DataBaseHelpers {
     }
 
     void updateData(String number, String note, String desc, String image, String date) {
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SqliteHelpers.NUMBER_COLUMN, number);
         values.put(SqliteHelpers.NOTES_COLUMN, note);
