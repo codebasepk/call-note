@@ -42,7 +42,6 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
         }
         mTemporaryDB = getTemporarySP();
         mPreferences = AppGlobals.getSharedPreferences();
-//        mCheckedContactsInSP = helper.getCheckedContacts();
         mContactNames = helper.getAllContactNames();
         mContactNumbers = helper.getAllContactNumbers();
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -100,12 +99,6 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
         viewHolder.checkbox.setChecked(mCheckStates.get(position));
         viewHolder.name.setText(mContactNames.get(position));
         viewHolder.number.setText(mContactNumbers.get(position));
-
-        if (AppGlobals.isCheckedAll()) {
-            viewHolder.checkbox.setChecked(true);
-        } else if (AppGlobals.isUnCheckedAll()) {
-            viewHolder.checkbox.setChecked(false);
-        }
         return convertView;
     }
 

@@ -53,7 +53,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mTitle = noteTitle.getText().toString();
         mNote = editTextNote.getText().toString();
         mHelpers.putTemporaryPreferenceToPermanent();
-//        mCheckedContacts = mHelpers.getCheckedContacts();
         mCheckedContacts = getPermanentPreference();
         if (!mNote.isEmpty()) {
             if(mTitle.isEmpty()){
@@ -77,7 +76,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     mCheckedContacts = null;
                     Log.i(Helpers.LOG_TAG,"Update success");
                     this.finish();
-                    } else {
+                } else {
                     if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
                             !mNote.isEmpty()&& mCheckedContacts != null) {
                         NotesAlreadyExistDialog();
@@ -208,16 +207,14 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         checkAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//                preferences.edit().putString("check", "checked_all").commit();
                 StringBuilder checkedContacts = new StringBuilder();
+                ContactsAdapter.mCheckStates.clear();
                 for (int i = 0; i < ma.getCount(); i++) {
+                    ContactsAdapter.mCheckStates.put(i, true);
                     checkedContacts.append(ma.getContactNumbers().get(i));
                     checkedContacts.append(",");
                 }
                 mPreferences.edit().putString("checkedContactsTemp", checkedContacts.toString()).commit();
-                AppGlobals.setCheckedAll(true);
-                AppGlobals.setUncheckedAll(false);
                 ma.notifyDataSetChanged();
             }
         });
@@ -226,8 +223,10 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             @Override
             public void onClick(View v) {
                 mPreferences.edit().putString("checkedContactsTemp", null).commit();
-                AppGlobals.setUncheckedAll(true);
-                AppGlobals.setCheckedAll(false);
+                ContactsAdapter.mCheckStates.clear();
+                for (int i = 0; i < ma.getCount(); i++) {
+                    ContactsAdapter.mCheckStates.put(i, false);
+                }
                 ma.notifyDataSetChanged();
             }
         });
@@ -243,16 +242,12 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                             }
                         }
                         mPreferences.edit().putString("checkedContactsTemp", builder.toString()).commit();
-                        AppGlobals.setUncheckedAll(false);
-                        AppGlobals.setCheckedAll(false);
                     }
                 });
         db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ContactsAdapter.mCheckStates = null;
-                AppGlobals.setUncheckedAll(false);
-                AppGlobals.setCheckedAll(false);
             }
         });
         db.show();

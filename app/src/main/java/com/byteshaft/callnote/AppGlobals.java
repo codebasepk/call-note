@@ -44,20 +44,4 @@ public class AppGlobals extends Application {
     static boolean isIsNoteEditModeFirst() {
         return isNoteEditModeFirst;
     }
-
-    static void setCheckedAll(boolean checkedAll) {
-        sIsCheckedAll = checkedAll;
-    }
-
-    static boolean isCheckedAll() {
-        return sIsCheckedAll;
-    }
-
-    static void setUncheckedAll(boolean unchecked) {
-        sIsUnCheckedAll = unchecked;
-    }
-
-    static boolean isUnCheckedAll() {
-        return sIsUnCheckedAll;
-    }
 }
