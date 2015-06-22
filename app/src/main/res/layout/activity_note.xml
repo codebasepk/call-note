@@ -3,39 +3,27 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
     <LinearLayout
-        android:id="@+id/linear_layout"
+        android:id="@+id/note_linear_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="5dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="190dp"
-            android:paddingEnd="190dp"
-            android:paddingLeft="10dp"
-            android:text="Show.."/>
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp"
+        android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show: "
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:layout_marginRight="10dp"/>
 
     <Spinner
-        android:id="@+id/noteStatus"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        >
+        android:id="@+id/note_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:popupBackground="@drawable/spinner_background">
     </Spinner>
     </LinearLayout>
-
-    <!--<Switch-->
-        <!--android:id="@+id/note_switch"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:text="Note Trigger"-->
-        <!--android:textStyle="bold"-->
-        <!--android:paddingLeft="9dp"-->
-        <!--android:paddingRight="9dp"-->
-        <!--android:visibility="gone"/>-->
 
     <EditText
         android:id="@+id/editText_title_note"
@@ -44,11 +32,10 @@
         android:maxLength="21"
         android:maxLines="1"
         android:textStyle="bold"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/linear_layout"
+        android:layout_below="@+id/note_linear_layout"
         android:hint="Title"/>
 
     <EditText

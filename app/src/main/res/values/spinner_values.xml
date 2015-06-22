@@ -3,7 +3,7 @@
     <string-array name="spinner">
         <item>Before call</item>
         <item>After call</item>
-        <item>Before + after call</item>
-        <item>Never</item>
+        <item>Before and After call</item>
+        <item>Never Show</item>
     </string-array>
 </resources>
