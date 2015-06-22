@@ -60,7 +60,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         }
         if (mNote.isEmpty()) {
             Toast.makeText(getApplicationContext(),"Note is empty", Toast.LENGTH_SHORT).show();
-        } else if (mCheckedContacts == null || mCheckedContacts.isEmpty()) {
+        } else if (mCheckedContacts.length() == 0) {
             Toast.makeText(getApplicationContext(),"please select at least one contact",Toast.LENGTH_SHORT).show();
         }
         if (imageVariable == null) {
@@ -73,17 +73,20 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
                                     imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
+                    mCheckedContacts = null;
                     Log.i(Helpers.LOG_TAG,"Update success");
                     this.finish();
                     } else {
                     if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
                             !mNote.isEmpty()&& mCheckedContacts.length() > 0) {
                         NotesAlreadyExistDialog();
+                        mCheckedContacts = null;
                     } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
                             !mNote.isEmpty() && mCheckedContacts.length() > 0) {
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         mHelpers.saveSpinnerState(mTitle, spinnerState);
+                        mCheckedContacts = null;
                         this.finish();
                     }
                 }
