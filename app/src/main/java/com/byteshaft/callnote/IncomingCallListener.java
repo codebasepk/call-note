@@ -73,9 +73,6 @@ public class IncomingCallListener extends PhoneStateListener {
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
             String numbers = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN));
-            if (numbers == null) {
-                return false;
-            }
             String[] numbersArray = numbers.split(",");
             for (String aNumbersArray : numbersArray) {
                 if (PhoneNumberUtils.compare(aNumbersArray, number)) {
