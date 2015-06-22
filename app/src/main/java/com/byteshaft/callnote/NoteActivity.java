@@ -55,8 +55,10 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mHelpers.putTemporaryPreferenceToPermanent();
 //        mCheckedContacts = mHelpers.getCheckedContacts();
         mCheckedContacts = getPermanentPreference();
-        if (mTitle.isEmpty()) {
-            mTitle = mHelpers.getCurrentDateandTime().substring(0,21);
+        if (!mNote.isEmpty()) {
+            if(mTitle.isEmpty()){
+                mTitle = mHelpers.getCurrentDateandTime().substring(0,21);
+            }
         }
         if (mNote.isEmpty()) {
             Toast.makeText(getApplicationContext(),"Note is empty", Toast.LENGTH_SHORT).show();
