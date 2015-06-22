@@ -53,7 +53,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mTitle = noteTitle.getText().toString();
         mNote = editTextNote.getText().toString();
         mHelpers.putTemporaryPreferenceToPermanent();
-//        mCheckedContacts = mHelpers.getCheckedContacts();
         mCheckedContacts = getPermanentPreference();
         if (!mNote.isEmpty()) {
             if(mTitle.isEmpty()){
@@ -77,7 +76,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     mCheckedContacts = null;
                     Log.i(Helpers.LOG_TAG,"Update success");
                     this.finish();
-                    } else {
+                } else {
                     if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
                             !mNote.isEmpty()&& mCheckedContacts != null) {
                         NotesAlreadyExistDialog();

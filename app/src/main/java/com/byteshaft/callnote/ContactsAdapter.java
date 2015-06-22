@@ -42,7 +42,6 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
         }
         mTemporaryDB = getTemporarySP();
         mPreferences = AppGlobals.getSharedPreferences();
-//        mCheckedContactsInSP = helper.getCheckedContacts();
         mContactNames = helper.getAllContactNames();
         mContactNumbers = helper.getAllContactNumbers();
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
