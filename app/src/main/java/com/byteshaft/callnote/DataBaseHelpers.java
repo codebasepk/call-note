@@ -128,14 +128,13 @@ public class DataBaseHelpers {
     String getIconLinkForNote(String value) {
         String uri = null;
         mDbHelper = mSqliteHelpers.getReadableDatabase();
-        String queury = String.format(
-                "SELECT %s,%s FROM %s WHERE %s='%s'",
+        String query = String.format(
+                "SELECT %s,%s FROM %s WHERE %s= ?",
                 SqliteHelpers.NOTES_COLUMN,
                 SqliteHelpers.PICTURE_COLUMN,
                 SqliteHelpers.TABLE_NAME,
-                SqliteHelpers.NOTES_COLUMN,
-                value);
-        Cursor cursor = mDbHelper.rawQuery(queury, null);
+                SqliteHelpers.NOTES_COLUMN);
+        Cursor cursor = mDbHelper.rawQuery(query,  new String[] {value});
         while(cursor.moveToNext()) {
             uri = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved .....");

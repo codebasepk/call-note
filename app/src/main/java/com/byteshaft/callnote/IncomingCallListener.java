@@ -63,7 +63,7 @@ public class IncomingCallListener extends PhoneStateListener {
         }
     }
 
-    private void getAllNotesForNumber(String number, int showWhen) {
+    private boolean getAllNotesForNumber(String number, int showWhen) {
         SQLiteDatabase database = mSqliteHelpers.getWritableDatabase();
         ArrayList<String> titles = new ArrayList<>();
         ArrayList<String> summaries = new ArrayList<>();
@@ -73,6 +73,9 @@ public class IncomingCallListener extends PhoneStateListener {
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
             String numbers = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN));
+            if (numbers == null) {
+                return false;
+            }
             String[] numbersArray = numbers.split(",");
             for (String aNumbersArray : numbersArray) {
                 if (PhoneNumberUtils.compare(aNumbersArray, number)) {
@@ -85,7 +88,6 @@ public class IncomingCallListener extends PhoneStateListener {
                 }
             }
         }
-
         // Filter notes that are enabled;
         mTitles = new ArrayList<>();
         mSummaries = new ArrayList<>();
@@ -99,6 +101,8 @@ public class IncomingCallListener extends PhoneStateListener {
                 mImages.add(images.get(i));
             }
         }
+
+        return true;
     }
 
 //    BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
