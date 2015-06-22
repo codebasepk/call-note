@@ -66,7 +66,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         if (imageVariable == null) {
             imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
         }
-        Log.i(Helpers.LOG_TAG , String.valueOf(mCheckedContacts.length()));
         switch (item.getItemId()) {
             case R.id.action_apply:
                 if (mId != null && !mNote.isEmpty() && mCheckedContacts.length() > 0) {
