@@ -12,9 +12,9 @@ public class CustomGrid  extends BaseAdapter {
     private Context mContext;
     private final int[] imagesId;
 
-    public CustomGrid(Context c, int[] Imageid) {
+    public CustomGrid(Context c, int[] imageId) {
         mContext = c;
-        this.imagesId = Imageid;
+        imagesId = imageId;
     }
 
     @Override
