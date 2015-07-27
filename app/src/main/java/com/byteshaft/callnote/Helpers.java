@@ -136,7 +136,7 @@ public class Helpers extends ContextWrapper {
     boolean isServiceSettingEnabled() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 getApplicationContext());
-        return sharedPreferences.getBoolean("enabled", false);
+        return sharedPreferences.getBoolean("enabled", true);
     }
 
     SharedPreferences getPreferenceManager() {

@@ -9,6 +9,11 @@
         android:title="Add Note"
         android:icon="@drawable/ic_plux"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/upgrade_button"
+        android:title="Upgrade"
+        android:icon="@drawable/buy_upgrade"
+        app:showAsAction="always"/>
 
     <!--<item-->
         <!--android:id="@+id/action_overlay"-->
