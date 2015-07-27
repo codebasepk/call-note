@@ -54,12 +54,13 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         mToggleSwitch.setOnCheckedChangeListener(this);
         mOverlayHelpers = new OverlayHelpers(getApplicationContext());
-        createDialogWhenNoNotePresent();
+        if (dataBaseHelpers.isEmpty()) {
+            createDialogIfNoNoteFound();
+        }
 
     }
 
-    private void createDialogWhenNoNotePresent() {
-        if (dataBaseHelpers.isEmpty()) {
+    private void createDialogIfNoNoteFound() {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Welcome!");
             builder.setMessage("Do you want to add a Note?");
@@ -70,17 +71,14 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     dialog.dismiss();
                 }
             });
-
             builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                 }
             });
-
             AlertDialog alert = builder.create();
             alert.show();
-        }
     }
 
     @Override
