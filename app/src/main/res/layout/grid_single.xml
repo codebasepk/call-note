@@ -5,6 +5,7 @@
 
     <ImageView
         android:id="@+id/grid_image"
+        android:padding="8dp"
         android:layout_width="100dp"
         android:layout_height="100dp">
     </ImageView>
