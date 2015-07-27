@@ -85,7 +85,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                 break;
             case R.id.upgrade_button:
                 showUpgradeDialog();
-                return true;
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -96,7 +96,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         builder.setTitle("Upgrade");
         builder.setMessage("Do you want to upgrade?");
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
+            @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
