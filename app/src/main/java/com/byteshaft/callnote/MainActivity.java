@@ -57,7 +57,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         if (dataBaseHelpers.isEmpty()) {
             showNoNoteFoundDialog();
         }
-
     }
 
     private void showNoNoteFoundDialog() {
