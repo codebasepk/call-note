@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -47,6 +48,18 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     private ImageView iconImageView;
     private int spinnerState;
     private String currentNote;
+    private GridView mGridView;
+    private int[] imageId = {
+            R.drawable.character_1,
+            R.drawable.character_2,
+            R.drawable.character_3,
+            R.drawable.character_4,
+            R.drawable.character_5,
+            R.drawable.character_6,
+            R.drawable.character_7,
+            R.drawable.character_8,
+            R.drawable.character_9
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -255,42 +268,54 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
 
     public void initiateIconDialog() {
         LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
-        View dialog_layout = inflater.inflate(R.layout.dialog_2, (ViewGroup) findViewById(R.id.dialogLayout_2));
-        final AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
+        View dialog_layout = inflater.inflate(R.layout.dialog_2, null);
+        AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
         alert = db.create();
         db.setView(dialog_layout);
-        db.setTitle("Add Icon");
+        db.setTitle("Select character");
         alert = db.show();
-        ImageView imageView1 = (ImageView) dialog_layout.findViewById(R.id.character_1);
-        imageView1.setOnClickListener(new View.OnClickListener() {
+        CustomGrid adapter = new CustomGrid(NoteActivity.this, imageId);
+        mGridView = (GridView) dialog_layout.findViewById(R.id.grid);
+        mGridView.setAdapter(adapter);
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onClick(View view) {
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
-                iconImageView.setImageResource(R.drawable.character_1);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                
+
             }
         });
-        ImageView imageView2 = (ImageView) dialog_layout.findViewById(R.id.character_2);
-        imageView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_2;
-                iconImageView.setImageResource(R.drawable.character_2);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
-            }
-        });
-        ImageView imageView3 = (ImageView) dialog_layout.findViewById(R.id.character_3);
-        imageView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_3;
-                iconImageView.setImageResource(R.drawable.character_3);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
-            }
-        });
+//        ImageView imageView1 = (ImageView) dialog_layout.findViewById(R.id.character_1);
+//        imageView1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
+//                iconImageView.setImageResource(R.drawable.character_1);
+//                iconImageView.setVisibility(View.VISIBLE);
+//                alert.dismiss();
+//            }
+//        });
+//        ImageView imageView2 = (ImageView) dialog_layout.findViewById(R.id.character_2);
+//        imageView2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_2;
+//                iconImageView.setImageResource(R.drawable.character_2);
+//                iconImageView.setVisibility(View.VISIBLE);
+//                alert.dismiss();
+//            }
+//        });
+//        ImageView imageView3 = (ImageView) dialog_layout.findViewById(R.id.character_3);
+//        imageView3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_3;
+//                iconImageView.setImageResource(R.drawable.character_3);
+//                iconImageView.setVisibility(View.VISIBLE);
+//                alert.dismiss();
+//            }
+//        });
     }
 
         @Override
