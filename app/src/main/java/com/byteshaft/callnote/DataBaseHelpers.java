@@ -268,40 +268,12 @@ public class DataBaseHelpers {
         return arrayList;
     }
 
-//    ArrayList<String> getAllNotesForNumber(String number) {
-//        mDbHelper = mSqliteHelpers.getWritableDatabase();
-//        String query = String.format(
-//                "SELECT * FROM %s", SqliteHelpers.TABLE_NAME);
-//        Cursor cursor = mDbHelper.rawQuery(query, null);
-//        while (cursor.moveToNext()) {
-//            String numbers = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN));
-//            String[] numbersArray = numbers.split(",");
-//            for (int i = 0; i < numbersArray.length; i++) {
-//                if (PhoneNumberUtils.compare(numbersArray[i], number)) {
-//                    String title = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
-//                    String summary = cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION));
-//                }
-//            }
-//        }
-//    }
-
-//    private void getNotesForNumber(String number) {
-//        arrayList = dbHelpers.getAllNumbers();
-//        titles = new ArrayList<>();
-//        summaries = new ArrayList<>();
-//        for(String contact : arrayList) {
-//            if (PhoneNumberUtils.compare(contact, number)) {
-//                ArrayList<String> noteTitles = dbHelpers.getTitleFromNumber(contact);
-//                ArrayList<String> noteSummaries = dbHelpers.getSummaryFromNumber(contact);
-//                for (String val: noteTitles) {
-//                    titles.add(val);
-//                }
-//
-//                for (String value1 : noteSummaries) {
-//                    summaries.add(value1);
-//                }
-//                return;
-//            }
-//        }
-//    }
+    public boolean isEmpty() {
+        SQLiteDatabase db = mSqliteHelpers.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + SqliteHelpers.TABLE_NAME, null);
+        boolean isEmpty;
+        isEmpty = !cursor.moveToNext();
+        cursor.close();
+        return isEmpty;
+    }
 }
