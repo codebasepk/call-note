@@ -287,61 +287,41 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         });
     }
 
+    private void setImageVariableAndCloseDialog(int drawable) {
+        imageVariable = "android.resource://com.byteshaft.callnote/" + drawable;
+        iconImageView.setImageResource(drawable);
+        iconImageView.setVisibility(View.VISIBLE);
+        alert.dismiss();
+    }
+
     private void currentNoteName(int position) {
         switch (position) {
             case 0:
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
-                iconImageView.setImageResource(R.drawable.character_1);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+                setImageVariableAndCloseDialog(R.drawable.character_1);
                 break;
             case 1:
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_2;
-                iconImageView.setImageResource(R.drawable.character_2);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+                setImageVariableAndCloseDialog(R.drawable.character_2);
                 break;
             case 2:
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_3;
-                iconImageView.setImageResource(R.drawable.character_3);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+                setImageVariableAndCloseDialog(R.drawable.character_3);
                 break;
             case 3:
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_4;
-                iconImageView.setImageResource(R.drawable.character_4);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+                setImageVariableAndCloseDialog(R.drawable.character_4);
                 break;
             case 4:
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_5;
-                iconImageView.setImageResource(R.drawable.character_5);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+                setImageVariableAndCloseDialog(R.drawable.character_5);
                 break;
             case 5:
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_6;
-                iconImageView.setImageResource(R.drawable.character_6);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+                setImageVariableAndCloseDialog(R.drawable.character_6);
                 break;
             case 6:
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_7;
-                iconImageView.setImageResource(R.drawable.character_7);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+                setImageVariableAndCloseDialog(R.drawable.character_7);
                 break;
             case 7:
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_8;
-                iconImageView.setImageResource(R.drawable.character_8);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+                setImageVariableAndCloseDialog(R.drawable.character_8);
                 break;
             case 8:
-                imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_9;
-                iconImageView.setImageResource(R.drawable.character_9);
-                iconImageView.setVisibility(View.VISIBLE);
-                alert.dismiss();
+                setImageVariableAndCloseDialog(R.drawable.character_9);
                 break;
         }
     }
