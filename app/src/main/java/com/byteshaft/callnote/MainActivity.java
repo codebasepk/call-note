@@ -82,8 +82,35 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
 //                }
             case R.id.action_addNote:
                 startActivity(new Intent(this, NoteActivity.class));
+                break;
+            case R.id.upgrade_button:
+                showUpgradeDialog();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showUpgradeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Upgrade");
+        builder.setMessage("Do you want to upgrade?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
