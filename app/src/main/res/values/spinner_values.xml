@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spinner">
-        <item>Before call</item>
-        <item>After call</item>
-        <item>Before and After call</item>
-        <item>Never Show</item>
+        <item>Incoming Call</item>
+        <item>Outgoing Call</item>
+        <item>Incoming &amp; Outgoing Call </item>
+        <item>Turn Off</item>
     </string-array>
 </resources>

@@ -21,12 +21,13 @@ public class IncomingCallListener extends PhoneStateListener {
     private ArrayList<String> mImages;
     private OverlayHelpers mOverlayHelpers;
     private SqliteHelpers mSqliteHelpers;
+    private boolean isOutGoingCall = false;
 
     private static class Note {
-        static int SHOW_ON_CALL = 0;
-        static int SHOW_AFTER_CALL = 1;
-        static int SHOW_BEFORE_AND_AFTER_CALL = 2;
-        static int SHOW_NEVER = 3;
+        static int SHOW_INCOMING_CALL = 0;
+        static int SHOW_OUTGOING_CALL = 1;
+        static int SHOW_INCOMING_OUTGOING = 2;
+        static int TURN_OFF = 3;
     }
 
     public IncomingCallListener(Context context) {
@@ -42,7 +43,7 @@ public class IncomingCallListener extends PhoneStateListener {
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
                 if (incomingNumber != null) {
-                    getAllNotesForNumber(incomingNumber, Note.SHOW_ON_CALL);
+                    getAllNotesForNumber(incomingNumber, Note.SHOW_INCOMING_CALL);
                     if (mTitles.size() > 0 && mSummaries.size() > 0) {
                         mOverlayHelpers.showNoteOverlay(mTitles, mSummaries, mImages);
                     }
@@ -50,15 +51,11 @@ public class IncomingCallListener extends PhoneStateListener {
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
                 mOverlayHelpers.removePopupNote();
-                if (incomingNumber != null) {
-                    getAllNotesForNumber(incomingNumber, Note.SHOW_AFTER_CALL);
-                    if (mTitles.size() > 0 && mSummaries.size() > 0) {
-                        mOverlayHelpers.showNoteOverlay(mTitles, mSummaries, mImages);
-                    }
-                }
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
-                mOverlayHelpers.removePopupNote();
+                if (!isOutGoingCall) {
+                    mOverlayHelpers.removePopupNote();
+                }
                 break;
         }
     }
@@ -91,8 +88,8 @@ public class IncomingCallListener extends PhoneStateListener {
         mImages = new ArrayList<>();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         for (int i = 0; i < titles.size(); i++) {
-            int noteShowPreference = preferences.getInt(titles.get(i), Note.SHOW_NEVER);
-            if (noteShowPreference == showWhen || noteShowPreference == Note.SHOW_BEFORE_AND_AFTER_CALL) {
+            int noteShowPreference = preferences.getInt(titles.get(i), Note.TURN_OFF);
+            if (noteShowPreference == showWhen || noteShowPreference == Note.SHOW_INCOMING_OUTGOING) {
                 mTitles.add(titles.get(i));
                 mSummaries.add(summaries.get(i));
                 mImages.add(images.get(i));
@@ -101,15 +98,15 @@ public class IncomingCallListener extends PhoneStateListener {
 
         return true;
     }
-
-//    BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-//            getAllNotesForNumber(number);
-//                if (titles.size() > 0 && summaries.size() > 0) {
-//                    mOverlayHelpers.showNoteOverlay(titles, summaries, mImages);
-//                }
-//        }
-//    };
+        BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+            getAllNotesForNumber(number, Note.SHOW_OUTGOING_CALL);
+            isOutGoingCall = true;
+            if (mTitles.size() > 0 && mSummaries.size() > 0) {
+                mOverlayHelpers.showNoteOverlay(mTitles, mSummaries, mImages);
+            }
+        }
+    };
 }
