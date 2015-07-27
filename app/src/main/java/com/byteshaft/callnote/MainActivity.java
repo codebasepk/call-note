@@ -37,7 +37,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private ArrayList<String> mNoteSummaries;
     private OverlayHelpers mOverlayHelpers;
     private Switch mToggleSwitch;
-    ArrayAdapter<String> mModeAdapter;
+    private ArrayAdapter<String> mModeAdapter;
+    private DataBaseHelpers dataBaseHelpers;
 //    private
 
     @Override
@@ -48,10 +49,35 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
         textViewTitle = (TextView) findViewById(R.id.title);
         mHelpers = new Helpers(getApplicationContext());
+        dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
         mToggleSwitch = (Switch) findViewById(R.id.aSwitch);
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         mToggleSwitch.setOnCheckedChangeListener(this);
         mOverlayHelpers = new OverlayHelpers(getApplicationContext());
+        if (dataBaseHelpers.isEmpty()) {
+            showNoNoteFoundDialog();
+        }
+    }
+
+    private void showNoNoteFoundDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Welcome!");
+        builder.setMessage("Do you want to add a Note?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -66,7 +92,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
         listView.setDivider(null);
-
     }
 
     @Override
@@ -182,31 +207,31 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
 
     class NotesArrayList extends ArrayAdapter<String> {
 
-            public NotesArrayList(Context context, int resource, ArrayList<String> videos) {
-                super(context, resource, videos);
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                ViewHolder holder;
-                if (convertView == null) {
-                    LayoutInflater inflater = getLayoutInflater();
-                    convertView = inflater.inflate(R.layout.row, parent, false);
-                    holder = new ViewHolder();
-                    holder.title = (TextView) convertView.findViewById(R.id.FilePath);
-                    holder.summary = (TextView) convertView.findViewById(R.id.summary);
-                    holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
-                    convertView.setTag(holder);
-                } else {
-                    holder = (ViewHolder) convertView.getTag();
-                }
-                holder.title.setText(arrayList.get(position));
-                holder.summary.setText(mNoteSummaries.get(position));
-                Uri uri = Uri.parse(mDbHelpers.getIconLinkForNote(arrayList.get(position)));
-                holder.thumbnail.setImageURI(uri);
-                return convertView;
-            }
+        public NotesArrayList(Context context, int resource, ArrayList<String> videos) {
+            super(context, resource, videos);
         }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView == null) {
+                LayoutInflater inflater = getLayoutInflater();
+                convertView = inflater.inflate(R.layout.row, parent, false);
+                holder = new ViewHolder();
+                holder.title = (TextView) convertView.findViewById(R.id.FilePath);
+                holder.summary = (TextView) convertView.findViewById(R.id.summary);
+                holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.title.setText(arrayList.get(position));
+            holder.summary.setText(mNoteSummaries.get(position));
+            Uri uri = Uri.parse(mDbHelpers.getIconLinkForNote(arrayList.get(position)));
+            holder.thumbnail.setImageURI(uri);
+            return convertView;
+        }
+    }
 
     static class ViewHolder {
         public TextView title;
