@@ -282,7 +282,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                currentNoteName(position);
+                setImageVariableAndCloseDialog(imageId[position]);
             }
         });
     }
@@ -294,46 +294,14 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         alert.dismiss();
     }
 
-    private void currentNoteName(int position) {
-        switch (position) {
-            case 0:
-                setImageVariableAndCloseDialog(R.drawable.character_1);
-                break;
-            case 1:
-                setImageVariableAndCloseDialog(R.drawable.character_2);
-                break;
-            case 2:
-                setImageVariableAndCloseDialog(R.drawable.character_3);
-                break;
-            case 3:
-                setImageVariableAndCloseDialog(R.drawable.character_4);
-                break;
-            case 4:
-                setImageVariableAndCloseDialog(R.drawable.character_5);
-                break;
-            case 5:
-                setImageVariableAndCloseDialog(R.drawable.character_6);
-                break;
-            case 6:
-                setImageVariableAndCloseDialog(R.drawable.character_7);
-                break;
-            case 7:
-                setImageVariableAndCloseDialog(R.drawable.character_8);
-                break;
-            case 8:
-                setImageVariableAndCloseDialog(R.drawable.character_9);
-                break;
+    @Override
+    public void onBackPressed() {
+        if (!mNote.equals(editTextNote.getText().toString()) || !mTitle.equals(noteTitle.getText().toString())){
+            discardDialog();
+        } else {
+            finish();
         }
     }
-
-        @Override
-        public void onBackPressed() {
-            if (!mNote.equals(editTextNote.getText().toString()) || !mTitle.equals(noteTitle.getText().toString())){
-                discardDialog();
-            } else {
-                finish();
-            }
-        }
 
     void discardDialog() {
         new AlertDialog.Builder(this)
