@@ -8,9 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 
-public class CustomGrid  extends BaseAdapter {
-    private Context mContext;
+public class CustomGrid extends BaseAdapter {
     private final int[] imagesId;
+    private Context mContext;
 
     public CustomGrid(Context c, int[] imageId) {
         mContext = c;

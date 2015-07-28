@@ -1,11 +1,9 @@
 package com.byteshaft.callnote;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
@@ -24,13 +22,17 @@ public class IncomingCallListener extends PhoneStateListener {
     private OverlayHelpers mOverlayHelpers;
     private SqliteHelpers mSqliteHelpers;
     private boolean isOutGoingCall = false;
-
-    public static class Note {
-        static final int SHOW_INCOMING_CALL = 0;
-        static final int SHOW_OUTGOING_CALL = 1;
-        static final int SHOW_INCOMING_OUTGOING = 2;
-        static final int TURN_OFF = 3;
-    }
+    BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+            getAllNotesForNumber(number, Note.SHOW_OUTGOING_CALL);
+            isOutGoingCall = true;
+            if (mTitles.size() > 0 && mSummaries.size() > 0) {
+                mOverlayHelpers.showNoteOverlay(mTitles, mSummaries, mImages);
+            }
+        }
+    };
 
     public IncomingCallListener(Context context) {
         super();
@@ -52,11 +54,11 @@ public class IncomingCallListener extends PhoneStateListener {
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
-                mOverlayHelpers.removePopupNote();
+                OverlayHelpers.removePopupNote();
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
                 if (!isOutGoingCall) {
-                    mOverlayHelpers.removePopupNote();
+                    OverlayHelpers.removePopupNote();
                 }
                 break;
         }
@@ -100,15 +102,11 @@ public class IncomingCallListener extends PhoneStateListener {
 
         return true;
     }
-        BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-            getAllNotesForNumber(number, Note.SHOW_OUTGOING_CALL);
-            isOutGoingCall = true;
-            if (mTitles.size() > 0 && mSummaries.size() > 0) {
-                mOverlayHelpers.showNoteOverlay(mTitles, mSummaries, mImages);
-            }
-        }
-    };
+
+    public static class Note {
+        static final int SHOW_INCOMING_CALL = 0;
+        static final int SHOW_OUTGOING_CALL = 1;
+        static final int SHOW_INCOMING_OUTGOING = 2;
+        static final int TURN_OFF = 3;
+    }
 }

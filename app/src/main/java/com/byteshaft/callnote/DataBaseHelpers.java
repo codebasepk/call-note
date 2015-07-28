@@ -4,13 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.telephony.PhoneNumberUtils;
 import android.util.Log;
-import android.util.SparseArray;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DataBaseHelpers {
 
@@ -24,8 +20,8 @@ public class DataBaseHelpers {
     String checkIfItemAlreadyExistInDatabase(String note) {
         String value = null;
         mDbHelper = mSqliteHelpers.getReadableDatabase();
-        String whereClause =  SqliteHelpers.NOTES_COLUMN +" = ?";
-        String[] whereArgs = new String[] {note};
+        String whereClause = SqliteHelpers.NOTES_COLUMN + " = ?";
+        String[] whereArgs = new String[]{note};
         Cursor cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, null);
         while (cursor.moveToNext()) {
@@ -70,7 +66,7 @@ public class DataBaseHelpers {
         values.put(SqliteHelpers.DATE_COLUMN, date);
         values.put(SqliteHelpers.DESCRIPTION, desc);
         String selection = SqliteHelpers.NOTES_COLUMN + " LIKE ?"; // where ID column = rowId (that is, selectionArgs)
-        String[] selectionArgs = { note };
+        String[] selectionArgs = {note};
         mDbHelper.update(SqliteHelpers.TABLE_NAME, values, selection,
                 selectionArgs);
         Log.i(Helpers.LOG_TAG, "Updated.......");
@@ -103,8 +99,8 @@ public class DataBaseHelpers {
                 SqliteHelpers.PICTURE_COLUMN,
                 SqliteHelpers.TABLE_NAME,
                 SqliteHelpers.NOTES_COLUMN);
-        Cursor cursor = mDbHelper.rawQuery(query,  new String[] {value});
-        while(cursor.moveToNext()) {
+        Cursor cursor = mDbHelper.rawQuery(query, new String[]{value});
+        while (cursor.moveToNext()) {
             uri = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved .....");
         }
@@ -113,12 +109,12 @@ public class DataBaseHelpers {
 
     String[] retrieveNoteDetails(String value) {
         mDbHelper = mSqliteHelpers.getReadableDatabase();
-                String whereClause =  SqliteHelpers.NOTES_COLUMN +" = ?";
-        String[] whereArgs = new String[] {value};
+        String whereClause = SqliteHelpers.NOTES_COLUMN + " = ?";
+        String[] whereArgs = new String[]{value};
         Cursor cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
                 null, null, null);
         String[] list = new String[5];
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             list[0] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.ID_COLUMN)));
             list[1] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
             list[2] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
@@ -148,24 +144,24 @@ public class DataBaseHelpers {
 
     ArrayList<String> getAllPresentNotes() {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
-        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME+ " ORDER BY "+
-                SqliteHelpers.DATE_COLUMN+" DESC";
+        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME + " ORDER BY " +
+                SqliteHelpers.DATE_COLUMN + " DESC";
         Cursor cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<String>();
         while (cursor.moveToNext()) {
-              String itemname = cursor.getString(cursor.getColumnIndex(
-              SqliteHelpers.NOTES_COLUMN));
-               if (itemname != null) {
-                  arrayList.add(itemname);
-               }
+            String itemname = cursor.getString(cursor.getColumnIndex(
+                    SqliteHelpers.NOTES_COLUMN));
+            if (itemname != null) {
+                arrayList.add(itemname);
+            }
         }
         return arrayList;
     }
 
     ArrayList<String> getDescriptions() {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
-        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME + " ORDER BY "+
-                SqliteHelpers.DATE_COLUMN+" DESC";
+        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME + " ORDER BY " +
+                SqliteHelpers.DATE_COLUMN + " DESC";
         Cursor cursor = mDbHelper.rawQuery(query, null);
         ArrayList<String> arrayList = new ArrayList<String>();
         while (cursor.moveToNext()) {

@@ -14,14 +14,6 @@ public class AppGlobals extends Application {
     private static boolean isNoteEditModeFirst;
     private static boolean isNoteVisible;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        sLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        sWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        sPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    }
-
     static LayoutInflater getLayoutInflater() {
         return sLayoutInflater;
     }
@@ -34,12 +26,12 @@ public class AppGlobals extends Application {
         return sPreferences;
     }
 
-    static void setIsNoteEditModeFirst(boolean first) {
-        isNoteEditModeFirst = first;
-    }
-
     static boolean isIsNoteEditModeFirst() {
         return isNoteEditModeFirst;
+    }
+
+    static void setIsNoteEditModeFirst(boolean first) {
+        isNoteEditModeFirst = first;
     }
 
     static boolean isNoteVisible() {
@@ -48,5 +40,13 @@ public class AppGlobals extends Application {
 
     static void setIsNoteVisible(boolean visible) {
         isNoteVisible = visible;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        sWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        sPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 }

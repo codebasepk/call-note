@@ -8,9 +8,9 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 public class OverlayService extends Service {
+
     private IncomingCallListener incomingCallListener;
     private TelephonyManager mTelephonyManager;
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -32,5 +32,6 @@ public class OverlayService extends Service {
     public void onDestroy() {
         super.onDestroy();
         mTelephonyManager.listen(incomingCallListener, PhoneStateListener.LISTEN_NONE);
+        unregisterReceiver(incomingCallListener.mOutgoingCallListener);
     }
 }

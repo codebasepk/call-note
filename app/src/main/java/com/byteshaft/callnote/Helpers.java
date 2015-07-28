@@ -1,20 +1,14 @@
 package com.byteshaft.callnote;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
-import android.util.TypedValue;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,11 +16,11 @@ import java.util.List;
 
 public class Helpers extends ContextWrapper {
 
+    public static final String LOG_TAG = "";
+
     public Helpers(Context base) {
         super(base);
     }
-
-    public static final String LOG_TAG = "";
 
     TelephonyManager getTelephonyManager() {
         return (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
