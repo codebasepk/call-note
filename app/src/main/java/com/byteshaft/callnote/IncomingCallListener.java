@@ -52,11 +52,11 @@ public class IncomingCallListener extends PhoneStateListener {
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
-                mOverlayHelpers.removePopupNote();
+                OverlayHelpers.removePopupNote();
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
                 if (!isOutGoingCall) {
-                    mOverlayHelpers.removePopupNote();
+                    OverlayHelpers.removePopupNote();
                 }
                 break;
         }
@@ -100,7 +100,8 @@ public class IncomingCallListener extends PhoneStateListener {
 
         return true;
     }
-        BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
+
+    BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
