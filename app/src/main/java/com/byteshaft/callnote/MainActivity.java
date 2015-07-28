@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +26,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static com.byteshaft.callnote.IncomingCallListener.*;
 
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -203,15 +207,17 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                 holder = new ViewHolder();
                 holder.title = (TextView) convertView.findViewById(R.id.FilePath);
                 holder.summary = (TextView) convertView.findViewById(R.id.summary);
-                holder.thumbnail = (ImageView) convertView.findViewById(R.id.Thumbnail);
+                holder.character = (ImageView) convertView.findViewById(R.id.Thumbnail);
+                holder.direction = (ImageView) convertView.findViewById(R.id.note_direction);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.title.setText(arrayList.get(position));
+            String title = arrayList.get(position);
+            holder.title.setText(title);
             holder.summary.setText(mNoteSummaries.get(position));
-            Uri uri = Uri.parse(mDbHelpers.getIconLinkForNote(arrayList.get(position)));
-            holder.thumbnail.setImageURI(uri);
+            holder.character.setImageURI(Uri.parse(mDbHelpers.getIconLinkForNote(title)));
+            holder.direction.setImageURI(Uri.parse(getDirectionThumbnail(title)));
             return convertView;
         }
     }
@@ -219,6 +225,23 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     static class ViewHolder {
         public TextView title;
         public TextView summary;
-        public ImageView thumbnail;
+        public ImageView character;
+        public ImageView direction;
+    }
+
+    private String getDirectionThumbnail(String title) {
+        String uriBase = "android.resource://com.byteshaft.callnote/";
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int noteShowPreference = preferences.getInt(title, Note.TURN_OFF);
+        switch (noteShowPreference) {
+            case Note.SHOW_INCOMING_CALL:
+                return uriBase + R.drawable.incoming_call;
+            case Note.SHOW_OUTGOING_CALL:
+                return uriBase + R.drawable.outgoing_call;
+            case Note.SHOW_INCOMING_OUTGOING:
+                return uriBase + R.drawable.incoming_outgoing_call;
+            default:
+                return uriBase + R.drawable.off;
+        }
     }
 }
