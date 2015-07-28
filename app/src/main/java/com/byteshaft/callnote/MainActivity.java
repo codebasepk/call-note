@@ -29,7 +29,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     Helpers mHelpers;
-    private boolean mViewCreated;
     DataBaseHelpers mDbHelpers;
     ArrayList<String> arrayList;
     ListView listView;
@@ -39,7 +38,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private Switch mToggleSwitch;
     private ArrayAdapter<String> mModeAdapter;
     private DataBaseHelpers dataBaseHelpers;
-//    private
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,14 +95,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_overlay:
-//                if (mViewCreated) {
-//                    mOverlayHelpers.removePopupNote();
-//                    mViewCreated = false;
-//                } else {
-//                    mOverlayHelpers.showSingleNoteOverlay("Hey yo", "Get some eggs");
-//                    mViewCreated = true;
-//                }
             case R.id.action_addNote:
                 startActivity(new Intent(this, NoteActivity.class));
                 break;
@@ -156,13 +146,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
             stopService(new Intent(this, OverlayService.class));
         }
         mHelpers.saveServiceStateEnabled(isChecked);
-    }
-
-    public void openActivity(View view) {
-        Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(new Intent(this, NoteActivity.class));
-        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
     }
 
     @Override

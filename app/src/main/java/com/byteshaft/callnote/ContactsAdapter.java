@@ -10,10 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +23,6 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
     private List<String> mContactNames;
     private List<String> mContactNumbers;
     private ArrayList<String> numbersForNote;
-    private String[] mCheckedContactsInSP;
     static StringBuilder sCheckedContactsToSave;
     private String[] mTemporaryDB;
     private Context mContext;
@@ -118,15 +114,6 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
                 sCheckedContactsToSave.append(mContactNumbers.get(i));
                 sCheckedContactsToSave.append(",");
             }
-        }
-    }
-
-    private String[] getTempContacts() {
-        String out = mPreferences.getString("checkedContactsTemp", null);
-        if (out != null) {
-            return out.split(",");
-        } else {
-            return null;
         }
     }
 

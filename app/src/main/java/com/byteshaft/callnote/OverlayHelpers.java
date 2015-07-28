@@ -23,14 +23,10 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
 
     private WindowManager mWindowManager;
     private boolean isViewCreated;
-    private RelativeLayout mSimpleLayout;
-    private RelativeLayout mScrollableLayout;
     private ArrayAdapter<String> mArrayAdapter;
     private ArrayList<String> mTitles;
     private ArrayList<String> mSummaries;
     private ArrayList<String> mIcons;
-    private boolean mHasMoreNotes;
-    private String whichViewIsVisible;
     private RelativeLayout mBubbleLayout;
     private LayoutInflater mLayoutInflater;
     private CustomScrollView mListView;

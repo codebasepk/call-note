@@ -1,7 +1,6 @@
 package com.byteshaft.callnote;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -12,10 +11,7 @@ public class AppGlobals extends Application {
     private static LayoutInflater sLayoutInflater;
     private static WindowManager sWindowManager;
     private static SharedPreferences sPreferences;
-    private static Context sContext;
     private static boolean isNoteEditModeFirst;
-    private static boolean sIsCheckedAll;
-    private static boolean sIsUnCheckedAll;
 
     @Override
     public void onCreate() {

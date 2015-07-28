@@ -47,7 +47,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     private SharedPreferences mPreferences;
     private ImageView iconImageView;
     private int spinnerState;
-    private String currentNote;
     private GridView mGridView;
     private int[] imageId = {
             R.drawable.character_1,
@@ -165,7 +164,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         setContentView(R.layout.activity_note);
         AppGlobals.setIsNoteEditModeFirst(true);
         mPreferences = AppGlobals.getSharedPreferences();
-//        Switch noteTrigger = (Switch) findViewById(R.id.note_switch);
         iconImageView = (ImageView) findViewById(R.id.image_icon);
         mHelpers = new Helpers(getApplicationContext());
         mHelpers.putPermanentPreferenceToTemporary();
@@ -331,12 +329,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                 })
                 .setNegativeButton("No", null)
                 .show();
-    }
-
-    private String[] getTemporarySP() {
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String output = mPreferences.getString("checkedContactsTemp", null);
-        return output.split(",");
     }
 
     private String getPermanentPreference() {

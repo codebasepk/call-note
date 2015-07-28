@@ -45,16 +45,6 @@ public class DataBaseHelpers {
         values.put(SqliteHelpers.DESCRIPTION, desc);
         mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
         Log.i(Helpers.LOG_TAG, "created New Entry");
-//        for (String val : value) {
-//            System.out.println(val);
-//            values.put(SqliteHelpers.NUMBER_COLUMN, val);
-//            values.put(SqliteHelpers.NOTES_COLUMN, note);
-//            values.put(SqliteHelpers.PICTURE_COLUMN, image);
-//            values.put(SqliteHelpers.DATE_COLUMN, date);
-//            values.put(SqliteHelpers.DESCRIPTION, desc);
-//            mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
-//            Log.i(Helpers.LOG_TAG, "created New Entry");
-//        }
         closeDatabase();
     }
 
@@ -68,15 +58,6 @@ public class DataBaseHelpers {
         values.put(SqliteHelpers.DESCRIPTION, desc);
         mDbHelper.update(SqliteHelpers.TABLE_NAME, values, SqliteHelpers.ID_COLUMN + "=" + id, null);
         Log.i(Helpers.LOG_TAG, "Updated.......");
-//        for (String val : number) {
-//            values.put(SqliteHelpers.NUMBER_COLUMN, val);
-//            values.put(SqliteHelpers.NOTES_COLUMN, note);
-//            values.put(SqliteHelpers.PICTURE_COLUMN, image);
-//            values.put(SqliteHelpers.DATE_COLUMN, date);
-//            values.put(SqliteHelpers.DESCRIPTION, desc);
-//            mDbHelper.update(SqliteHelpers.TABLE_NAME, values, SqliteHelpers.ID_COLUMN + "=" + id, null);
-//            Log.i(Helpers.LOG_TAG, "Updated.......");
-//        }
         closeDatabase();
     }
 
@@ -93,18 +74,6 @@ public class DataBaseHelpers {
         mDbHelper.update(SqliteHelpers.TABLE_NAME, values, selection,
                 selectionArgs);
         Log.i(Helpers.LOG_TAG, "Updated.......");
-//        for (String val : number) {
-//            values.put(SqliteHelpers.NUMBER_COLUMN, val);
-//            values.put(SqliteHelpers.NOTES_COLUMN, note);
-//            values.put(SqliteHelpers.PICTURE_COLUMN, image);
-//            values.put(SqliteHelpers.DATE_COLUMN, date);
-//            values.put(SqliteHelpers.DESCRIPTION, desc);
-//            String selection = SqliteHelpers.NOTES_COLUMN + " LIKE ?"; // where ID column = rowId (that is, selectionArgs)
-//            String[] selectionArgs = { note };
-//            mDbHelper.update(SqliteHelpers.TABLE_NAME, values, selection,
-//                    selectionArgs);
-//            Log.i(Helpers.LOG_TAG, "Updated.......");
-//        }
         closeDatabase();
     }
 
@@ -142,34 +111,6 @@ public class DataBaseHelpers {
         return uri;
     }
 
-    ArrayList<String> getTitleFromNumber(String value) {
-        mDbHelper = mSqliteHelpers.getReadableDatabase();
-        Cursor cursor = mDbHelper.rawQuery(
-                "select " + SqliteHelpers.NOTES_COLUMN + " from " + SqliteHelpers.TABLE_NAME +
-                        " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
-                new String[]{"%" + value + "%"});
-        ArrayList<String> list = new ArrayList<String>();
-        while(cursor.moveToNext()) {
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
-            Log.i(Helpers.LOG_TAG, " Data retrieved .....");
-        }
-        return list;
-    }
-
-    ArrayList<String> getSummaryFromNumber(String value) {
-        mDbHelper = mSqliteHelpers.getReadableDatabase();
-        Cursor cursor = mDbHelper.rawQuery(
-                "select " + SqliteHelpers.DESCRIPTION + " from " + SqliteHelpers.TABLE_NAME +
-                        " where " + SqliteHelpers.NUMBER_COLUMN + " like ?",
-                new String[]{"%" + value + "%"});
-        ArrayList<String> list = new ArrayList<String>();
-        while(cursor.moveToNext()) {
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
-            Log.i(Helpers.LOG_TAG, " Data retrieved ,,,,,,");
-        }
-        return list;
-    }
-
     String[] retrieveNoteDetails(String value) {
         mDbHelper = mSqliteHelpers.getReadableDatabase();
                 String whereClause =  SqliteHelpers.NOTES_COLUMN +" = ?";
@@ -188,22 +129,6 @@ public class DataBaseHelpers {
         return list;
     }
 
-    List<String> getLastNoteForContact(String value) {
-        mDbHelper = mSqliteHelpers.getWritableDatabase();
-        String whereClause = SqliteHelpers.NUMBER_COLUMN + " = ?";
-        String[] whereArgs = new String[]{value};
-        Cursor cursor = mDbHelper.query(SqliteHelpers.TABLE_NAME, null, whereClause, whereArgs,
-                null, null, SqliteHelpers.NOTES_COLUMN + " DESC ", "1");
-        List<String> list = new ArrayList<String>();
-        while (cursor.moveToNext()) {
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN)));
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
-            list.add(cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
-            Log.i(Helpers.LOG_TAG, " Data retrieved");
-        }
-        return list;
-    }
-
     ArrayList<String> getNumberFromNote(String note) {
         mDbHelper = mSqliteHelpers.getReadableDatabase();
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
@@ -216,21 +141,6 @@ public class DataBaseHelpers {
                 String number = cursor.getString(cursor.getColumnIndex(
                         SqliteHelpers.NUMBER_COLUMN));
                 arrayList.add(number);
-            }
-        }
-        return arrayList;
-    }
-
-    ArrayList<String> getAllNumbers() {
-        mDbHelper = mSqliteHelpers.getWritableDatabase();
-        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
-        Cursor cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<String>();
-        while (cursor.moveToNext()) {
-            String itemname = cursor.getString(cursor.getColumnIndex(
-                    SqliteHelpers.NUMBER_COLUMN));
-            if (itemname != null) {
-                arrayList.add(itemname);
             }
         }
         return arrayList;
