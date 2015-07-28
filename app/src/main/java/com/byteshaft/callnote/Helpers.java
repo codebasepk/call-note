@@ -16,11 +16,11 @@ import java.util.List;
 
 public class Helpers extends ContextWrapper {
 
+    public static final String LOG_TAG = "";
+
     public Helpers(Context base) {
         super(base);
     }
-
-    public static final String LOG_TAG = "";
 
     TelephonyManager getTelephonyManager() {
         return (TelephonyManager) getSystemService(TELEPHONY_SERVICE);

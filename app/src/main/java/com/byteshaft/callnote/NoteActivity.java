@@ -28,7 +28,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSelectedListener{
+public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSelectedListener {
 
     private EditText noteTitle;
     private EditText editTextNote;
@@ -63,14 +63,14 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mHelpers.putTemporaryPreferenceToPermanent();
         mCheckedContacts = getPermanentPreference();
         if (!mNote.isEmpty()) {
-            if(mTitle.isEmpty()){
-                mTitle = mHelpers.getCurrentDateandTime().substring(0,21);
+            if (mTitle.isEmpty()) {
+                mTitle = mHelpers.getCurrentDateandTime().substring(0, 21);
             }
         }
         if (mNote.isEmpty()) {
-            Toast.makeText(getApplicationContext(),"Note is empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Note is empty", Toast.LENGTH_SHORT).show();
         } else if (mCheckedContacts == null) {
-            Toast.makeText(getApplicationContext(),"please select at least one contact",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "please select at least one contact", Toast.LENGTH_SHORT).show();
         }
         if (imageVariable == null) {
             imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
@@ -79,14 +79,14 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             case R.id.action_apply:
                 if (mId != null && !mNote.isEmpty() && mCheckedContacts != null) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
-                                    imageVariable, mHelpers.getCurrentDateandTime());
+                            imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
                     mCheckedContacts = null;
-                    Log.i(Helpers.LOG_TAG,"Update success");
+                    Log.i(Helpers.LOG_TAG, "Update success");
                     this.finish();
                 } else {
                     if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
-                            !mNote.isEmpty()&& mCheckedContacts != null) {
+                            !mNote.isEmpty() && mCheckedContacts != null) {
                         NotesAlreadyExistDialog();
                         mCheckedContacts = null;
                     } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
@@ -112,7 +112,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                 builder.setTitle("Delete");
                 builder.setMessage("Are you sure?");
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    
+
                     public void onClick(DialogInterface dialog, int which) {
                         if (!mId.isEmpty()) {
                             mDbHelpers.deleteItemById(mId);
@@ -176,7 +176,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mNote = editTextNote.getText().toString();
         if (getIntent().getExtras() != null) {
             String title = getIntent().getExtras().getString("note_title", "");
-                    noteTitle.setText(title);
+            noteTitle.setText(title);
             String[] detailsForThisNote = mDbHelpers.retrieveNoteDetails(title);
             iconImageView.setImageURI(Uri.parse(detailsForThisNote[4]));
             imageVariable = detailsForThisNote[4];
@@ -290,7 +290,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
 
     @Override
     public void onBackPressed() {
-        if (!mNote.equals(editTextNote.getText().toString()) || !mTitle.equals(noteTitle.getText().toString())){
+        if (!mNote.equals(editTextNote.getText().toString()) || !mTitle.equals(noteTitle.getText().toString())) {
             discardDialog();
         } else {
             finish();
@@ -320,7 +320,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                         mDbHelpers.updateData(mCheckedContacts, mTitle, mNote, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         mHelpers.saveSpinnerState(mTitle, spinnerState);
-                           NoteActivity.this.finish();
+                        NoteActivity.this.finish();
                     }
                 })
                 .setNegativeButton("No", null)

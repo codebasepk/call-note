@@ -19,12 +19,12 @@ import java.util.List;
 public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener {
 
     static SparseBooleanArray mCheckStates;
+    static StringBuilder sCheckedContactsToSave;
     private LayoutInflater mInflater;
     private SharedPreferences mPreferences;
     private List<String> mContactNames;
     private List<String> mContactNumbers;
     private ArrayList<String> numbersForNote;
-    static StringBuilder sCheckedContactsToSave;
     private String[] mTemporaryDB;
     private Context mContext;
 
@@ -41,7 +41,7 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
         mPreferences = AppGlobals.getSharedPreferences();
         mContactNames = helper.getAllContactNames();
         mContactNumbers = helper.getAllContactNumbers();
-        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mCheckStates = new SparseBooleanArray(mContactNumbers.size());
         int i = 0;
         for (String contactNumber : mContactNumbers) {
@@ -99,12 +99,6 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
         return convertView;
     }
 
-    static class ViewHolder {
-        private TextView name;
-        private TextView number;
-        private CheckBox checkbox;
-    }
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int id = (int) buttonView.getTag();
@@ -121,7 +115,7 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
     @SuppressLint("CommitPrefEdits")
     private void putDatabaseContactsToTemporarySP(ArrayList<String> numbers) {
         StringBuilder builder = new StringBuilder();
-        for (String number: numbers) {
+        for (String number : numbers) {
             builder.append(number);
             builder.append(",");
         }
@@ -136,5 +130,11 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
             output = "";
         }
         return output.split(",");
+    }
+
+    static class ViewHolder {
+        private TextView name;
+        private TextView number;
+        private CheckBox checkbox;
     }
 }

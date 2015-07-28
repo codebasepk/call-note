@@ -192,6 +192,29 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         return true;
     }
 
+    private String getDirectionThumbnail(String title) {
+        String uriBase = "android.resource://com.byteshaft.callnote/";
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int noteShowPreference = preferences.getInt(title, Note.TURN_OFF);
+        switch (noteShowPreference) {
+            case Note.SHOW_INCOMING_CALL:
+                return uriBase + R.drawable.incoming_call;
+            case Note.SHOW_OUTGOING_CALL:
+                return uriBase + R.drawable.outgoing_call;
+            case Note.SHOW_INCOMING_OUTGOING:
+                return uriBase + R.drawable.incoming_outgoing_call;
+            default:
+                return uriBase + R.drawable.off;
+        }
+    }
+
+    static class ViewHolder {
+        public TextView title;
+        public TextView summary;
+        public ImageView character;
+        public ImageView direction;
+    }
+
     class NotesArrayList extends ArrayAdapter<String> {
 
         public NotesArrayList(Context context, int resource, ArrayList<String> videos) {
@@ -219,29 +242,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
             holder.character.setImageURI(Uri.parse(mDbHelpers.getIconLinkForNote(title)));
             holder.direction.setImageURI(Uri.parse(getDirectionThumbnail(title)));
             return convertView;
-        }
-    }
-
-    static class ViewHolder {
-        public TextView title;
-        public TextView summary;
-        public ImageView character;
-        public ImageView direction;
-    }
-
-    private String getDirectionThumbnail(String title) {
-        String uriBase = "android.resource://com.byteshaft.callnote/";
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        int noteShowPreference = preferences.getInt(title, Note.TURN_OFF);
-        switch (noteShowPreference) {
-            case Note.SHOW_INCOMING_CALL:
-                return uriBase + R.drawable.incoming_call;
-            case Note.SHOW_OUTGOING_CALL:
-                return uriBase + R.drawable.outgoing_call;
-            case Note.SHOW_INCOMING_OUTGOING:
-                return uriBase + R.drawable.incoming_outgoing_call;
-            default:
-                return uriBase + R.drawable.off;
         }
     }
 }

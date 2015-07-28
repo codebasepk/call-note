@@ -21,11 +21,11 @@ import java.util.ArrayList;
 public class OverlayHelpers extends ContextWrapper implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private static WindowManager mWindowManager;
+    private static RelativeLayout mBubbleLayout;
     private ArrayAdapter<String> mArrayAdapter;
     private ArrayList<String> mTitles;
     private ArrayList<String> mSummaries;
     private ArrayList<String> mIcons;
-    private static RelativeLayout mBubbleLayout;
     private LayoutInflater mLayoutInflater;
     private CustomScrollView mListView;
     private WindowManager.LayoutParams mLayoutParams;
@@ -50,7 +50,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         mIcons = icons;
         mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mTitles);
         mBubbleLayout = (RelativeLayout) mLayoutInflater.inflate(R.layout.overlay, null);
-        mListView = (CustomScrollView)  mBubbleLayout.findViewById(R.id.left_drawer);
+        mListView = (CustomScrollView) mBubbleLayout.findViewById(R.id.left_drawer);
         mListView.setMaxHeight(220);
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mArrayAdapter);
@@ -61,7 +61,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         mWindowManager = AppGlobals.getWindowManager();
         mLayoutParams = new WindowManager.LayoutParams();
         mLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
         mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         mLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         mLayoutParams.format = PixelFormat.TRANSPARENT;
@@ -91,6 +91,12 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         removePopupNote();
     }
 
+    static class ViewHolder {
+        public TextView title;
+        public TextView summary;
+        private ImageView image;
+    }
+
     class CustomBubbleAdapter extends ArrayAdapter<String> {
 
         public CustomBubbleAdapter(Context context, int resource, ArrayList<String> notes) {
@@ -116,11 +122,5 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
             holder.image.setImageURI(Uri.parse(mIcons.get(position)));
             return convertView;
         }
-    }
-
-    static class ViewHolder {
-        public TextView title;
-        public TextView summary;
-        private ImageView image;
     }
 }

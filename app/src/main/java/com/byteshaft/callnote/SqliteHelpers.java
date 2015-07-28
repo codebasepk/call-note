@@ -24,7 +24,7 @@ public class SqliteHelpers extends SQLiteOpenHelper {
                     ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     NUMBER_COLUMN + " TEXT , " +
                     NOTES_COLUMN + " TEXT UNIQUE , " +
-                    DESCRIPTION + " TEXT , "+
+                    DESCRIPTION + " TEXT , " +
                     PICTURE_COLUMN + " TEXT, " +
                     DATE_COLUMN + " TEXT" + " ) ";
 
