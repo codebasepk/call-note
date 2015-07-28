@@ -8,9 +8,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import static com.byteshaft.callnote.IncomingCallListener.*;
+import static com.byteshaft.callnote.IncomingCallListener.Note;
 
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
