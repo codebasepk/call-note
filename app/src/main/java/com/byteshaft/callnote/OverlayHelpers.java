@@ -21,17 +21,12 @@ import java.util.ArrayList;
 
 public class OverlayHelpers extends ContextWrapper implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    private WindowManager mWindowManager;
-    private boolean isViewCreated;
-    private RelativeLayout mSimpleLayout;
-    private RelativeLayout mScrollableLayout;
+    private static WindowManager mWindowManager;
     private ArrayAdapter<String> mArrayAdapter;
     private ArrayList<String> mTitles;
     private ArrayList<String> mSummaries;
     private ArrayList<String> mIcons;
-    private boolean mHasMoreNotes;
-    private String whichViewIsVisible;
-    private RelativeLayout mBubbleLayout;
+    private static RelativeLayout mBubbleLayout;
     private LayoutInflater mLayoutInflater;
     private CustomScrollView mListView;
     private WindowManager.LayoutParams mLayoutParams;
@@ -45,14 +40,15 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         mLayoutInflater = AppGlobals.getLayoutInflater();
     }
 
-    void removePopupNote() {
-        if (isViewCreated) {
+    static void removePopupNote() {
+        if (AppGlobals.isNoteVisible()) {
             mWindowManager.removeView(mBubbleLayout);
+            AppGlobals.setIsNoteVisible(false);
         }
-        isViewCreated = false;
     }
 
     void showNoteOverlay(ArrayList<String> titles, ArrayList<String> summaries, ArrayList<String> icons) {
+        removePopupNote();
         mTitles = titles;
         mSummaries = summaries;
         mIcons = icons;
@@ -102,7 +98,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         mLayoutParams.gravity = Gravity.TOP;
         mLayoutParams.y = getTwentyPercentDownScreenHeight();
         mWindowManager.addView(view, mLayoutParams);
-        isViewCreated = true;
+        AppGlobals.setIsNoteVisible(true);
     }
 
     private int getTwentyPercentDownScreenHeight() {

@@ -28,17 +28,8 @@ public class Helpers extends ContextWrapper {
 
     public static final String LOG_TAG = "";
 
-    static String logTag(Class presentClass) {
-        return LOG_TAG + "/" + presentClass.getSimpleName();
-    }
-
     TelephonyManager getTelephonyManager() {
         return (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-    }
-
-    float getDensityPixels(int pixels) {
-        return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, pixels, getResources().getDisplayMetrics());
     }
 
     private Cursor getAllContacts(ContentResolver cr) {
@@ -72,60 +63,9 @@ public class Helpers extends ContextWrapper {
         return contactNumbers;
     }
 
-    public boolean contactExists(String number, ContentResolver contentResolver) {
-        Cursor phones = getAllContacts(contentResolver);
-        while (phones.moveToNext()){
-            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            if(PhoneNumberUtils.compare(number, phoneNumber)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    boolean contactExistsInWhitelist(String number, String checkedContacts) {
-        boolean contactExistsInWhitelist = false;
-        String[] checkContactsArray = getCheckedContacts(checkedContacts);
-        for(String contact : checkContactsArray) {
-            if (PhoneNumberUtils.compare(contact, number)) {
-                contactExistsInWhitelist = true;
-            }
-        }
-        return contactExistsInWhitelist;
-    }
-
-    String[] getCheckedContacts(String checkedContacts) {
-        return checkedContacts.split(",");
-    }
-
-//    void getCheckedContactsFromSharedPrefrence(List<String> contactNumber) {
-//        String[] checkedContacts = getCheckedContacts();
-//        int i = 0;
-//        for (String contact : contactNumber) {
-//            for (String checkedContact: checkedContacts) {
-//                if (contact.equals(checkedContact)) {
-//                    ContactsAdapter.mCheckStates.put(i, true);
-//                }
-//            }
-//            i++;
-//        }
-//    }
-
-    String[] getCheckedContacts() {
-        String string = getPreferenceManager().getString("checkedContactsPrefs", " ");
-        return string.split(",");
-    }
-
     String getCurrentDateandTime() {
-        Date formattedDate = null;
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyy h:mm a zz");
-        String date = sdf.format(new Date());
-//        try {
-//            formattedDate = sdf.parse(date);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-        return date;
+        return sdf.format(new Date());
     }
 
     void saveServiceStateEnabled(boolean enable) {
