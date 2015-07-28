@@ -14,13 +14,4 @@
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent" />
 
-    <Button
-        android:id="@+id/button_less_more"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/left_drawer"
-        android:background="@drawable/ic_expand"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="40dp"/>
-
 </RelativeLayout>
