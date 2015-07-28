@@ -12,6 +12,7 @@ public class AppGlobals extends Application {
     private static WindowManager sWindowManager;
     private static SharedPreferences sPreferences;
     private static boolean isNoteEditModeFirst;
+    private static boolean isNoteVisible;
 
     @Override
     public void onCreate() {
@@ -39,5 +40,13 @@ public class AppGlobals extends Application {
 
     static boolean isIsNoteEditModeFirst() {
         return isNoteEditModeFirst;
+    }
+
+    static boolean isNoteVisible() {
+        return isNoteVisible;
+    }
+
+    static void setIsNoteVisible(boolean visible) {
+        isNoteVisible = visible;
     }
 }

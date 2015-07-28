@@ -1,5 +1,6 @@
 package com.byteshaft.callnote;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -117,6 +118,7 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     private void putDatabaseContactsToTemporarySP(ArrayList<String> numbers) {
         StringBuilder builder = new StringBuilder();
         for (String number: numbers) {
@@ -124,12 +126,15 @@ public class ContactsAdapter extends BaseAdapter implements CompoundButton.OnChe
             builder.append(",");
         }
         mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        mPreferences.edit().putString("checkedContactsTemp", builder.toString()).apply();
+        mPreferences.edit().putString("checkedContactsTemp", builder.toString()).commit();
     }
 
     private String[] getTemporarySP() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String output = mPreferences.getString("checkedContactsTemp", null);
+        String output = mPreferences.getString("checkedContactsTemp", "");
+        if (output == null) {
+            output = "";
+        }
         return output.split(",");
     }
 }
