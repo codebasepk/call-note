@@ -4,7 +4,9 @@
     android:layout_width="fill_parent"
     android:layout_height="80dp"
     android:orientation="horizontal"
-    android:weightSum="100">
+    android:weightSum="100"
+    android:layout_margin="2dp"
+    android:padding="5dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -29,6 +31,13 @@
 
     <ImageView
         android:id="@+id/Thumbnail"
-        android:layout_width="30dp"
+        android:layout_width="35dp"
         android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/note_direction"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/off" />
 </LinearLayout>

@@ -25,11 +25,11 @@ public class IncomingCallListener extends PhoneStateListener {
     private SqliteHelpers mSqliteHelpers;
     private boolean isOutGoingCall = false;
 
-    private static class Note {
-        static int SHOW_INCOMING_CALL = 0;
-        static int SHOW_OUTGOING_CALL = 1;
-        static int SHOW_INCOMING_OUTGOING = 2;
-        static int TURN_OFF = 3;
+    public static class Note {
+        static final int SHOW_INCOMING_CALL = 0;
+        static final int SHOW_OUTGOING_CALL = 1;
+        static final int SHOW_INCOMING_OUTGOING = 2;
+        static final int TURN_OFF = 3;
     }
 
     public IncomingCallListener(Context context) {
