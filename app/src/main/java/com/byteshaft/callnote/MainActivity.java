@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private void showNoNoteFoundDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Welcome!");
-        builder.setMessage("Do you want to add a Note?");
+        builder.setMessage("Would you like to add your first note?");
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
