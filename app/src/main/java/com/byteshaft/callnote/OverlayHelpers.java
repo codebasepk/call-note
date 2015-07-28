@@ -30,9 +30,6 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     private LayoutInflater mLayoutInflater;
     private CustomScrollView mListView;
     private WindowManager.LayoutParams mLayoutParams;
-    private ArrayList<String> mLatestNote;
-    private boolean isPopupExpanded;
-    private Button aButton;
 
     public OverlayHelpers(Context base) {
         super(base);
@@ -52,39 +49,13 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         mTitles = titles;
         mSummaries = summaries;
         mIcons = icons;
-        mLatestNote = new ArrayList<>();
-        mLatestNote.add(mTitles.get(0));
-        mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mLatestNote);
+        mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mTitles);
         mBubbleLayout = (RelativeLayout) mLayoutInflater.inflate(R.layout.overlay, null);
         mListView = (CustomScrollView)  mBubbleLayout.findViewById(R.id.left_drawer);
         mListView.setMaxHeight(220);
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mArrayAdapter);
-        aButton = (Button) mBubbleLayout.findViewById(R.id.button_less_more);
-        aButton.setOnClickListener(this);
-        if (titles.size() == 1) {
-            aButton.setVisibility(View.GONE);
-        } else if (titles.size() > 1) {
-            aButton.setBackgroundResource(R.drawable.ic_expand);
-            aButton.setVisibility(View.VISIBLE);
-        }
         addViewToWindowManager(mBubbleLayout);
-    }
-
-    private void expandNoteOverlay() {
-        mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mTitles);
-        mListView.setAdapter(mArrayAdapter);
-        aButton.setBackgroundResource(R.drawable.ic_contract);
-        mWindowManager.updateViewLayout(mBubbleLayout, mLayoutParams);
-        isPopupExpanded = true;
-    }
-
-    private void collapseNoteOverlay() {
-        mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mLatestNote);
-        mListView.setAdapter(mArrayAdapter);
-        aButton.setBackgroundResource(R.drawable.ic_expand);
-        mWindowManager.updateViewLayout(mBubbleLayout, mLayoutParams);
-        isPopupExpanded = false;
     }
 
     private void addViewToWindowManager(View view) {
@@ -110,14 +81,6 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button_less_more:
-                if (isPopupExpanded) {
-                    collapseNoteOverlay();
-
-                } else {
-                    expandNoteOverlay();
-                }
-                break;
             case R.id.left_drawer:
                 removePopupNote();
                 break;
