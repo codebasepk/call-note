@@ -25,6 +25,9 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
 
 import static com.byteshaft.callnote.IncomingCallListener.Note;
@@ -59,6 +62,12 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         dataBaseHelpers.getNotesCount();
         if (dataBaseHelpers.isEmpty()) {
             showNoNoteFoundDialog();
+        }
+        if (!AppGlobals.PREMIUM) {
+            AdView adView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder()
+                    .setRequestAgent("android_studio:ad_template").build();
+            adView.loadAd(adRequest);
         }
     }
 
