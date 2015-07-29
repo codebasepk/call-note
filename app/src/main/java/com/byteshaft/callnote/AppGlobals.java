@@ -8,7 +8,7 @@ import android.view.WindowManager;
 
 public class AppGlobals extends Application {
 
-    public static final boolean PREMIUM = false;
+    public static final boolean PREMIUM = true;
     private static LayoutInflater sLayoutInflater;
     private static WindowManager sWindowManager;
     private static SharedPreferences sPreferences;
