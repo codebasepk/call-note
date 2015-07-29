@@ -48,6 +48,7 @@ public class ContactsPicker extends ActionBarActivity {
         if (getIntent().getExtras() != null) {
             String checkedContacts = getIntent().getExtras().getString("pre_checked");
             noteTitle = getIntent().getExtras().getString("note");
+            boolean revisitingTemporary = getIntent().getExtras().getBoolean("temporary_select");
             if (checkedContacts != null) {
                 String[] pre_checked = checkedContacts.split(",");
                 for (int i = 0; i < mListView.getCount(); i++) {
@@ -57,6 +58,8 @@ public class ContactsPicker extends ActionBarActivity {
                         }
                     }
                 }
+            } else if (revisitingTemporary) {
+                // Just don't do anything
             } else {
                 ArrayList<String> numbersForNote = dataBaseHelpers.getNumberFromNote(noteTitle);
                 for (int i = 0; i < mListView.getCount(); i++) {
@@ -125,6 +128,7 @@ public class ContactsPicker extends ActionBarActivity {
                 if (stringBuilder.length() != 0) {
                     intent.putExtra("selected_contacts", stringBuilder.toString());
                 }
+                intent.putExtra("temporary", true);
                 setResult(AppGlobals.RESULT_OK, intent);
                 finish();
                 return true;
