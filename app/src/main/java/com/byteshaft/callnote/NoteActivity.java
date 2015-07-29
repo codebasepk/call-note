@@ -69,7 +69,8 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         if (mNote.isEmpty()) {
             Toast.makeText(getApplicationContext(), "Note is empty", Toast.LENGTH_SHORT).show();
         } else if (mCheckedContacts == null) {
-            Toast.makeText(getApplicationContext(), "please select at least one contact", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "please select at least one contact",
+                    Toast.LENGTH_SHORT).show();
         }
         if (imageVariable == null) {
             imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;

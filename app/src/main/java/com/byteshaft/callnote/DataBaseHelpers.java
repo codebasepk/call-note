@@ -151,7 +151,7 @@ public class DataBaseHelpers {
         String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME + " ORDER BY " +
                 SqliteHelpers.DATE_COLUMN + " DESC";
         Cursor cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<String>();
+        ArrayList<String> arrayList = new ArrayList<>();
         while (cursor.moveToNext()) {
             String itemname = cursor.getString(cursor.getColumnIndex(
                     SqliteHelpers.NOTES_COLUMN));
@@ -185,5 +185,17 @@ public class DataBaseHelpers {
         isEmpty = !cursor.moveToNext();
         cursor.close();
         return isEmpty;
+    }
+
+    public int getNotesCount() {
+        int noteCount  = 0;
+        mDbHelper = mSqliteHelpers.getWritableDatabase();
+        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
+        Cursor cursor = mDbHelper.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            noteCount++;
+        }
+        System.out.println(noteCount);
+        return noteCount;
     }
 }
