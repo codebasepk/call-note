@@ -25,6 +25,9 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
 
 import static com.byteshaft.callnote.IncomingCallListener.Note;
@@ -56,8 +59,15 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         mToggleSwitch.setOnCheckedChangeListener(this);
         mOverlayHelpers = new OverlayHelpers(getApplicationContext());
+        dataBaseHelpers.getNotesCount();
         if (dataBaseHelpers.isEmpty()) {
             showNoNoteFoundDialog();
+        }
+        if (!AppGlobals.PREMIUM) {
+            AdView adView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder()
+                    .setRequestAgent("android_studio:ad_template").build();
+            adView.loadAd(adRequest);
         }
     }
 
@@ -100,37 +110,24 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_addNote:
-                startActivity(new Intent(this, NoteActivity.class));
+                if (dataBaseHelpers.getNotesCount() >= 3 && !AppGlobals.PREMIUM) {
+                    String message = "You cannot add more than 3 Notes in free version " +
+                            "Upgrade to premium";
+                    String title = "Notes limit";
+                    mHelpers.showUpgradeDialog(MainActivity.this, title, message);
+                } else {
+                    startActivity(new Intent(this, NoteActivity.class));
+                }
                 break;
             case R.id.upgrade_button:
-                showUpgradeDialog();
+                String dialogMessage = "Do you want to upgrade?";
+                mHelpers.showUpgradeDialog(MainActivity.this, "Upgrade", dialogMessage);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void showUpgradeDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Upgrade");
-        builder.setMessage("Do you want to upgrade?");
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
