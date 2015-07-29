@@ -54,6 +54,11 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             R.drawable.character_8,
             R.drawable.character_9
     };
+    private int[] imageIdForFree = {
+            R.drawable.character_1,
+            R.drawable.character_2,
+            R.drawable.character_3
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -168,10 +173,17 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         Spinner mSpinner = (Spinner) findViewById(R.id.note_spinner);
         mSpinner.setOnItemSelectedListener(this);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
-                R.array.spinner, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(adapter);
+        String[] freeVersionOptions = {"Incoming Call", "Turn Off"};
+        String[] premiumVersionOptions = {"Incoming Call", "Outgoing Call", "Incoming & Outgoing Call",
+                "Turn Off"};
+        ArrayAdapter<String> arrayAdapter;
+        if (AppGlobals.PREMIUM) {
+            arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, premiumVersionOptions);
+        } else {
+            arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, freeVersionOptions);
+        }
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(arrayAdapter);
         mTitle = noteTitle.getText().toString();
         mNote = editTextNote.getText().toString();
         if (getIntent().getExtras() != null) {
@@ -189,7 +201,11 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         addIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initiateIconDialog();
+                if (AppGlobals.PREMIUM) {
+                    initiateIconDialog(imageId);
+                } else {
+                    initiateIconDialog(imageIdForFree);
+                }
             }
         });
         Button attachContacts = (Button) findViewById(R.id.attach_contacts);
@@ -203,7 +219,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         });
     }
 
-    public void initiateIconDialog() {
+    public void initiateIconDialog(final int[] items) {
         LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog_2, null);
         AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
@@ -211,7 +227,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         db.setView(dialog_layout);
         db.setTitle("Select character");
         alert = db.show();
-        CustomGrid adapter = new CustomGrid(NoteActivity.this, imageId);
+        CustomGrid adapter = new CustomGrid(NoteActivity.this, items);
         mGridView = (GridView) dialog_layout.findViewById(R.id.grid);
         mGridView.setAdapter(adapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -219,7 +235,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                setImageVariableAndCloseDialog(imageId[position]);
+                setImageVariableAndCloseDialog(items[position]);
             }
         });
     }
