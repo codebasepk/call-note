@@ -104,10 +104,10 @@ public class Helpers extends ContextWrapper {
         return sharedPreferences.getInt(key, 0);
     }
 
-     void showUpgradeDialog(Activity activity) {
+     void showUpgradeDialog(Activity activity, String title, String DialogMessage) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Upgrade");
-        builder.setMessage("Do you want to upgrade?");
+        builder.setTitle(title);
+        builder.setMessage(DialogMessage);
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

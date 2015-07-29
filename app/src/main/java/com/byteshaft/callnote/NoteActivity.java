@@ -77,13 +77,25 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                if (AppGlobals.PREMIUM) {
-                    saveCurrentNote();
-                } else if (!AppGlobals.PREMIUM) {
-                    if (mDbHelpers.getNotesCount() >= 3) {
-                        mHelpers.showUpgradeDialog(NoteActivity.this);
-                    } else {
-                        saveCurrentNote();
+                if (mId != null && !mNote.isEmpty() && mCheckedContacts != null) {
+                    mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
+                            imageVariable, mHelpers.getCurrentDateandTime());
+                    mHelpers.saveSpinnerState(mTitle, spinnerState);
+                    mCheckedContacts = null;
+                    Log.i(Helpers.LOG_TAG, "Update success");
+                    this.finish();
+                } else {
+                    if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
+                            !mNote.isEmpty() && mCheckedContacts != null) {
+                        NotesAlreadyExistDialog();
+                        mCheckedContacts = null;
+                    } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
+                            !mNote.isEmpty() && mCheckedContacts != null) {
+                        mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
+                                mHelpers.getCurrentDateandTime());
+                        mHelpers.saveSpinnerState(mTitle, spinnerState);
+                        mCheckedContacts = null;
+                        this.finish();
                     }
                 }
                 break;
@@ -122,30 +134,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void saveCurrentNote() {
-        if (mId != null && !mNote.isEmpty() && mCheckedContacts != null) {
-            mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle, mNote,
-                    imageVariable, mHelpers.getCurrentDateandTime());
-            mHelpers.saveSpinnerState(mTitle, spinnerState);
-            mCheckedContacts = null;
-            Log.i(Helpers.LOG_TAG, "Update success");
-            this.finish();
-        } else {
-            if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) != null &&
-                    !mNote.isEmpty() && mCheckedContacts != null) {
-                NotesAlreadyExistDialog();
-                mCheckedContacts = null;
-            } else if (mDbHelpers.checkIfItemAlreadyExistInDatabase(mTitle) == null &&
-                    !mNote.isEmpty() && mCheckedContacts != null) {
-                mDbHelpers.createNewEntry(mCheckedContacts, mTitle, mNote, imageVariable,
-                        mHelpers.getCurrentDateandTime());
-                mHelpers.saveSpinnerState(mTitle, spinnerState);
-                mCheckedContacts = null;
-                this.finish();
-                }
-            }
     }
 
     @Override

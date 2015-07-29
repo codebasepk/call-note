@@ -101,10 +101,18 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_addNote:
-                startActivity(new Intent(this, NoteActivity.class));
+                if (dataBaseHelpers.getNotesCount() >= 3) {
+                    String message = "You cannot add more than 3 Notes in free version " +
+                            "Upgrade to premium";
+                    String title = "Notes limit";
+                    mHelpers.showUpgradeDialog(MainActivity.this, title, message);
+                } else {
+                    startActivity(new Intent(this, NoteActivity.class));
+                }
                 break;
             case R.id.upgrade_button:
-                mHelpers.showUpgradeDialog(MainActivity.this);
+                String dialogMessage = "Do you want to upgrade?";
+                mHelpers.showUpgradeDialog(MainActivity.this, "Upgrade", dialogMessage);
                 break;
         }
         return super.onOptionsItemSelected(item);
