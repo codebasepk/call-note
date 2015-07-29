@@ -41,5 +41,6 @@
             android:name=".NoteActivity"
             android:label="Create Note" >
         </activity>
+        <activity android:name="contactpicker.ContactsPicker" android:label="Select contacts"/>
     </application>
 </manifest>

@@ -1,6 +1,5 @@
 package com.byteshaft.callnote;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,16 +16,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import contactpicker.ContactsPicker;
 
 public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSelectedListener {
 
@@ -196,68 +195,11 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         attachContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContactsDialog();
+                Intent intent = new Intent(getApplicationContext(), ContactsPicker.class);
+                intent.putExtra("note", mTitle);
+                startActivity(intent);
             }
         });
-    }
-
-    public void showContactsDialog() {
-        final LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
-        View dialog_layout = inflater.inflate(R.layout.dialog, (ViewGroup) findViewById(R.id.dialogLayout));
-        AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
-        db.setView(dialog_layout);
-        db.setTitle("Select Contacts");
-        ListView listView = (ListView) dialog_layout.findViewById(R.id.lv);
-        final ContactsAdapter ma = new ContactsAdapter(getApplicationContext(), mTitle);
-        listView.setAdapter(ma);
-        Button checkAll = (Button) dialog_layout.findViewById(R.id.button_checkall);
-        checkAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StringBuilder checkedContacts = new StringBuilder();
-                ContactsAdapter.mCheckStates.clear();
-                for (int i = 0; i < ma.getCount(); i++) {
-                    ContactsAdapter.mCheckStates.put(i, true);
-                    checkedContacts.append(ma.getContactNumbers().get(i));
-                    checkedContacts.append(",");
-                }
-                mPreferences.edit().putString("checkedContactsTemp", checkedContacts.toString()).commit();
-                ma.notifyDataSetChanged();
-            }
-        });
-        Button uncheckAll = (Button) dialog_layout.findViewById(R.id.button_uncheck_all);
-        uncheckAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPreferences.edit().putString("checkedContactsTemp", null).commit();
-                ContactsAdapter.mCheckStates.clear();
-                for (int i = 0; i < ma.getCount(); i++) {
-                    ContactsAdapter.mCheckStates.put(i, false);
-                }
-                ma.notifyDataSetChanged();
-            }
-        });
-        db.setPositiveButton("OK", new
-                DialogInterface.OnClickListener() {
-                    @SuppressLint("CommitPrefEdits")
-                    public void onClick(DialogInterface dialog, int which) {
-                        StringBuilder builder = new StringBuilder();
-                        for (int i = 0; i < ma.getCount(); i++) {
-                            if (ContactsAdapter.mCheckStates.get(i)) {
-                                builder.append(ma.getContactNumbers().get(i));
-                                builder.append(",");
-                            }
-                        }
-                        mPreferences.edit().putString("checkedContactsTemp", builder.toString()).commit();
-                    }
-                });
-        db.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ContactsAdapter.mCheckStates = null;
-            }
-        });
-        db.show();
     }
 
     public void initiateIconDialog() {
