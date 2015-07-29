@@ -26,16 +26,16 @@ public class Helpers extends ContextWrapper {
         return (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
     }
 
-    private Cursor getAllContacts(ContentResolver cr) {
+    private static Cursor getAllContacts(ContentResolver cr) {
         return cr.query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null,
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
         );
     }
 
-    public List<String> getAllContactNames() {
+    public static List<String> getAllContactNames() {
         List<String> contactNames = new ArrayList<>();
-        Cursor cursor = getAllContacts(getContentResolver());
+        Cursor cursor = getAllContacts(AppGlobals.getContext().getContentResolver());
         while (cursor.moveToNext()) {
             String name = cursor.getString(
                     cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
@@ -45,9 +45,9 @@ public class Helpers extends ContextWrapper {
         return contactNames;
     }
 
-    public List<String> getAllContactNumbers() {
+    public static List<String> getAllContactNumbers() {
         List<String> contactNumbers = new ArrayList<>();
-        Cursor cursor = getAllContacts(getContentResolver());
+        Cursor cursor = getAllContacts(AppGlobals.getContext().getContentResolver());
         while (cursor.moveToNext()) {
             String number = cursor.getString(
                     cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));

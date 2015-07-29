@@ -1,6 +1,7 @@
 package com.byteshaft.callnote;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ public class AppGlobals extends Application {
     private static LayoutInflater sLayoutInflater;
     private static WindowManager sWindowManager;
     private static SharedPreferences sPreferences;
+    private static Context sContext;
     private static boolean isNoteEditModeFirst;
     private static boolean isNoteVisible;
 
@@ -20,6 +22,10 @@ public class AppGlobals extends Application {
 
     static WindowManager getWindowManager() {
         return sWindowManager;
+    }
+
+    static Context getContext() {
+        return sContext;
     }
 
     static SharedPreferences getSharedPreferences() {
@@ -45,6 +51,7 @@ public class AppGlobals extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        sContext = getApplicationContext();
         sLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         sWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         sPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

@@ -27,22 +27,19 @@ public class ContactsPicker extends ActionBarActivity {
 
     private ArrayAdapter<String> listAdapter;
     private ListView mListView;
-    private Helpers mHelpers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contacts_picker_activity);
-        mHelpers = new Helpers(getApplicationContext());
-        List<String> names = mHelpers.getAllContactNames();
-        List<String> numbers = mHelpers.getAllContactNumbers();
+        List<String> names = Helpers.getAllContactNames();
+        List<String> numbers = Helpers.getAllContactNumbers();
         ArrayList<String> output = getFormattedListEntries(names, numbers);
-        listAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_list_item_multiple_choice, output);
+        listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice,
+                                         output);
         mListView = (ListView) findViewById(R.id.list);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setAdapter(listAdapter);
-//        String[] selectedOld = getSelectedContacts();
 
         DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
         String noteTitle;
