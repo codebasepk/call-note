@@ -135,6 +135,12 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         inflater.inflate(R.menu.menu_main, menu);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
+        MenuItem item = menu.findItem(R.id.upgrade_button);
+        if (AppGlobals.PREMIUM) {
+            item.setVisible(false);
+        } else {
+            item.setVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
