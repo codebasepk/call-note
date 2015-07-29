@@ -33,7 +33,7 @@ public class Helpers extends ContextWrapper {
         );
     }
 
-    List<String> getAllContactNames() {
+    public List<String> getAllContactNames() {
         List<String> contactNames = new ArrayList<>();
         Cursor cursor = getAllContacts(getContentResolver());
         while (cursor.moveToNext()) {
@@ -45,7 +45,7 @@ public class Helpers extends ContextWrapper {
         return contactNames;
     }
 
-    List<String> getAllContactNumbers() {
+    public List<String> getAllContactNumbers() {
         List<String> contactNumbers = new ArrayList<>();
         Cursor cursor = getAllContacts(getContentResolver());
         while (cursor.moveToNext()) {
