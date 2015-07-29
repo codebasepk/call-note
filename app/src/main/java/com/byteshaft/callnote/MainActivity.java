@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,11 +36,11 @@ import static com.byteshaft.callnote.IncomingCallListener.Note;
 public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    Helpers mHelpers;
-    DataBaseHelpers mDbHelpers;
-    ArrayList<String> arrayList;
-    ListView listView;
-    TextView textViewTitle;
+    private Helpers mHelpers;
+    private DataBaseHelpers mDbHelpers;
+    private ArrayList<String> arrayList;
+    private ListView listView;
+    private TextView textViewTitle;
     private ArrayList<String> mNoteSummaries;
     private OverlayHelpers mOverlayHelpers;
     private Switch mToggleSwitch;
@@ -127,8 +128,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         return super.onOptionsItemSelected(item);
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -193,6 +192,26 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         String uriBase = "android.resource://com.byteshaft.callnote/";
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int noteShowPreference = preferences.getInt(title, Note.TURN_OFF);
+        if (AppGlobals.PREMIUM) {
+            return getDirectionIconForPremium(uriBase, noteShowPreference);
+        } else {
+            return getDirectionIconForTrial(uriBase, noteShowPreference);
+        }
+    }
+
+    private String getDirectionIconForTrial(String uriBase, int notePreference) {
+        switch (notePreference) {
+            case Note.SHOW_INCOMING_CALL:
+                return uriBase + R.drawable.incoming_call;
+            case Note.TURN_OFF:
+                return uriBase + R.drawable.off;
+            default:
+                return uriBase + R.drawable.off;
+        }
+    }
+
+    @NonNull
+    private String getDirectionIconForPremium(String uriBase, int noteShowPreference) {
         switch (noteShowPreference) {
             case Note.SHOW_INCOMING_CALL:
                 return uriBase + R.drawable.incoming_call;
