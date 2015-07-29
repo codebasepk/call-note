@@ -80,19 +80,6 @@ public class Helpers extends ContextWrapper {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
-    void putTemporaryPreferenceToPermanent() {
-        SharedPreferences preferences = getPreferenceManager();
-        String temp = preferences.getString("checkedContactsTemp", null);
-        preferences.edit().putString("checkedContactsPrefs", temp).commit();
-
-    }
-
-    void putPermanentPreferenceToTemporary() {
-        SharedPreferences preferences = getPreferenceManager();
-        String permanent = preferences.getString("checkedContactsPrefs", null);
-        preferences.edit().putString("checkedContactsTemp", permanent).commit();
-    }
-
     void saveSpinnerState(String key, int value) {
         SharedPreferences sharedPreferences = getPreferenceManager();
         sharedPreferences.edit().putInt(key, value).apply();

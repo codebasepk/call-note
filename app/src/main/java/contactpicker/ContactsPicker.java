@@ -2,6 +2,7 @@ package contactpicker;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.byteshaft.callnote.AppGlobals;
 import com.byteshaft.callnote.DataBaseHelpers;
 import com.byteshaft.callnote.Helpers;
 import com.byteshaft.callnote.R;
@@ -44,12 +46,24 @@ public class ContactsPicker extends ActionBarActivity {
         DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
         String noteTitle;
         if (getIntent().getExtras() != null) {
+            String checkedContacts = getIntent().getExtras().getString("pre_checked");
             noteTitle = getIntent().getExtras().getString("note");
-            ArrayList<String> numbersForNote = dataBaseHelpers.getNumberFromNote(noteTitle);
-            for (int i = 0; i < mListView.getCount(); i++) {
-                for (String contact : numbersForNote) {
-                    if (PhoneNumberUtils.compare(numbers.get(i), contact)) {
-                        mListView.setItemChecked(i, true);
+            if (checkedContacts != null) {
+                String[] pre_checked = checkedContacts.split(",");
+                for (int i = 0; i < mListView.getCount(); i++) {
+                    for (String contact : pre_checked) {
+                        if (PhoneNumberUtils.compare(numbers.get(i), contact)) {
+                            mListView.setItemChecked(i, true);
+                        }
+                    }
+                }
+            } else {
+                ArrayList<String> numbersForNote = dataBaseHelpers.getNumberFromNote(noteTitle);
+                for (int i = 0; i < mListView.getCount(); i++) {
+                    for (String contact : numbersForNote) {
+                        if (PhoneNumberUtils.compare(numbers.get(i), contact)) {
+                            mListView.setItemChecked(i, true);
+                        }
                     }
                 }
             }
@@ -98,7 +112,6 @@ public class ContactsPicker extends ActionBarActivity {
                 }
                 return true;
             case R.id.action_done:
-                saveSelectedContacts(null);
                 SparseBooleanArray array = mListView.getCheckedItemPositions();
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < mListView.getCount(); i++) {
@@ -108,7 +121,11 @@ public class ContactsPicker extends ActionBarActivity {
                         stringBuilder.append(lines[1]).append(",");
                     }
                 }
-                saveSelectedContacts(stringBuilder.toString());
+                Intent intent = new Intent();
+                if (stringBuilder.length() != 0) {
+                    intent.putExtra("selected_contacts", stringBuilder.toString());
+                }
+                setResult(AppGlobals.RESULT_OK, intent);
                 finish();
                 return true;
         }
@@ -125,10 +142,5 @@ public class ContactsPicker extends ActionBarActivity {
         }
         return entries;
 
-    }
-
-    private void saveSelectedContacts(String contacts) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.edit().putString("checkedContactsTemp", contacts).apply();
     }
 }
