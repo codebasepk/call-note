@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,7 +37,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     private String mTitle;
     private String mNote;
     private String mId = null;
-    private String mCheckedContacts = null;
+    private String mCheckedContacts;
     private SharedPreferences mPreferences;
     private ImageView iconImageView;
     private int spinnerState;
@@ -64,8 +63,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     public boolean onOptionsItemSelected(MenuItem item) {
         mTitle = noteTitle.getText().toString();
         mNote = editTextNote.getText().toString();
-        mHelpers.putTemporaryPreferenceToPermanent();
-        mCheckedContacts = getPermanentPreference();
         if (!mNote.isEmpty()) {
             if (mTitle.isEmpty()) {
                 mTitle = mHelpers.getCurrentDateandTime().substring(0, 21);
@@ -76,6 +73,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         } else if (mCheckedContacts == null) {
             Toast.makeText(getApplicationContext(), "please select at least one contact",
                     Toast.LENGTH_SHORT).show();
+            return false;
         }
         if (imageVariable == null) {
             imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
@@ -167,7 +165,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mPreferences = AppGlobals.getSharedPreferences();
         iconImageView = (ImageView) findViewById(R.id.image_icon);
         mHelpers = new Helpers(getApplicationContext());
-        mHelpers.putPermanentPreferenceToTemporary();
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         editTextNote = (EditText) findViewById(R.id.editText_create_note);
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
@@ -214,9 +211,26 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ContactsPicker.class);
                 intent.putExtra("note", mTitle);
-                startActivity(intent);
+                intent.putExtra("pre_checked", mCheckedContacts);
+                startActivityForResult(intent, AppGlobals.REQUEST_CODE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case AppGlobals.REQUEST_CODE:
+                if (resultCode == AppGlobals.RESULT_OK) {
+                    Bundle extras = data.getExtras();
+                    if (extras == null) {
+                        mCheckedContacts = null;
+                    } else {
+                        mCheckedContacts = extras.getString("selected_contacts");
+                    }
+                }
+        }
     }
 
     public void initiateIconDialog(final int[] items) {
@@ -284,11 +298,6 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                 })
                 .setNegativeButton("No", null)
                 .show();
-    }
-
-    private String getPermanentPreference() {
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        return mPreferences.getString("checkedContactsPrefs", null);
     }
 
     @Override
