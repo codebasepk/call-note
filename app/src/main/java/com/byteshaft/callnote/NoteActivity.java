@@ -54,6 +54,11 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             R.drawable.character_8,
             R.drawable.character_9
     };
+    private int[] imageIdForFree = {
+            R.drawable.character_1,
+            R.drawable.character_2,
+            R.drawable.character_3
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -189,7 +194,11 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         addIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initiateIconDialog();
+                if (AppGlobals.PREMIUM) {
+                    initiateIconDialog(imageId);
+                } else {
+                    initiateIconDialog(imageIdForFree);
+                }
             }
         });
         Button attachContacts = (Button) findViewById(R.id.attach_contacts);
@@ -203,7 +212,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         });
     }
 
-    public void initiateIconDialog() {
+    public void initiateIconDialog(final int[] items) {
         LayoutInflater inflater = LayoutInflater.from(NoteActivity.this);
         View dialog_layout = inflater.inflate(R.layout.dialog_2, null);
         AlertDialog.Builder db = new AlertDialog.Builder(NoteActivity.this);
@@ -211,7 +220,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         db.setView(dialog_layout);
         db.setTitle("Select character");
         alert = db.show();
-        CustomGrid adapter = new CustomGrid(NoteActivity.this, imageId);
+        CustomGrid adapter = new CustomGrid(NoteActivity.this, items);
         mGridView = (GridView) dialog_layout.findViewById(R.id.grid);
         mGridView.setAdapter(adapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -219,7 +228,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                setImageVariableAndCloseDialog(imageId[position]);
+                setImageVariableAndCloseDialog(items[position]);
             }
         });
     }
