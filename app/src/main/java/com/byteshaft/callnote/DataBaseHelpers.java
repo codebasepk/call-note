@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class DataBaseHelpers {
 
@@ -125,21 +126,24 @@ public class DataBaseHelpers {
         return list;
     }
 
-    ArrayList<String> getNumberFromNote(String note) {
+    public ArrayList<String> getNumberFromNote(String note) {
         mDbHelper = mSqliteHelpers.getReadableDatabase();
-        String query = "SELECT * FROM " + SqliteHelpers.TABLE_NAME;
+        String query = "SELECT " + SqliteHelpers.NOTES_COLUMN + ", " + SqliteHelpers.NUMBER_COLUMN + " FROM " + SqliteHelpers.TABLE_NAME;
         Cursor cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> arrayList = new ArrayList<String>();
+        ArrayList<String> numbers = new ArrayList<>();
+        String out = null;
         while (cursor.moveToNext()) {
-            String itemname = cursor.getString(cursor.getColumnIndex(
-                    SqliteHelpers.NOTES_COLUMN));
-            if (itemname.equals(note)) {
-                String number = cursor.getString(cursor.getColumnIndex(
-                        SqliteHelpers.NUMBER_COLUMN));
-                arrayList.add(number);
+            String item = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
+            if (item.equals(note)) {
+                out = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN));
             }
         }
-        return arrayList;
+        if (out != null) {
+            String[] phoneNumbers = out.split(",");
+            Collections.addAll(numbers, phoneNumbers);
+        }
+        cursor.close();
+        return numbers;
     }
 
     ArrayList<String> getAllPresentNotes() {
