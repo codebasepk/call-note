@@ -29,14 +29,15 @@ public class ContactsPicker extends ActionBarActivity {
 
     private ArrayAdapter<String> listAdapter;
     private ListView mListView;
+    private List<String> mNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contacts_picker_activity);
-        List<String> names = Helpers.getAllContactNames();
+        mNames = Helpers.getAllContactNames();
         List<String> numbers = Helpers.getAllContactNumbers();
-        ArrayList<String> output = getFormattedListEntries(names, numbers);
+        ArrayList<String> output = getFormattedListEntries(mNames, numbers);
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice,
                                          output);
         mListView = (ListView) findViewById(R.id.list);
@@ -93,7 +94,11 @@ public class ContactsPicker extends ActionBarActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                listAdapter.getFilter().filter(newText);
+                for (int i = 0; i < mListView.getCount(); i++) {
+                    if (mNames.get(i).toLowerCase().startsWith(newText.toLowerCase())) {
+                        mListView.setSelection(i);
+                    }
+                }
                 return true;
             }
         });
