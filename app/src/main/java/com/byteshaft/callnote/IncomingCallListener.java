@@ -64,11 +64,10 @@ public class IncomingCallListener extends PhoneStateListener {
     }
 
     private boolean getAllNotesForNumber(String number, int showWhen) {
-        SQLiteDatabase database = mSqliteHelpers.getWritableDatabase();
+        SQLiteDatabase database = mSqliteHelpers.getReadableDatabase();
         ArrayList<String> titles = new ArrayList<>();
         ArrayList<String> images = new ArrayList<>();
-        String query = String.format(
-                "SELECT * FROM %s", SqliteHelpers.TABLE_NAME);
+        String query = String.format("SELECT * FROM %s", SqliteHelpers.TABLE_NAME);
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
             String numbers = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN));
@@ -82,6 +81,7 @@ public class IncomingCallListener extends PhoneStateListener {
                 }
             }
         }
+        cursor.close();
         // Filter notes that are enabled;
         mTitles = new ArrayList<>();
         mImages = new ArrayList<>();
