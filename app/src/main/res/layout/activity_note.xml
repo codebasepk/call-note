@@ -29,13 +29,13 @@
         android:id="@+id/editText_title_note"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:maxLength="21"
-        android:maxLines="1"
+        android:maxHeight="90dp"
+        android:maxLength="140"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/note_linear_layout"
-        android:hint="Title"/>
+        android:hint="Enter note..."/>
 
 
     <Button
