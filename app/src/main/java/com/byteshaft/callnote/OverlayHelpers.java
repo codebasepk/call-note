@@ -109,7 +109,6 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
                 convertView = inflater.inflate(R.layout.overlay_row, parent, false);
                 holder = new ViewHolder();
                 holder.title = (TextView) convertView.findViewById(R.id.note_title);
-                holder.summary = (TextView) convertView.findViewById(R.id.note_summary);
                 holder.image = (ImageView) convertView.findViewById(R.id.icon_overlay_row);
                 convertView.setTag(holder);
             } else {

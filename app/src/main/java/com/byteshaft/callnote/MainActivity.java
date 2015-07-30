@@ -228,7 +228,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
 
     static class ViewHolder {
         public TextView title;
-        public TextView summary;
         public ImageView character;
         public ImageView direction;
     }
@@ -247,7 +246,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                 convertView = inflater.inflate(R.layout.row, parent, false);
                 holder = new ViewHolder();
                 holder.title = (TextView) convertView.findViewById(R.id.FilePath);
-                holder.summary = (TextView) convertView.findViewById(R.id.summary);
                 holder.character = (ImageView) convertView.findViewById(R.id.Thumbnail);
                 holder.direction = (ImageView) convertView.findViewById(R.id.note_direction);
                 convertView.setTag(holder);
