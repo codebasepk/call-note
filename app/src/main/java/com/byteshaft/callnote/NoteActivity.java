@@ -41,6 +41,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     private int spinnerState;
     private GridView mGridView;
     private boolean mShowTemporaryCheckedContacts;
+    private boolean isStartedFresh;
     private int[] imageId = {
             R.drawable.character_1,
             R.drawable.character_2,
@@ -61,20 +62,26 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         mTitle = noteTitle.getText().toString();
-            if (mTitle.isEmpty()) {
-                mTitle = mHelpers.getCurrentDateandTime().substring(0, 21);
-            }
-        if (mCheckedContacts == null) {
-            Toast.makeText(getApplicationContext(), "please select at least one contact",
-                    Toast.LENGTH_SHORT).show();
-            return false;
-        }
         if (imageVariable == null) {
             imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
-                if (mId != null &&  mCheckedContacts != null) {
+                if (mTitle.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "please make sure to add note text",
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                if (isStartedFresh) {
+                    DataBaseHelpers dataBaseHelpers = new DataBaseHelpers(getApplicationContext());
+                    mCheckedContacts = dataBaseHelpers.getNumbersForNote(mTitle);
+                }
+                if (mCheckedContacts == null) {
+                    Toast.makeText(getApplicationContext(), "please select at least one contact",
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                if (mId != null) {
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle,
                             imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
@@ -154,6 +161,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
         AppGlobals.setIsNoteEditModeFirst(true);
+        isStartedFresh = true;
         mPreferences = AppGlobals.getSharedPreferences();
         iconImageView = (ImageView) findViewById(R.id.image_icon);
         mHelpers = new Helpers(getApplicationContext());
@@ -214,6 +222,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             case AppGlobals.REQUEST_CODE:
                 if (resultCode == AppGlobals.RESULT_OK) {
                     mShowTemporaryCheckedContacts = true;
+                    isStartedFresh = false;
                     Bundle extras = data.getExtras();
                     if (extras == null) {
                         mCheckedContacts = null;
