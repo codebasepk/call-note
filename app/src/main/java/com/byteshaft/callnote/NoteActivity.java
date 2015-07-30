@@ -42,6 +42,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     private ImageView iconImageView;
     private int spinnerState;
     private GridView mGridView;
+    private boolean mShowTemporaryCheckedContacts;
     private int[] imageId = {
             R.drawable.character_1,
             R.drawable.character_2,
@@ -212,6 +213,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                 Intent intent = new Intent(getApplicationContext(), ContactsPicker.class);
                 intent.putExtra("note", mTitle);
                 intent.putExtra("pre_checked", mCheckedContacts);
+                intent.putExtra("temporary_select", mShowTemporaryCheckedContacts);
                 startActivityForResult(intent, AppGlobals.REQUEST_CODE);
             }
         });
@@ -223,6 +225,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         switch (requestCode) {
             case AppGlobals.REQUEST_CODE:
                 if (resultCode == AppGlobals.RESULT_OK) {
+                    mShowTemporaryCheckedContacts = true;
                     Bundle extras = data.getExtras();
                     if (extras == null) {
                         mCheckedContacts = null;
