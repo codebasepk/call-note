@@ -31,7 +31,7 @@ public class DataBaseHelpers {
         return value;
     }
 
-    void createNewEntry(String value, String note, String desc, String image, String date) {
+    void createNewEntry(String value, String note, String image, String date) {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         ContentValues values = new ContentValues();
         System.out.println(value);
@@ -39,33 +39,30 @@ public class DataBaseHelpers {
         values.put(SqliteHelpers.NOTES_COLUMN, note);
         values.put(SqliteHelpers.PICTURE_COLUMN, image);
         values.put(SqliteHelpers.DATE_COLUMN, date);
-        values.put(SqliteHelpers.DESCRIPTION, desc);
         mDbHelper.insert(SqliteHelpers.TABLE_NAME, null, values);
         Log.i(Helpers.LOG_TAG, "created New Entry");
         closeDatabase();
     }
 
-    void clickUpdate(String id, String number, String note, String desc, String image, String date) {
+    void clickUpdate(String id, String number, String note, String image, String date) {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SqliteHelpers.NUMBER_COLUMN, number);
         values.put(SqliteHelpers.NOTES_COLUMN, note);
         values.put(SqliteHelpers.PICTURE_COLUMN, image);
         values.put(SqliteHelpers.DATE_COLUMN, date);
-        values.put(SqliteHelpers.DESCRIPTION, desc);
         mDbHelper.update(SqliteHelpers.TABLE_NAME, values, SqliteHelpers.ID_COLUMN + "=" + id, null);
         Log.i(Helpers.LOG_TAG, "Updated.......");
         closeDatabase();
     }
 
-    void updateData(String number, String note, String desc, String image, String date) {
+    void updateData(String number, String note, String image, String date) {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SqliteHelpers.NUMBER_COLUMN, number);
         values.put(SqliteHelpers.NOTES_COLUMN, note);
         values.put(SqliteHelpers.PICTURE_COLUMN, image);
         values.put(SqliteHelpers.DATE_COLUMN, date);
-        values.put(SqliteHelpers.DESCRIPTION, desc);
         String selection = SqliteHelpers.NOTES_COLUMN + " LIKE ?"; // where ID column = rowId (that is, selectionArgs)
         String[] selectionArgs = {note};
         mDbHelper.update(SqliteHelpers.TABLE_NAME, values, selection,
@@ -118,7 +115,6 @@ public class DataBaseHelpers {
         while (cursor.moveToNext()) {
             list[0] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.ID_COLUMN)));
             list[1] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN)));
-            list[2] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION)));
             list[3] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.DATE_COLUMN)));
             list[4] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved ....");

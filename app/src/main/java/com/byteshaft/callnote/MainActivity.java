@@ -41,7 +41,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private ArrayList<String> arrayList;
     private ListView listView;
     private TextView textViewTitle;
-    private ArrayList<String> mNoteSummaries;
     private OverlayHelpers mOverlayHelpers;
     private Switch mToggleSwitch;
     private ArrayAdapter<String> mModeAdapter;
@@ -60,7 +59,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         mToggleSwitch.setOnCheckedChangeListener(this);
         mOverlayHelpers = new OverlayHelpers(getApplicationContext());
-        dataBaseHelpers.getNotesCount();
         if (dataBaseHelpers.isEmpty()) {
             showNoNoteFoundDialog();
         }
@@ -98,7 +96,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         super.onResume();
         mToggleSwitch.setChecked(mHelpers.isServiceSettingEnabled());
         arrayList = mDbHelpers.getAllPresentNotes();
-        mNoteSummaries = mDbHelpers.getDescriptions();
         mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
         listView.setAdapter(mModeAdapter);
@@ -158,7 +155,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra("note_title", arrayList.get(position));
-        intent.putExtra("note_summary", mNoteSummaries.get(position));
         startActivity(intent);
     }
 
@@ -260,7 +256,6 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
             }
             String title = arrayList.get(position);
             holder.title.setText(title);
-            holder.summary.setText(mNoteSummaries.get(position));
             holder.character.setImageURI(Uri.parse(mDbHelpers.getIconLinkForNote(title)));
             holder.direction.setImageURI(Uri.parse(getDirectionThumbnail(title)));
             return convertView;
