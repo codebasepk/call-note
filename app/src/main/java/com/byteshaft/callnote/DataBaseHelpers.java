@@ -123,10 +123,19 @@ public class DataBaseHelpers {
     }
 
     public ArrayList<String> getNumberFromNote(String note) {
+        String raw = getNumbersForNote(note);
+        ArrayList<String> numbers = new ArrayList<>();
+        if (raw != null) {
+            String[] phoneNumbers = raw.split(",");
+            Collections.addAll(numbers, phoneNumbers);
+        }
+        return numbers;
+    }
+
+    public String getNumbersForNote(String note) {
         mDbHelper = mSqliteHelpers.getReadableDatabase();
         String query = "SELECT " + SqliteHelpers.NOTES_COLUMN + ", " + SqliteHelpers.NUMBER_COLUMN + " FROM " + SqliteHelpers.TABLE_NAME;
         Cursor cursor = mDbHelper.rawQuery(query, null);
-        ArrayList<String> numbers = new ArrayList<>();
         String out = null;
         while (cursor.moveToNext()) {
             String item = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
@@ -134,12 +143,8 @@ public class DataBaseHelpers {
                 out = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NUMBER_COLUMN));
             }
         }
-        if (out != null) {
-            String[] phoneNumbers = out.split(",");
-            Collections.addAll(numbers, phoneNumbers);
-        }
         cursor.close();
-        return numbers;
+        return out;
     }
 
     ArrayList<String> getAllPresentNotes() {

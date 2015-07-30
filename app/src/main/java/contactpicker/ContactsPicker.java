@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.util.SparseBooleanArray;
@@ -25,7 +26,7 @@ import com.byteshaft.callnote.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactsPicker extends ActionBarActivity {
+public class ContactsPicker extends AppCompatActivity {
 
     private ArrayAdapter<String> listAdapter;
     private ListView mListView;
@@ -97,6 +98,10 @@ public class ContactsPicker extends ActionBarActivity {
                 for (int i = 0; i < mListView.getCount(); i++) {
                     if (mNames.get(i).toLowerCase().startsWith(newText.toLowerCase())) {
                         mListView.setSelection(i);
+                        break;
+                    } else if (mNames.get(i).toLowerCase().contains(newText.toLowerCase())){
+                        mListView.setSelection(i);
+                        break;
                     }
                 }
                 return true;
