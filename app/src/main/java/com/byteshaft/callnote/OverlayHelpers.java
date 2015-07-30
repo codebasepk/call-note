@@ -24,7 +24,6 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     private static RelativeLayout mBubbleLayout;
     private ArrayAdapter<String> mArrayAdapter;
     private ArrayList<String> mTitles;
-    private ArrayList<String> mSummaries;
     private ArrayList<String> mIcons;
     private LayoutInflater mLayoutInflater;
     private CustomScrollView mListView;
@@ -43,10 +42,9 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
         }
     }
 
-    void showNoteOverlay(ArrayList<String> titles, ArrayList<String> summaries, ArrayList<String> icons) {
+    void showNoteOverlay(ArrayList<String> titles, ArrayList<String> icons) {
         removePopupNote();
         mTitles = titles;
-        mSummaries = summaries;
         mIcons = icons;
         mArrayAdapter = new CustomBubbleAdapter(getApplicationContext(), R.layout.row, mTitles);
         mBubbleLayout = (RelativeLayout) mLayoutInflater.inflate(R.layout.overlay, null);
@@ -111,14 +109,12 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
                 convertView = inflater.inflate(R.layout.overlay_row, parent, false);
                 holder = new ViewHolder();
                 holder.title = (TextView) convertView.findViewById(R.id.note_title);
-                holder.summary = (TextView) convertView.findViewById(R.id.note_summary);
                 holder.image = (ImageView) convertView.findViewById(R.id.icon_overlay_row);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.title.setText(mTitles.get(position));
-            holder.summary.setText(mSummaries.get(position));
             holder.image.setImageURI(Uri.parse(mIcons.get(position)));
             return convertView;
         }

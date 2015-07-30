@@ -17,7 +17,6 @@ public class IncomingCallListener extends PhoneStateListener {
 
     private Context mContext;
     private ArrayList<String> mTitles;
-    private ArrayList<String> mSummaries;
     private ArrayList<String> mImages;
     private OverlayHelpers mOverlayHelpers;
     private SqliteHelpers mSqliteHelpers;
@@ -28,8 +27,8 @@ public class IncomingCallListener extends PhoneStateListener {
             String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
             getAllNotesForNumber(number, Note.SHOW_OUTGOING_CALL);
             isOutGoingCall = true;
-            if (mTitles.size() > 0 && mSummaries.size() > 0) {
-                mOverlayHelpers.showNoteOverlay(mTitles, mSummaries, mImages);
+            if (mTitles.size() > 0) {
+                mOverlayHelpers.showNoteOverlay(mTitles, mImages);
             }
         }
     };
@@ -48,8 +47,8 @@ public class IncomingCallListener extends PhoneStateListener {
             case TelephonyManager.CALL_STATE_RINGING:
                 if (incomingNumber != null) {
                     getAllNotesForNumber(incomingNumber, Note.SHOW_INCOMING_CALL);
-                    if (mTitles.size() > 0 && mSummaries.size() > 0) {
-                        mOverlayHelpers.showNoteOverlay(mTitles, mSummaries, mImages);
+                    if (mTitles.size() > 0) {
+                        mOverlayHelpers.showNoteOverlay(mTitles, mImages);
                     }
                 }
                 break;
@@ -67,7 +66,6 @@ public class IncomingCallListener extends PhoneStateListener {
     private boolean getAllNotesForNumber(String number, int showWhen) {
         SQLiteDatabase database = mSqliteHelpers.getWritableDatabase();
         ArrayList<String> titles = new ArrayList<>();
-        ArrayList<String> summaries = new ArrayList<>();
         ArrayList<String> images = new ArrayList<>();
         String query = String.format(
                 "SELECT * FROM %s", SqliteHelpers.TABLE_NAME);
@@ -78,24 +76,20 @@ public class IncomingCallListener extends PhoneStateListener {
             for (String aNumbersArray : numbersArray) {
                 if (PhoneNumberUtils.compare(aNumbersArray, number)) {
                     String title = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
-                    String summary = cursor.getString(cursor.getColumnIndex(SqliteHelpers.DESCRIPTION));
                     String image = cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN));
                     titles.add(title);
-                    summaries.add(summary);
                     images.add(image);
                 }
             }
         }
         // Filter notes that are enabled;
         mTitles = new ArrayList<>();
-        mSummaries = new ArrayList<>();
         mImages = new ArrayList<>();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         for (int i = 0; i < titles.size(); i++) {
             int noteShowPreference = preferences.getInt(titles.get(i), Note.TURN_OFF);
             if (noteShowPreference == showWhen || noteShowPreference == Note.SHOW_INCOMING_OUTGOING) {
                 mTitles.add(titles.get(i));
-                mSummaries.add(summaries.get(i));
                 mImages.add(images.get(i));
             }
         }
