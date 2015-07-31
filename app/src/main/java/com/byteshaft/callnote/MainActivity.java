@@ -95,6 +95,13 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     protected void onResume() {
         super.onResume();
         mToggleSwitch.setChecked(mHelpers.isServiceSettingEnabled());
+        if (mHelpers.isServiceSettingEnabled()) {
+            mToggleSwitch.setText("Notes Active");
+            mToggleSwitch.setTextColor(Color.BLACK);
+        } else {
+            mToggleSwitch.setText("All Notes OFF");
+            mToggleSwitch.setTextColor(Color.RED);
+        }
         arrayList = mDbHelpers.getAllPresentNotes();
         mModeAdapter = new NotesArrayList(this, R.layout.row, arrayList);
         listView = (ListView) findViewById(R.id.listView_main);
@@ -145,8 +152,12 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
 
         if (isChecked) {
             startService(new Intent(this, OverlayService.class));
+            mToggleSwitch.setText("Notes Active");
+            mToggleSwitch.setTextColor(Color.BLACK);
         } else {
             stopService(new Intent(this, OverlayService.class));
+            mToggleSwitch.setText("All Notes OFF");
+            mToggleSwitch.setTextColor(Color.RED);
         }
         mHelpers.saveServiceStateEnabled(isChecked);
     }
