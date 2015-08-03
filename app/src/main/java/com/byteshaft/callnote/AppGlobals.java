@@ -9,7 +9,7 @@ import android.view.WindowManager;
 
 public class AppGlobals extends Application {
 
-    public static final boolean PREMIUM = true;
+    public static final boolean PREMIUM = false;
     public static final int RESULT_OK = 200;
     public static final int REQUEST_CODE = 199;
     private static LayoutInflater sLayoutInflater;
