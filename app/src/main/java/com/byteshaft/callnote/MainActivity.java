@@ -112,6 +112,12 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        UpgradeDialog.dismiss();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_addNote:
@@ -125,8 +131,9 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                 }
                 break;
             case R.id.upgrade_button:
-                String dialogMessage = "Do you want to upgrade?";
-                mHelpers.showUpgradeDialog(MainActivity.this, "Upgrade", dialogMessage);
+//                String dialogMessage = "Do you want to upgrade?";
+//                mHelpers.showUpgradeDialog(MainActivity.this, "Upgrade", dialogMessage);
+                UpgradeDialog.show(MainActivity.this);
                 break;
         }
         return super.onOptionsItemSelected(item);
