@@ -9,7 +9,6 @@ import android.view.WindowManager;
 
 public class AppGlobals extends Application {
 
-    public static final boolean PREMIUM = false;
     public static final int RESULT_OK = 200;
     public static final int REQUEST_CODE = 199;
     private static LayoutInflater sLayoutInflater;
@@ -35,10 +34,6 @@ public class AppGlobals extends Application {
         return sPreferences;
     }
 
-    static boolean isIsNoteEditModeFirst() {
-        return isNoteEditModeFirst;
-    }
-
     static void setIsNoteEditModeFirst(boolean first) {
         isNoteEditModeFirst = first;
     }
@@ -49,6 +44,14 @@ public class AppGlobals extends Application {
 
     static void setIsNoteVisible(boolean visible) {
         isNoteVisible = visible;
+    }
+
+    static boolean isPremium() {
+        return sPreferences.getBoolean("premium", false);
+    }
+
+    static void enablePremium(boolean enable) {
+        sPreferences.edit().putBoolean("premium", enable).apply();
     }
 
     @Override

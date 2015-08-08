@@ -173,7 +173,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         String[] premiumVersionOptions = {"Incoming Call", "Outgoing Call", "Incoming & Outgoing Call",
                 "Turn Off"};
         ArrayAdapter<String> arrayAdapter;
-        if (AppGlobals.PREMIUM) {
+        if (AppGlobals.isPremium()) {
             arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, premiumVersionOptions);
         } else {
             arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, freeVersionOptions);
@@ -195,7 +195,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         addIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AppGlobals.PREMIUM) {
+                if (AppGlobals.isPremium()) {
                     initiateIconDialog(imageId);
                 } else {
                     initiateIconDialog(imageIdForFree);

@@ -1,14 +1,22 @@
 package com.byteshaft.callnote;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
@@ -18,16 +26,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -45,6 +60,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private Switch mToggleSwitch;
     private ArrayAdapter<String> mModeAdapter;
     private DataBaseHelpers dataBaseHelpers;
+    private final String mSku = "premiumupgrade";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +78,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         if (dataBaseHelpers.isEmpty()) {
             showNoNoteFoundDialog();
         }
-        if (!AppGlobals.PREMIUM) {
+        if (!AppGlobals.isPremium()) {
             AdView adView = (AdView) findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder()
                     .setRequestAgent("android_studio:ad_template").build();
@@ -114,14 +130,14 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     @Override
     protected void onPause() {
         super.onPause();
-        UpgradeDialog.dismiss();
+        dismissUpgradeDialog();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_addNote:
-                if (dataBaseHelpers.getNotesCount() >= 3 && !AppGlobals.PREMIUM) {
+                if (dataBaseHelpers.getNotesCount() >= 3 && !AppGlobals.isPremium()) {
                     String message = "You cannot add more than 3 Notes in free version " +
                             "Upgrade to premium";
                     String title = "Notes limit";
@@ -131,9 +147,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                 }
                 break;
             case R.id.upgrade_button:
-//                String dialogMessage = "Do you want to upgrade?";
-//                mHelpers.showUpgradeDialog(MainActivity.this, "Upgrade", dialogMessage);
-                UpgradeDialog.show(MainActivity.this);
+                showUpgradeDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -146,7 +160,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#689F39")));
         MenuItem item = menu.findItem(R.id.upgrade_button);
-        if (AppGlobals.PREMIUM) {
+        if (AppGlobals.isPremium()) {
             item.setVisible(false);
         } else {
             item.setVisible(true);
@@ -212,7 +226,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         String uriBase = "android.resource://com.byteshaft.callnote/";
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int noteShowPreference = preferences.getInt(title, Note.TURN_OFF);
-        if (AppGlobals.PREMIUM) {
+        if (AppGlobals.isPremium()) {
             return getDirectionIconForPremium(uriBase, noteShowPreference);
         } else {
             return getDirectionIconForTrial(uriBase, noteShowPreference);
@@ -276,5 +290,118 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
             holder.direction.setImageURI(Uri.parse(getDirectionThumbnail(title)));
             return convertView;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 4002) {
+            String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+
+            if (resultCode == RESULT_OK) {
+                try {
+                    JSONObject jo = new JSONObject(purchaseData);
+                    String sku = jo.getString("productId");
+                    if (sku.equals(mSku)) {
+                        AppGlobals.enablePremium(true);
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "You have bought the premium version",
+                                Toast.LENGTH_LONG).show();
+                        disconnectionPayService();
+                        // Unlock and restart the activity
+                        recreate();
+                    }
+
+                }
+                catch (JSONException e) {
+                    disconnectionPayService();
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Failed to parse purchase data.",
+                            Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void disconnectionPayService() {
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
+    }
+
+    private IInAppBillingService mService;
+
+    private ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+            try {
+                Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(),
+                        mSku, "inapp", "bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ");
+                PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+                if (buyIntentBundle.getInt("RESPONSE_CODE") == 0) {
+                    startIntentSenderForResult(
+                            pendingIntent.getIntentSender(), 4002, new Intent(), 0, 0, 0
+                    );
+                } else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Error Code: " + buyIntentBundle.getInt("RESPONSE_CODE"),
+                            Toast.LENGTH_SHORT).show();
+                }
+            } catch (RemoteException | IntentSender.SendIntentException e) {
+                disconnectionPayService();
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private WindowManager sWindowManager;
+    private View sUpgradeDialog;
+    private boolean isShown;
+
+    private void showUpgradeDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        sUpgradeDialog = inflater.inflate(R.layout.upgrade_dialog, null);
+        ImageButton yesButton = (ImageButton) sUpgradeDialog.findViewById(R.id.upgrade_button_yes);
+        ImageButton noButton = (ImageButton) sUpgradeDialog.findViewById(R.id.upgrade_button_no);
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+                serviceIntent.setPackage("com.android.vending");
+                bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+                dismissUpgradeDialog();
+            }
+        });
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismissUpgradeDialog();
+            }
+        });
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+        params.type = WindowManager.LayoutParams.TYPE_PHONE;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.format = PixelFormat.TRANSPARENT;
+        sWindowManager = (WindowManager)
+                AppGlobals.getContext().getSystemService(Context.WINDOW_SERVICE);
+        sWindowManager.addView(sUpgradeDialog, params);
+        isShown = true;
+    }
+
+    private void dismissUpgradeDialog() {
+        if (isShown) {
+            sWindowManager.removeView(sUpgradeDialog);
+        }
+        isShown = false;
     }
 }
