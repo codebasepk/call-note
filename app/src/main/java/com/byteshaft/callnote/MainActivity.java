@@ -61,6 +61,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private ArrayAdapter<String> mModeAdapter;
     private DataBaseHelpers dataBaseHelpers;
     private final String mSku = "premiumupgrade";
+    private boolean isServiceBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -321,19 +322,23 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                             Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
+            } else {
+                disconnectionPayService();
             }
         }
     }
 
     private void disconnectionPayService() {
-        if (mService != null) {
+        if (mService != null && isServiceBound) {
             unbindService(mServiceConn);
         }
+        isServiceBound = false;
     }
 
     private IInAppBillingService mService;
 
     private ServiceConnection mServiceConn = new ServiceConnection() {
+
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mService = null;
@@ -378,6 +383,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                 Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
                 serviceIntent.setPackage("com.android.vending");
                 bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+                isServiceBound = true;
                 dismissUpgradeDialog();
             }
         });
