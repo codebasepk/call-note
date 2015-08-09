@@ -139,8 +139,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         switch (item.getItemId()) {
             case R.id.action_addNote:
                 if (dataBaseHelpers.getNotesCount() >= 3 && !AppGlobals.isPremium()) {
-                    String message = "You cannot add more than 3 Notes in free version " +
-                            "Upgrade to premium";
+                    String message = "You cannot add more than 3 Notes in free version. " +
+                            "Upgrade to premium?";
                     String title = "Notes limit";
                     showFreeLimitExceededDialog(title, message);
 //                    mHelpers.showUpgradeDialog(MainActivity.this, title, message);
