@@ -356,6 +356,15 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     startIntentSenderForResult(
                             pendingIntent.getIntentSender(), 4002, new Intent(), 0, 0, 0
                     );
+                } else if (buyIntentBundle.getInt("RESPONSE_CODE") == 7) {
+                    AppGlobals.enablePremium(true);
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "You have already bought the premium version, unlocked now",
+                            Toast.LENGTH_LONG).show();
+                    disconnectionPayService();
+                    // Unlock and restart the activity
+                    recreate();
                 } else {
                     Toast.makeText(
                             getApplicationContext(),
