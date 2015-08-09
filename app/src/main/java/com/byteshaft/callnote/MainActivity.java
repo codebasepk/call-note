@@ -142,7 +142,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     String message = "You cannot add more than 3 Notes in free version " +
                             "Upgrade to premium";
                     String title = "Notes limit";
-                    mHelpers.showUpgradeDialog(MainActivity.this, title, message);
+                    showFreeLimitExceededDialog(title, message);
+//                    mHelpers.showUpgradeDialog(MainActivity.this, title, message);
                 } else {
                     startActivity(new Intent(this, NoteActivity.class));
                 }
@@ -409,5 +410,31 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
             sWindowManager.removeView(sUpgradeDialog);
         }
         isShown = false;
+    }
+
+    private void showFreeLimitExceededDialog(String title, String DialogMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(DialogMessage);
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+                serviceIntent.setPackage("com.android.vending");
+                bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+                isServiceBound = true;
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
