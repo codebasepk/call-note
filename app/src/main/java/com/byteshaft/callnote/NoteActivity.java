@@ -18,10 +18,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import contactpicker.ContactsPicker;
@@ -42,6 +44,8 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     private GridView mGridView;
     private boolean mShowTemporaryCheckedContacts;
     private boolean isStartedFresh;
+    private Switch vibrationSwitch;
+    private boolean vibrationValue;
     private int[] imageId = {
             R.drawable.character_1,
             R.drawable.character_2,
@@ -85,6 +89,12 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle,
                             imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
+                    if (vibrationSwitch.isChecked()) {
+                        vibrationValue = true;
+                    } else {
+                        vibrationValue = false;
+                    }
+                    mHelpers.saveVibrationState(mTitle+"_vibration", vibrationValue);
                     mCheckedContacts = null;
                     Log.i(Helpers.LOG_TAG, "Update success");
                     this.finish();
@@ -97,6 +107,12 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                             && mCheckedContacts != null) {
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, imageVariable,
                                 mHelpers.getCurrentDateandTime());
+                        if (vibrationSwitch.isChecked()) {
+                            vibrationValue = true;
+                        } else {
+                            vibrationValue = false;
+                        }
+                        mHelpers.saveVibrationState(mTitle+"_vibration", vibrationValue);
                         mHelpers.saveSpinnerState(mTitle, spinnerState);
                         mCheckedContacts = null;
                         this.finish();
@@ -168,6 +184,8 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         Spinner mSpinner = (Spinner) findViewById(R.id.note_spinner);
+        vibrationSwitch = (Switch) findViewById(R.id.vibrationSwitch);
+        vibrationSwitch.setChecked(false);
         mSpinner.setOnItemSelectedListener(this);
         String[] freeVersionOptions = {"Incoming Call", "Turn Off"};
         String[] premiumVersionOptions = {"Incoming Call", "Outgoing Call", "Incoming & Outgoing Call",
@@ -190,6 +208,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             mId = detailsForThisNote[0];
             setTitle("Edit Note");
             mSpinner.setSelection(mHelpers.getSpinnerValue(title));
+            vibrationSwitch.setChecked(mHelpers.getVibrationState(title));
         }
         Button addIcon = (Button) findViewById(R.id.button_icon);
         addIcon.setOnClickListener(new View.OnClickListener() {
