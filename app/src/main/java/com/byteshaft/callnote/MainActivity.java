@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private Switch mToggleSwitch;
     private ArrayAdapter<String> mModeAdapter;
     private DataBaseHelpers dataBaseHelpers;
-    private final String mSku = "premiumupgrade";
+    private final String mSku = "com.fgm.plumbo.premiumupgrade";
     private boolean isServiceBound;
 
     @Override
