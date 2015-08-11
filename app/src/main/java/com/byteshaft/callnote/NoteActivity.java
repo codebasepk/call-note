@@ -125,7 +125,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBody = "Try ‘Call Note’, it’s really fun. \n \n " +
-                        "Link: https://play.google.com/store/apps/details?id=com.fungamesmobile.callnote”";
+                        "Link: https://play.google.com/store/apps/details?id=com.fgm.plumbo”";
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 break;
