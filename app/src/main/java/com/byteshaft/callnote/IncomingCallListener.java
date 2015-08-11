@@ -30,10 +30,14 @@ public class IncomingCallListener extends PhoneStateListener {
             isOutGoingCall = true;
             if (mTitles.size() > 0) {
                 mOverlayHelpers.showNoteOverlay(mTitles, mImages);
-                if (!Helpers.isVibrationEnabled() &&
-                        Helpers.getVibrationState(mTitles.get(0)) && AppGlobals.isPremium()) {
-                    isVibrating = true;
-                    Helpers.vibrate();
+                if (AppGlobals.isPremium() && !Helpers.isVibrationEnabled()) {
+                    for (int i = 0; i < mTitles.size(); i++) {
+                        if (Helpers.getVibrationState(mTitles.get(i))) {
+                            Helpers.vibrate();
+                            isVibrating = true;
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -55,10 +59,14 @@ public class IncomingCallListener extends PhoneStateListener {
                     getAllNotesForNumber(incomingNumber, Note.SHOW_INCOMING_CALL);
                     if (mTitles.size() > 0) {
                         mOverlayHelpers.showNoteOverlay(mTitles, mImages);
-                        if (!Helpers.isVibrationEnabled() &&
-                                Helpers.getVibrationState(mTitles.get(0)) && AppGlobals.isPremium()) {
-                            isVibrating = true;
-                            Helpers.vibrate();
+                        if (AppGlobals.isPremium() && !Helpers.isVibrationEnabled()) {
+                            for (int i = 0; i < mTitles.size(); i++) {
+                                if (Helpers.getVibrationState(mTitles.get(i))) {
+                                    Helpers.vibrate();
+                                    isVibrating = true;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }

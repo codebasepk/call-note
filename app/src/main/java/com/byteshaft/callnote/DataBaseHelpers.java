@@ -28,6 +28,8 @@ public class DataBaseHelpers {
         while (cursor.moveToNext()) {
             value = cursor.getString(cursor.getColumnIndex(SqliteHelpers.NOTES_COLUMN));
         }
+        cursor.close();
+        closeDatabase();
         return value;
     }
 
@@ -75,12 +77,14 @@ public class DataBaseHelpers {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         mDbHelper.delete(SqliteHelpers.TABLE_NAME, column + " = ?", new String[]{value});
         Log.i(Helpers.LOG_TAG, "Entry deleted");
+        closeDatabase();
     }
 
     void deleteItemById(String value) {
         mDbHelper = mSqliteHelpers.getWritableDatabase();
         mDbHelper.delete(SqliteHelpers.TABLE_NAME, SqliteHelpers.ID_COLUMN + " = ?", new String[]{value});
         Log.i(Helpers.LOG_TAG, "Entry deleted");
+        closeDatabase();
     }
 
     void closeDatabase() {
@@ -102,6 +106,7 @@ public class DataBaseHelpers {
             uri = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved .....");
         }
+        closeDatabase();
         return uri;
     }
 
@@ -119,6 +124,7 @@ public class DataBaseHelpers {
             list[4] = (cursor.getString(cursor.getColumnIndex(SqliteHelpers.PICTURE_COLUMN)));
             Log.i(Helpers.LOG_TAG, " Data retrieved ....");
         }
+        closeDatabase();
         return list;
     }
 
@@ -144,6 +150,7 @@ public class DataBaseHelpers {
             }
         }
         cursor.close();
+        closeDatabase();
         return out;
     }
 
@@ -160,6 +167,7 @@ public class DataBaseHelpers {
                 arrayList.add(itemname);
             }
         }
+        closeDatabase();
         return arrayList;
     }
 
@@ -185,6 +193,7 @@ public class DataBaseHelpers {
         boolean isEmpty;
         isEmpty = !cursor.moveToNext();
         cursor.close();
+        closeDatabase();
         return isEmpty;
     }
 
@@ -197,6 +206,7 @@ public class DataBaseHelpers {
             noteCount++;
         }
         System.out.println(noteCount);
+        closeDatabase();
         return noteCount;
     }
 }

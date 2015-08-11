@@ -91,11 +91,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle,
                             imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
-                    if (vibrationSwitch.isChecked()) {
-                        vibrationValue = true;
-                    } else {
-                        vibrationValue = false;
-                    }
+                    vibrationValue = vibrationSwitch.isChecked();
                     if (AppGlobals.isPremium()) {
                         mHelpers.saveVibrationState(mTitle, vibrationValue);
                     }
@@ -188,7 +184,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         Spinner mSpinner = (Spinner) findViewById(R.id.note_spinner);
         vibrationSwitch = (CheckBox) findViewById(R.id.vibration);
 //        TextView vibrationTextView = (TextView) findViewById(R.id.vibrationTextView);
-        vibrationSwitch.setChecked(false);
+//        vibrationSwitch.setChecked(false);
         if (!AppGlobals.isPremium()) {
             vibrationSwitch.setVisibility(View.GONE);
 //            vibrationTextView.setVisibility(View.GONE);
@@ -215,7 +211,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             mId = detailsForThisNote[0];
             setTitle("Edit Note");
             mSpinner.setSelection(mHelpers.getSpinnerValue(title));
-            vibrationSwitch.setChecked(mHelpers.getVibrationState(title));
+            vibrationSwitch.setChecked(Helpers.getVibrationState(title));
         }
         Button addIcon = (Button) findViewById(R.id.button_icon);
         addIcon.setOnClickListener(new View.OnClickListener() {
