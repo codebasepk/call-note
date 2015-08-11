@@ -25,6 +25,8 @@
     </Spinner>
     </LinearLayout>
 
+
+
     <EditText
         android:id="@+id/editText_title_note"
         android:layout_width="fill_parent"

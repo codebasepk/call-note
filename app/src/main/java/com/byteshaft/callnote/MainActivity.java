@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private Switch mToggleSwitch;
     private ArrayAdapter<String> mModeAdapter;
     private DataBaseHelpers dataBaseHelpers;
-    private final String mSku = "premiumupgrade";
+    private final String mSku = "com.fgm.plumbo.premiumupgrade";
     private boolean isServiceBound;
 
     @Override
@@ -139,8 +139,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         switch (item.getItemId()) {
             case R.id.action_addNote:
                 if (dataBaseHelpers.getNotesCount() >= 3 && !AppGlobals.isPremium()) {
-                    String message = "You cannot add more than 3 Notes in free version " +
-                            "Upgrade to premium";
+                    String message = "You cannot add more than 3 Notes in free version. " +
+                            "Upgrade to premium?";
                     String title = "Notes limit";
                     showFreeLimitExceededDialog(title, message);
 //                    mHelpers.showUpgradeDialog(MainActivity.this, title, message);
@@ -356,6 +356,15 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                     startIntentSenderForResult(
                             pendingIntent.getIntentSender(), 4002, new Intent(), 0, 0, 0
                     );
+                } else if (buyIntentBundle.getInt("RESPONSE_CODE") == 7) {
+                    AppGlobals.enablePremium(true);
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "You have already bought the premium version, unlocked now",
+                            Toast.LENGTH_LONG).show();
+                    disconnectionPayService();
+                    // Unlock and restart the activity
+                    recreate();
                 } else {
                     Toast.makeText(
                             getApplicationContext(),
