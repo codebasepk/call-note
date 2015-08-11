@@ -120,17 +120,7 @@ public class Helpers extends ContextWrapper {
         Context context = AppGlobals.getContext();
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (mVibrator.hasVibrator()) {
-            int dot = 200;          // Length of a Morse Code "dot" in milliseconds
-            int dash = 500;         // Length of a Morse Code "dash" in milliseconds
-            int short_gap = 200;    // Length of Gap Between dots/dashes
-            int medium_gap = 500;   // Length of Gap Between Letters
-            int long_gap = 1000;    // Length of Gap Between Words
-            long[] pattern = {
-                    0,  // Start immediately
-                    dot, short_gap, dot, short_gap, dot, medium_gap,    // S
-                    dash, short_gap, dash, short_gap, dash, medium_gap, // O
-                    dot, short_gap, dot, short_gap, dot, long_gap       // S
-            };
+            long[] pattern = {0, 200, 400, 200, 400, 200, 800};
             mVibrator.vibrate(pattern, 0);
         }
     }
