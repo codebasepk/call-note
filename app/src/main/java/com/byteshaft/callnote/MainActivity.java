@@ -225,7 +225,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     }
 
     private String getDirectionThumbnail(String title) {
-        String uriBase = "android.resource://com.byteshaft.callnote/";
+        String uriBase = "android.resource://com.fgm.plumbo/";
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int noteShowPreference = preferences.getInt(title, Note.TURN_OFF);
         if (AppGlobals.isPremium()) {

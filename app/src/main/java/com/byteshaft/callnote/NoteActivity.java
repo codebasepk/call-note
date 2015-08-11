@@ -69,7 +69,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     public boolean onOptionsItemSelected(MenuItem item) {
         mTitle = noteTitle.getText().toString();
         if (imageVariable == null) {
-            imageVariable = "android.resource://com.byteshaft.callnote/" + R.drawable.character_1;
+            imageVariable = "android.resource://com.fgm.plumbo/" + R.drawable.character_1;
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
@@ -281,7 +281,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     }
 
     private void setImageVariableAndCloseDialog(int drawable) {
-        imageVariable = "android.resource://com.byteshaft.callnote/" + drawable;
+        imageVariable = "android.resource://com.fgm.plumbo/" + drawable;
         iconImageView.setImageResource(drawable);
         iconImageView.setVisibility(View.VISIBLE);
         alert.dismiss();
