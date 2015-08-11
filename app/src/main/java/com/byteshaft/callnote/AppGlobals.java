@@ -47,7 +47,7 @@ public class AppGlobals extends Application {
     }
 
     static boolean isPremium() {
-        return sPreferences.getBoolean("premium", false);
+        return sPreferences.getBoolean("premium", true);
     }
 
     static void enablePremium(boolean enable) {
