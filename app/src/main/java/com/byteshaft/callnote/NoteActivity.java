@@ -91,11 +91,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     mDbHelpers.clickUpdate(mId, mCheckedContacts, mTitle,
                             imageVariable, mHelpers.getCurrentDateandTime());
                     mHelpers.saveSpinnerState(mTitle, spinnerState);
-                    if (vibrationSwitch.isChecked()) {
-                        vibrationValue = true;
-                    } else {
-                        vibrationValue = false;
-                    }
+                    vibrationValue = vibrationSwitch.isChecked();
                     if (AppGlobals.isPremium()) {
                         mHelpers.saveVibrationState(mTitle, vibrationValue);
                     }
@@ -125,7 +121,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBody = "Try ‘Call Note’, it’s really fun. \n \n " +
-                        "Link: https://play.google.com/store/apps/details?id=com.fungamesmobile.callnote”";
+                        "Link: https://play.google.com/store/apps/details?id=com.fgm.plumbo”";
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 break;
@@ -187,11 +183,11 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         Spinner mSpinner = (Spinner) findViewById(R.id.note_spinner);
         vibrationSwitch = (CheckBox) findViewById(R.id.vibration);
-        TextView vibrationTextView = (TextView) findViewById(R.id.vibrationTextView);
-        vibrationSwitch.setChecked(false);
+//        TextView vibrationTextView = (TextView) findViewById(R.id.vibrationTextView);
+//        vibrationSwitch.setChecked(false);
         if (!AppGlobals.isPremium()) {
             vibrationSwitch.setVisibility(View.GONE);
-            vibrationTextView.setVisibility(View.GONE);
+//            vibrationTextView.setVisibility(View.GONE);
         }
         mSpinner.setOnItemSelectedListener(this);
         String[] freeVersionOptions = {"Incoming Call", "Turn Off"};
@@ -215,7 +211,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
             mId = detailsForThisNote[0];
             setTitle("Edit Note");
             mSpinner.setSelection(mHelpers.getSpinnerValue(title));
-            vibrationSwitch.setChecked(mHelpers.getVibrationState(title));
+            vibrationSwitch.setChecked(Helpers.getVibrationState(title));
         }
         Button addIcon = (Button) findViewById(R.id.button_icon);
         addIcon.setOnClickListener(new View.OnClickListener() {

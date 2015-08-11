@@ -38,6 +38,7 @@ public class OverlayHelpers extends ContextWrapper implements View.OnClickListen
     static void removePopupNote() {
         if (AppGlobals.isNoteVisible()) {
             mWindowManager.removeView(mBubbleLayout);
+            Helpers.cancelVibration();
             AppGlobals.setIsNoteVisible(false);
         }
     }
