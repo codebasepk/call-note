@@ -20,7 +20,6 @@ public class IncomingCallListener extends PhoneStateListener {
     private ArrayList<String> mImages;
     private OverlayHelpers mOverlayHelpers;
     private SqliteHelpers mSqliteHelpers;
-    private Helpers mHelpers;
     private boolean isOutGoingCall = false;
     private boolean isVibrating = false;
     BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
@@ -31,6 +30,11 @@ public class IncomingCallListener extends PhoneStateListener {
             isOutGoingCall = true;
             if (mTitles.size() > 0) {
                 mOverlayHelpers.showNoteOverlay(mTitles, mImages);
+                if (!Helpers.isVibrationEnabled() &&
+                        Helpers.getVibrationState(mTitles.get(0)) && AppGlobals.isPremium()) {
+                    isVibrating = true;
+                    Helpers.vibrate();
+                }
             }
         }
     };
@@ -39,7 +43,6 @@ public class IncomingCallListener extends PhoneStateListener {
         super();
         mContext = context;
         mOverlayHelpers = new OverlayHelpers(mContext.getApplicationContext());
-        mHelpers = new Helpers(mContext.getApplicationContext());
     }
 
     @Override
@@ -52,10 +55,10 @@ public class IncomingCallListener extends PhoneStateListener {
                     getAllNotesForNumber(incomingNumber, Note.SHOW_INCOMING_CALL);
                     if (mTitles.size() > 0) {
                         mOverlayHelpers.showNoteOverlay(mTitles, mImages);
-                        if (!mHelpers.isVibrationEnabled() &&
-                                mHelpers.getVibrationState(mTitles.get(0)) && AppGlobals.isPremium()) {
+                        if (!Helpers.isVibrationEnabled() &&
+                                Helpers.getVibrationState(mTitles.get(0)) && AppGlobals.isPremium()) {
                             isVibrating = true;
-                            mHelpers.vibrate();
+                            Helpers.vibrate();
                         }
                     }
                 }
@@ -63,7 +66,7 @@ public class IncomingCallListener extends PhoneStateListener {
             case TelephonyManager.CALL_STATE_IDLE:
                 OverlayHelpers.removePopupNote();
                 if (isVibrating) {
-                    mHelpers.cancelVibration();
+                    Helpers.cancelVibration();
                 }
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:

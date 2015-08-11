@@ -20,7 +20,7 @@ import java.util.List;
 public class Helpers extends ContextWrapper {
 
     public static final String LOG_TAG = "";
-    private Vibrator mVibrator;
+    private static Vibrator mVibrator;
 
     public Helpers(Context base) {
         super(base);
@@ -92,9 +92,10 @@ public class Helpers extends ContextWrapper {
         return sharedPreferences.getInt(key, 0);
     }
 
-    boolean isVibrationEnabled() {
+    static boolean isVibrationEnabled() {
+        Context context = AppGlobals.getContext();
         boolean vibrateValue = false;
-        AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         switch (audio.getRingerMode()) {
             case AudioManager.RINGER_MODE_VIBRATE:
                 vibrateValue = true;
@@ -108,14 +109,16 @@ public class Helpers extends ContextWrapper {
         sharedPreferences.edit().putBoolean(key+"_vibration", value).apply();
     }
 
-    boolean getVibrationState(String key) {
+    static boolean getVibrationState(String key) {
+        Context context = AppGlobals.getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                getApplicationContext());
+                context.getApplicationContext());
         return sharedPreferences.getBoolean(key + "_vibration", false);
     }
 
-    void vibrate() {
-        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    static void vibrate() {
+        Context context = AppGlobals.getContext();
+        mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (mVibrator.hasVibrator()) {
             int dot = 200;          // Length of a Morse Code "dot" in milliseconds
             int dash = 500;         // Length of a Morse Code "dash" in milliseconds
@@ -132,7 +135,9 @@ public class Helpers extends ContextWrapper {
         }
     }
 
-    void cancelVibration() {
-        mVibrator.cancel();
+    static void cancelVibration() {
+        if (mVibrator != null) {
+            mVibrator.cancel();
+        }
     }
 }

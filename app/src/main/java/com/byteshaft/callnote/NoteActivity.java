@@ -187,11 +187,11 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         Spinner mSpinner = (Spinner) findViewById(R.id.note_spinner);
         vibrationSwitch = (CheckBox) findViewById(R.id.vibration);
-        TextView vibrationTextView = (TextView) findViewById(R.id.vibrationTextView);
+//        TextView vibrationTextView = (TextView) findViewById(R.id.vibrationTextView);
         vibrationSwitch.setChecked(false);
         if (!AppGlobals.isPremium()) {
             vibrationSwitch.setVisibility(View.GONE);
-            vibrationTextView.setVisibility(View.GONE);
+//            vibrationTextView.setVisibility(View.GONE);
         }
         mSpinner.setOnItemSelectedListener(this);
         String[] freeVersionOptions = {"Incoming Call", "Turn Off"};
