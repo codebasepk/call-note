@@ -33,7 +33,7 @@ public class Helpers extends ContextWrapper {
     private static Cursor getAllContacts(ContentResolver cr) {
         return cr.query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
+                "upper("+ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + ") ASC"
         );
     }
 
