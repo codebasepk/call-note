@@ -94,7 +94,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     } else {
                         vibrationValue = false;
                     }
-                    mHelpers.saveVibrationState(mTitle+"_vibration", vibrationValue);
+                    mHelpers.saveVibrationState(mTitle, vibrationValue);
                     mCheckedContacts = null;
                     Log.i(Helpers.LOG_TAG, "Update success");
                     this.finish();
@@ -107,12 +107,8 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                             && mCheckedContacts != null) {
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, imageVariable,
                                 mHelpers.getCurrentDateandTime());
-                        if (vibrationSwitch.isChecked()) {
-                            vibrationValue = true;
-                        } else {
-                            vibrationValue = false;
-                        }
-                        mHelpers.saveVibrationState(mTitle+"_vibration", vibrationValue);
+                        vibrationValue = vibrationSwitch.isChecked();
+                        mHelpers.saveVibrationState(mTitle, vibrationValue);
                         mHelpers.saveSpinnerState(mTitle, spinnerState);
                         mCheckedContacts = null;
                         this.finish();

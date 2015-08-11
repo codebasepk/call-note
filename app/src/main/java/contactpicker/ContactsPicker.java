@@ -40,7 +40,7 @@ public class ContactsPicker extends AppCompatActivity {
         List<String> numbers = Helpers.getAllContactNumbers();
         ArrayList<String> output = getFormattedListEntries(mNames, numbers);
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice,
-                                         output);
+                output);
         mListView = (ListView) findViewById(R.id.list);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setAdapter(listAdapter);
@@ -99,7 +99,7 @@ public class ContactsPicker extends AppCompatActivity {
                     if (mNames.get(i).toLowerCase().startsWith(newText.toLowerCase())) {
                         mListView.setSelection(i);
                         break;
-                    } else if (mNames.get(i).toLowerCase().contains(newText.toLowerCase())){
+                    } else if (mNames.get(i).toLowerCase().contains(newText.toLowerCase())) {
                         mListView.setSelection(i);
                         break;
                     }

@@ -52,9 +52,9 @@ public class IncomingCallListener extends PhoneStateListener {
                     getAllNotesForNumber(incomingNumber, Note.SHOW_INCOMING_CALL);
                     if (mTitles.size() > 0) {
                         mOverlayHelpers.showNoteOverlay(mTitles, mImages);
-                        if (!mHelpers.isVibratorEnabled() && mHelpers.getVibrationState(mTitles.get(0))) {
+                        if (!mHelpers.isVibrationEnabled() && mHelpers.getVibrationState(mTitles.get(0))) {
                             isVibrating = true;
-                            mHelpers.vibrateOnCall();
+                            mHelpers.vibrate();
                         }
                     }
                 }

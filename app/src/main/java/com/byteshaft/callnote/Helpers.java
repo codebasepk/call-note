@@ -20,7 +20,7 @@ import java.util.List;
 public class Helpers extends ContextWrapper {
 
     public static final String LOG_TAG = "";
-    private Vibrator vibrator;
+    private Vibrator mVibrator;
 
     public Helpers(Context base) {
         super(base);
@@ -92,20 +92,20 @@ public class Helpers extends ContextWrapper {
         return sharedPreferences.getInt(key, 0);
     }
 
-    boolean isVibratorEnabled() {
-        boolean vibrationValue = false;
+    boolean isVibrationEnabled() {
+        boolean vibrateValue = false;
         AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         switch (audio.getRingerMode()) {
             case AudioManager.RINGER_MODE_VIBRATE:
-                vibrationValue = true;
+                vibrateValue = true;
         }
-        return vibrationValue;
+        return vibrateValue;
     }
 
     void saveVibrationState(String key, boolean value) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 getApplicationContext());
-        sharedPreferences.edit().putBoolean(key, value).apply();
+        sharedPreferences.edit().putBoolean(key+"_vibration", value).apply();
     }
 
     boolean getVibrationState(String key) {
@@ -114,9 +114,9 @@ public class Helpers extends ContextWrapper {
         return sharedPreferences.getBoolean(key + "_vibration", false);
     }
 
-    void vibrateOnCall() {
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        if (vibrator.hasVibrator()) {
+    void vibrate() {
+        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (mVibrator.hasVibrator()) {
             int dot = 200;          // Length of a Morse Code "dot" in milliseconds
             int dash = 500;         // Length of a Morse Code "dash" in milliseconds
             int short_gap = 200;    // Length of Gap Between dots/dashes
@@ -128,11 +128,11 @@ public class Helpers extends ContextWrapper {
                     dash, short_gap, dash, short_gap, dash, medium_gap, // O
                     dot, short_gap, dot, short_gap, dot, long_gap       // S
             };
-            vibrator.vibrate(pattern, 0);
+            mVibrator.vibrate(pattern, 0);
         }
     }
 
     void cancelVibration() {
-        vibrator.cancel();
+        mVibrator.cancel();
     }
 }
