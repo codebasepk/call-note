@@ -18,12 +18,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import contactpicker.ContactsPicker;
@@ -44,7 +46,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     private GridView mGridView;
     private boolean mShowTemporaryCheckedContacts;
     private boolean isStartedFresh;
-    private Switch vibrationSwitch;
+    private CheckBox vibrationSwitch;
     private boolean vibrationValue;
     private int[] imageId = {
             R.drawable.character_1,
@@ -184,10 +186,12 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         mDbHelpers = new DataBaseHelpers(getApplicationContext());
         noteTitle = (EditText) findViewById(R.id.editText_title_note);
         Spinner mSpinner = (Spinner) findViewById(R.id.note_spinner);
-        vibrationSwitch = (Switch) findViewById(R.id.vibrationSwitch);
+        vibrationSwitch = (CheckBox) findViewById(R.id.vibration);
+        TextView vibrationTextView = (TextView) findViewById(R.id.vibrationTextView);
         vibrationSwitch.setChecked(false);
         if (!AppGlobals.isPremium()) {
             vibrationSwitch.setVisibility(View.GONE);
+            vibrationTextView.setVisibility(View.GONE);
         }
         mSpinner.setOnItemSelectedListener(this);
         String[] freeVersionOptions = {"Incoming Call", "Turn Off"};
