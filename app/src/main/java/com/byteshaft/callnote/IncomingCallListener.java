@@ -20,7 +20,9 @@ public class IncomingCallListener extends PhoneStateListener {
     private ArrayList<String> mImages;
     private OverlayHelpers mOverlayHelpers;
     private SqliteHelpers mSqliteHelpers;
+    private Helpers mHelpers;
     private boolean isOutGoingCall = false;
+    private boolean isVibrating = false;
     BroadcastReceiver mOutgoingCallListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -37,6 +39,7 @@ public class IncomingCallListener extends PhoneStateListener {
         super();
         mContext = context;
         mOverlayHelpers = new OverlayHelpers(mContext.getApplicationContext());
+        mHelpers = new Helpers(mContext.getApplicationContext());
     }
 
     @Override
@@ -49,11 +52,19 @@ public class IncomingCallListener extends PhoneStateListener {
                     getAllNotesForNumber(incomingNumber, Note.SHOW_INCOMING_CALL);
                     if (mTitles.size() > 0) {
                         mOverlayHelpers.showNoteOverlay(mTitles, mImages);
+                        if (!mHelpers.isVibrationEnabled() &&
+                                mHelpers.getVibrationState(mTitles.get(0)) && AppGlobals.isPremium()) {
+                            isVibrating = true;
+                            mHelpers.vibrate();
+                        }
                     }
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
                 OverlayHelpers.removePopupNote();
+                if (isVibrating) {
+                    mHelpers.cancelVibration();
+                }
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
                 if (!isOutGoingCall) {

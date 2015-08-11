@@ -1,13 +1,13 @@
 package com.byteshaft.callnote;
 
-import android.app.Activity;
-import android.app.AlertDialog;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
@@ -20,6 +20,7 @@ import java.util.List;
 public class Helpers extends ContextWrapper {
 
     public static final String LOG_TAG = "";
+    private Vibrator mVibrator;
 
     public Helpers(Context base) {
         super(base);
@@ -89,5 +90,49 @@ public class Helpers extends ContextWrapper {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 getApplicationContext());
         return sharedPreferences.getInt(key, 0);
+    }
+
+    boolean isVibrationEnabled() {
+        boolean vibrateValue = false;
+        AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        switch (audio.getRingerMode()) {
+            case AudioManager.RINGER_MODE_VIBRATE:
+                vibrateValue = true;
+        }
+        return vibrateValue;
+    }
+
+    void saveVibrationState(String key, boolean value) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                getApplicationContext());
+        sharedPreferences.edit().putBoolean(key+"_vibration", value).apply();
+    }
+
+    boolean getVibrationState(String key) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                getApplicationContext());
+        return sharedPreferences.getBoolean(key + "_vibration", false);
+    }
+
+    void vibrate() {
+        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (mVibrator.hasVibrator()) {
+            int dot = 200;          // Length of a Morse Code "dot" in milliseconds
+            int dash = 500;         // Length of a Morse Code "dash" in milliseconds
+            int short_gap = 200;    // Length of Gap Between dots/dashes
+            int medium_gap = 500;   // Length of Gap Between Letters
+            int long_gap = 1000;    // Length of Gap Between Words
+            long[] pattern = {
+                    0,  // Start immediately
+                    dot, short_gap, dot, short_gap, dot, medium_gap,    // S
+                    dash, short_gap, dash, short_gap, dash, medium_gap, // O
+                    dot, short_gap, dot, short_gap, dot, long_gap       // S
+            };
+            mVibrator.vibrate(pattern, 0);
+        }
+    }
+
+    void cancelVibration() {
+        mVibrator.cancel();
     }
 }
