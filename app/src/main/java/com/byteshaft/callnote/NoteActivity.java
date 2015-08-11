@@ -94,7 +94,9 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                     } else {
                         vibrationValue = false;
                     }
-                    mHelpers.saveVibrationState(mTitle, vibrationValue);
+                    if (AppGlobals.isPremium()) {
+                        mHelpers.saveVibrationState(mTitle, vibrationValue);
+                    }
                     mCheckedContacts = null;
                     Log.i(Helpers.LOG_TAG, "Update success");
                     this.finish();
@@ -108,7 +110,9 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                         mDbHelpers.createNewEntry(mCheckedContacts, mTitle, imageVariable,
                                 mHelpers.getCurrentDateandTime());
                         vibrationValue = vibrationSwitch.isChecked();
-                        mHelpers.saveVibrationState(mTitle, vibrationValue);
+                        if (AppGlobals.isPremium()) {
+                            mHelpers.saveVibrationState(mTitle, vibrationValue);
+                        }
                         mHelpers.saveSpinnerState(mTitle, spinnerState);
                         mCheckedContacts = null;
                         this.finish();
@@ -182,6 +186,9 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
         Spinner mSpinner = (Spinner) findViewById(R.id.note_spinner);
         vibrationSwitch = (Switch) findViewById(R.id.vibrationSwitch);
         vibrationSwitch.setChecked(false);
+        if (!AppGlobals.isPremium()) {
+            vibrationSwitch.setVisibility(View.GONE);
+        }
         mSpinner.setOnItemSelectedListener(this);
         String[] freeVersionOptions = {"Incoming Call", "Turn Off"};
         String[] premiumVersionOptions = {"Incoming Call", "Outgoing Call", "Incoming & Outgoing Call",

@@ -31,7 +31,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Vibration"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/vibrationSwitch"
         android:textSize="18sp"
         android:layout_below="@+id/note_linear_layout"
@@ -49,6 +49,7 @@
         android:layout_marginRight="30dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/vibrationSwitch"
+        android:layout_marginTop="10dp"
         android:hint="Enter note..."/>
 
 
