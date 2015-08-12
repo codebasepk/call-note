@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/call-note-vibrate.iml" filepath="$PROJECT_DIR$/call-note-vibrate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/call-note.iml" filepath="$PROJECT_DIR$/call-note.iml" />
     </modules>
   </component>
 </project>
