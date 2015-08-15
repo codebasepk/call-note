@@ -4,7 +4,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
     defaultConfig {
-        applicationId 'com.fgm.plumbo'
+        applicationId 'com.fgm2.plumbo'
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 3

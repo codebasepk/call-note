@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private Switch mToggleSwitch;
     private ArrayAdapter<String> mModeAdapter;
     private DataBaseHelpers dataBaseHelpers;
-    private final String mSku = "com.fgm.plumbo.premiumupgrade";
+    private final String mSku = "com.fgm2.plumbo";
     private boolean isServiceBound;
 
     @Override
@@ -225,7 +225,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     }
 
     private String getDirectionThumbnail(String title) {
-        String uriBase = "android.resource://com.fgm.plumbo/";
+        String uriBase = "android.resource://com.fgm2.plumbo/";
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int noteShowPreference = preferences.getInt(title, Note.TURN_OFF);
         if (AppGlobals.isPremium()) {

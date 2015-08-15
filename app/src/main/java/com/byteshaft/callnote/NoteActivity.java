@@ -69,7 +69,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     public boolean onOptionsItemSelected(MenuItem item) {
         mTitle = noteTitle.getText().toString();
         if (imageVariable == null) {
-            imageVariable = "android.resource://com.fgm.plumbo/" + R.drawable.character_1;
+            imageVariable = "android.resource://com.fgm2.plumbo/" + R.drawable.character_1;
         }
         switch (item.getItemId()) {
             case R.id.action_apply:
@@ -121,7 +121,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBody = "Try 'Plumbo', it's really useful. You will never forget anything anymore. \n \n " +
-                        "Link: https://play.google.com/store/apps/details?id=com.fgm.plumbo";
+                        "Link: https://play.google.com/store/apps/details?id=com.fgm2.plumbo";
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 break;
@@ -277,7 +277,7 @@ public class NoteActivity extends ActionBarActivity implements Spinner.OnItemSel
     }
 
     private void setImageVariableAndCloseDialog(int drawable) {
-        imageVariable = "android.resource://com.fgm.plumbo/" + drawable;
+        imageVariable = "android.resource://com.fgm2.plumbo/" + drawable;
         iconImageView.setImageResource(drawable);
         iconImageView.setVisibility(View.VISIBLE);
         alert.dismiss();
